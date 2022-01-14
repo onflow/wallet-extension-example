@@ -7,6 +7,9 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
       {
         url: chrome.runtime.getURL("index.html"),
         type: "popup",
+        height: 598,
+        width: 375,
+        left: 1000,
       },
       function (win) {
         console.log(win)
