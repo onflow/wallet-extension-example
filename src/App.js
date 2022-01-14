@@ -16,6 +16,7 @@ function App() {
           currentWindow: true,
         },
         tabs => {
+          console.log("Ext opened", tabs[0].id)
           /**
            * Sends a single message to the content script(s) in the specified tab,
            * with an optional callback to run when a response is sent back.
@@ -36,7 +37,7 @@ function App() {
 
   return (
     <div className='App'>
-      <h1>Flow Wallet Extension</h1>
+      <h1>Flow Wallet Exxxtension</h1>
 
       <ul className='Form'>
         <li className='Validation'>

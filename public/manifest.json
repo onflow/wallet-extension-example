@@ -3,6 +3,9 @@
   "description": "Non-custodial wallet extension for Flow",
   "version": "1.0",
   "manifest_version": 3,
+  "background": {
+    "service_worker": "./background.js"
+  },
   "action": {
     "default_popup": "index.html",
     "default_title": "Open the popup"
@@ -14,6 +17,12 @@
     }
   ],
   "permissions": ["activeTab"],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html", "script.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "icons": {
     "16": "logo192.png",
     "48": "logo192.png",
