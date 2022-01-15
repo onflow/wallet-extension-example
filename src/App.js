@@ -16,7 +16,9 @@ function App() {
           currentWindow: true,
         },
         tabs => {
-          console.log("Ext opened", tabs[0].id)
+          let search = window.location.search
+          let params = new URLSearchParams(search)
+          let openerTabId = params.get("opener")
           /**
            * Sends a single message to the content script(s) in the specified tab,
            * with an optional callback to run when a response is sent back.
@@ -25,7 +27,7 @@ function App() {
            * in the specified tab for the current extension.
            */
           chrome.tabs.sendMessage(
-            tabs[0].id || 0,
+            parseInt(openerTabId) || 0,
             {type: "FCL:VIEW:READY"},
             response => {
               setTitle(response.title)
@@ -37,7 +39,7 @@ function App() {
 
   return (
     <div className='App'>
-      <h1>Flow Wallet Exxxtension</h1>
+      <h1>Flow Wallet Extension</h1>
 
       <ul className='Form'>
         <li className='Validation'>
