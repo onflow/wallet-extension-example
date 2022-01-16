@@ -2,7 +2,7 @@
 const messagesFromReactAppListener = (msg, sender, sendResponse) => {
   console.log("[background-script.js]. Message received", msg.type)
 
-  if (msg.type === "SHOW_POPUP") {
+  if (msg.type === "FCL:OPEN:EXTENSION") {
     chrome.tabs.query(
       {
         active: true,

@@ -14,8 +14,11 @@ injectScript(chrome.runtime.getURL("script.js"), "body")
 // Listener for messages from window/FCL
 window.addEventListener("message", function (event) {
   console.log("Message Received from window in contentScript", event.data)
-  if (event.data.type && event.data.type === "SHOW_POPUP") {
+  if (event.data.type && event.data.type === "FCL:OPEN:EXTENSION") {
     chrome.runtime.sendMessage({type: event.data.type})
+  }
+  if (event.data.type && event.data.type === "FCL:VIEW:READY:RESPONSE") {
+    chrome.runtime.sendMessage(event.data)
   }
 })
 
@@ -32,6 +35,35 @@ setTimeout(() => {
 
 const messagesFromReactAppListener = (msg, sender, sendResponse) => {
   console.log("[content.js]. Message received", msg)
+
+  if (msg.type === "FCL:VIEW:READY") {
+    console.log("recieved view ready", JSON.parse(JSON.stringify(msg || {})))
+    window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+  }
+
+  if (msg.f_type && msg.f_type === "AuthnResponse") {
+    console.log(
+      "recieved authn response",
+      JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {}))
+    )
+
+    window &&
+      window.postMessage(
+        JSON.parse(
+          JSON.stringify(
+            {
+              f_type: "PollingResponse",
+              f_vsn: "1.0.0",
+              status: "APPROVED",
+              reason: null,
+              data: msg,
+              type: "FCL:VIEW:RESPONSE",
+            } || {}
+          )
+        ),
+        "*"
+      )
+  }
 
   const response = {
     title: document.title,
