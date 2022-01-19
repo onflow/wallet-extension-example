@@ -12,7 +12,7 @@ function buildAuthnService(id) {
     f_vsn: "1.0.0",
     type: "authn",
     uid: `${id}#authn`,
-    endpoint: `chrome-extension://${id}/index.html#authn`,
+    endpoint: `chrome-extension://${id}/index.html#/authn`,
     method: "EXT/RPC",
     id: `${id}`,
     identity: {

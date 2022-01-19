@@ -1,16 +1,21 @@
 // Function called when a new message is received
-const messagesFromReactAppListener = (msg, sender, sendResponse) => {
-  console.log("[background-script.js]. Message received", msg.type)
+const messagesFromReactAppListener = (
+  {type, service},
+  sender,
+  sendResponse
+) => {
+  console.log("[background-script.js]. Message received", type, service)
 
-  if (msg.type === "FCL:OPEN:EXTENSION") {
+  if (type === "FCL:OPEN:EXTENSION") {
     chrome.tabs.query(
       {
         active: true,
         currentWindow: true,
       },
       tabs => {
-        let popUrl = chrome.runtime.getURL("index.html")
+        let popUrl = chrome.runtime.getURL(`index.html`)
 
+        console.log("popup url", `${popUrl}?opener=${tabs[0].id}`)
         chrome.windows.create(
           {
             url: `${popUrl}?opener=${tabs[0].id}`,
@@ -20,7 +25,7 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
             left: 1000,
           },
           function (win) {
-            console.log(win)
+            console.log("window obj", win)
             // win represents the Window object from windows API
             // Send VIEW READY to content script
             // here or in react?
@@ -35,3 +40,32 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
  * Fired when a message is sent from either an extension process or a content script.
  */
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
+
+/* chrome.action.onClicked.addListener(function (tab) {
+  chrome.tabs.query(
+    {
+      active: true,
+      currentWindow: true,
+    },
+    tabs => {
+      let popUrl = chrome.runtime.getURL(`index.html`)
+
+      console.log("popup browser action url", `${popUrl}?opener=${tabs[0].id}`)
+      chrome.windows.create(
+        {
+          url: `${popUrl}?opener=${tabs[0].id}`,
+          type: "popup",
+          height: 598,
+          width: 375,
+          left: 1000,
+        },
+        function (win) {
+          console.log("window obj", win)
+          // win represents the Window object from windows API
+          // Send VIEW READY to content script
+          // here or in react?
+        }
+      )
+    }
+  )
+}) */

@@ -7,7 +7,7 @@
     "service_worker": "./background.js"
   },
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "index.html#/authn",
     "default_title": "Open the popup"
   },
   "content_scripts": [

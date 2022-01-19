@@ -15,7 +15,7 @@ injectScript(chrome.runtime.getURL("script.js"), "body")
 window.addEventListener("message", function (event) {
   console.log("Message Received from window in contentScript", event.data)
   if (event.data.type && event.data.type === "FCL:OPEN:EXTENSION") {
-    chrome.runtime.sendMessage({type: event.data.type})
+    chrome.runtime.sendMessage(event.data)
   }
   if (event.data.type && event.data.type === "FCL:VIEW:READY:RESPONSE") {
     chrome.runtime.sendMessage(event.data)
@@ -43,7 +43,7 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
 
   if (msg.f_type && msg.f_type === "AuthnResponse") {
     console.log(
-      "recieved authn response",
+      "recieved authnnnnnn response",
       JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {}))
     )
 
