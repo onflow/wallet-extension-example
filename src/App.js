@@ -47,10 +47,6 @@ function App() {
   }
 
   useEffect(() => {
-    let search = window.location.search
-    let params = new URLSearchParams(search)
-    let openerTabId = params.get("opener")
-    setOpener(openerTabId)
     /**
      * We can't use "chrome.runtime.sendMessage" for sending messages from React.
      * For sending messages from React we need to specify which tab to send it to.
@@ -59,12 +55,9 @@ function App() {
       chrome.tabs.query(
         {
           active: true,
-          currentWindow: true,
+          currentWindow: false,
         },
         tabs => {
-          let search = window.location.search
-          let params = new URLSearchParams(search)
-          let openerTabId = params.get("opener")
           /**
            * Sends a single message to the content script(s) in the specified tab,
            * with an optional callback to run when a response is sent back.
@@ -72,8 +65,9 @@ function App() {
            * The runtime.onMessage event is fired in each content script running
            * in the specified tab for the current extension.
            */
+          setOpener(tabs[0].id)
           chrome.tabs.sendMessage(
-            openerTabId ? parseInt(openerTabId) : tabs[0].id || 0,
+            tabs[0].id || 0,
             {type: "FCL:VIEW:READY"},
             response => {
               console.log(response)

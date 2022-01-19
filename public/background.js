@@ -13,12 +13,11 @@ const messagesFromReactAppListener = (
         currentWindow: true,
       },
       tabs => {
-        let popUrl = chrome.runtime.getURL(`index.html`)
+        let popUrl = chrome.runtime.getURL(`index.html#/${service.type}`)
 
-        console.log("popup url", `${popUrl}?opener=${tabs[0].id}`)
         chrome.windows.create(
           {
-            url: `${popUrl}?opener=${tabs[0].id}`,
+            url: popUrl,
             type: "popup",
             height: 598,
             width: 375,

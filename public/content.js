@@ -37,13 +37,16 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
   console.log("[content.js]. Message received", msg)
 
   if (msg.type === "FCL:VIEW:READY") {
-    console.log("recieved view ready", JSON.parse(JSON.stringify(msg || {})))
+    console.log(
+      "CS: recieved view ready",
+      JSON.parse(JSON.stringify(msg || {}))
+    )
     window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
   }
 
   if (msg.f_type && msg.f_type === "AuthnResponse") {
     console.log(
-      "recieved authnnnnnn response",
+      "CS: recieved authn response",
       JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {}))
     )
 
