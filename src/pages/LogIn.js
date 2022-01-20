@@ -1,14 +1,8 @@
-import React, {useState, useEffect} from "react"
-import {HashRouter as Router, Switch, Route} from "react-router-dom"
-import {Box} from "@chakra-ui/react"
-import AuthnRouter from "./routers/AuthnRouter"
-import PopupRouter from "./routers/PopupRouter"
-import Authz from "./pages/Authz"
-import "./App.css"
+import React, {useEffect, useState} from "react"
+import {Button} from "@chakra-ui/react"
 
-function App() {
+function LogIn() {
   const [opener, setOpener] = useState(null)
-  const [loading, setLoading] = useState(true)
 
   function sendAuthnToFCL() {
     chrome.tabs.sendMessage(parseInt(opener), {
@@ -48,16 +42,6 @@ function App() {
       ],
     })
   }
-
-  useEffect(() => {
-    async function load() {
-      // await keyVault.loadVault()
-      //await loadAccounts()
-      setLoading(false)
-    }
-    load()
-  }, [])
-
   useEffect(() => {
     /**
      * We can't use "chrome.runtime.sendMessage" for sending messages from React.
@@ -104,36 +88,7 @@ function App() {
      */
     chrome.runtime?.onMessage.addListener(messagesFromReactAppListener)
   }, [])
-
-  if (loading) {
-    return null
-  }
-
-  return (
-    <Router>
-      <Box
-        position='absolute'
-        w={"358px"}
-        h={"600px"}
-        p={0}
-        m={0}
-        background='transparent'
-        //zIndex='-1'
-      >
-        <Switch>
-          <Route exact path='/'>
-            <PopupRouter />
-          </Route>
-          <Route exact path='/authn'>
-            <AuthnRouter />
-          </Route>
-          <Route exact path='/authz'>
-            <Authz></Authz>
-          </Route>
-        </Switch>
-      </Box>
-    </Router>
-  )
+  return <Button onClick={sendAuthnToFCL}>LOGIN</Button>
 }
 
-export default App
+export default LogIn
