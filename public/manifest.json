@@ -16,7 +16,11 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["activeTab"],
+  "permissions": [
+    "activeTab", 
+    "storage", 
+    "alarms"
+  ],
   "web_accessible_resources": [
     {
       "resources": ["index.html", "script.js"],

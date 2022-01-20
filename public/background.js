@@ -19,7 +19,7 @@ const messagesFromReactAppListener = (
           {
             url: popUrl,
             type: "popup",
-            height: 598,
+            height: 628,
             width: 375,
             left: 1000,
           },

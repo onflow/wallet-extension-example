@@ -4,55 +4,19 @@ import {Box} from "@chakra-ui/react"
 import AuthnRouter from "./routers/AuthnRouter"
 import PopupRouter from "./routers/PopupRouter"
 import Authz from "./pages/Authz"
+import {keyVault} from "./lib/keyVault"
+import {loadAccounts} from "./lib/AccountManager"
 import "./App.css"
 
 function App() {
   const [opener, setOpener] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  function sendAuthnToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), {
-      f_type: "AuthnResponse",
-      f_vsn: "1.0.0",
-      addr: "0x1",
-      services: [
-        {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authn",
-          uid: "fcl-dev-wallet#authn",
-          endpoint: `fcl/authn`,
-          id: "0x1",
-          identity: {
-            address: "0x1",
-          },
-          provider: {
-            address: null,
-            name: "FCL Dev Wallet",
-            icon: null,
-            description: "For Local Development Only",
-          },
-        },
-        {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authz",
-          uid: "fcl-dev-wallet#authz",
-          endpoint: `fcl/authz`,
-          method: "IFRAME/RPC",
-          identity: {
-            address: "0x1",
-            keyId: Number(0),
-          },
-        },
-      ],
-    })
-  }
-
   useEffect(() => {
     async function load() {
-      // await keyVault.loadVault()
-      //await loadAccounts()
+      await keyVault.loadVault()
+      const accounts = await loadAccounts()
+      console.log("load accounts", accounts)
       setLoading(false)
     }
     load()
@@ -113,7 +77,7 @@ function App() {
     <Router>
       <Box
         position='absolute'
-        w={"358px"}
+        w={"375px"}
         h={"600px"}
         p={0}
         m={0}

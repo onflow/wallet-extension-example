@@ -57,8 +57,6 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
         "*"
       )
   }
-
-  return true
 }
 
 /**

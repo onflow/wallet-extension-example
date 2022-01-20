@@ -1,73 +1,37 @@
 import React, {useEffect, useState} from "react"
 import {MemoryRouter, Switch, Route} from "react-router"
 import FirstTime from "../pages/FirstTime"
-import Balances from "../pages/Balances"
 import LogIn from "../pages/LogIn"
 import CreateAccount from "../pages/CreateAccount"
+import {keyVault} from "../lib/keyVault"
+import {accountManager} from "../lib/AccountManager"
 
 function AuthnRouter() {
   const [loading, setLoading] = useState(true)
   const [initial, setInitial] = useState(null)
   const [opener, setOpener] = useState(null)
 
-  function sendAuthnToFCL() {
-    console.log(opener, "OPENER")
-    chrome.tabs.sendMessage(parseInt(opener), {
-      f_type: "AuthnResponse",
-      f_vsn: "1.0.0",
-      addr: "0x1",
-      services: [
-        {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authn",
-          uid: "fcl-dev-wallet#authn",
-          endpoint: `fcl/authn`,
-          id: "0x1",
-          identity: {
-            address: "0x1",
-          },
-          provider: {
-            address: null,
-            name: "FCL Dev Wallet",
-            icon: null,
-            description: "For Local Development Only",
-          },
-        },
-        {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authz",
-          uid: "fcl-dev-wallet#authz",
-          endpoint: `fcl/authz`,
-          method: "IFRAME/RPC",
-          identity: {
-            address: "0x1",
-            keyId: Number(0),
-          },
-        },
-      ],
-    })
-  }
   useEffect(() => {
-    setInitial("/LogIn")
-    /*     if (keyVault.unlocked) {
-      const selectedAccount = await accountManager.getFavoriteAccount()
-      if (selectedAccount) {
-        setInitial("/Balances")
+    async function setRoute() {
+      if (keyVault.unlocked) {
+        const selectedAccount = await accountManager.getFavoriteAccount()
+        if (selectedAccount) {
+          setInitial("/Balances")
+        } else {
+          setInitial("/SelectAccount")
+        }
       } else {
-        setInitial("/SelectAccount")
+        // if we have an account, go to Login page
+        const allAccounts = await accountManager.listAccounts()
+        if (allAccounts.size > 0) {
+          setInitial("/LogIn")
+        } else {
+          setInitial("/FirstTime")
+        }
       }
-    } else {
-      // if we have an account, go to Login page
-      const allAccounts = await accountManager.listAccounts()
-      if (allAccounts.size > 0) {
-        setInitial("/LogIn")
-      } else {
-        setInitial("/FirstTime")
-      }
-    } */
-    setLoading(false)
+      setLoading(false)
+    }
+    setRoute()
   }, [])
 
   useEffect(() => {
@@ -120,6 +84,7 @@ function AuthnRouter() {
   if (loading) {
     return null
   }
+
   const entryRoutes = ["/FirstTime", "/LogIn", "/Balances", "/SelectAccount"]
   const initialIndex = entryRoutes.indexOf(initial) || 0
   return (
@@ -127,7 +92,6 @@ function AuthnRouter() {
       <Switch>
         <Route path='/FirstTime' component={FirstTime}></Route>
         <Route path='/CreateAccount' component={CreateAccount}></Route>
-        <Route path='/Balances' component={Balances}></Route>
         <Route path='/LogIn' component={LogIn}></Route>
       </Switch>
     </MemoryRouter>
