@@ -14,7 +14,7 @@ const messagesFromReactAppListener = (
       },
       tabs => {
         let popUrl = chrome.runtime.getURL(`index.html#/${service.type}`)
-
+        console.log("pop url", popUrl)
         chrome.windows.create(
           {
             url: popUrl,

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import {HashRouter as Router, Routes, Route} from "react-router-dom"
+import {HashRouter as Router, Switch, Route} from "react-router-dom"
 import AuthnRouter from "./routers/AuthnRouter"
 import PopupRouter from "./routers/PopupRouter"
 import Authz from "./pages/Authz"
@@ -98,11 +98,17 @@ function App() {
       <h1>Flow Wallet Extension</h1>
 
       <Router>
-        <Routes>
-          <Route exact path='/' element={<PopupRouter />} />
-          <Route exact path='authn' element={<AuthnRouter />} />
-          <Route exact path='authz' element={<Authz />} />
-        </Routes>
+        <Switch>
+          <Route exact path='/'>
+            <PopupRouter />
+          </Route>
+          <Route exact path='/authn'>
+            <AuthnRouter />
+          </Route>
+          <Route exact path='/authz'>
+            <Authz></Authz>
+          </Route>
+        </Switch>
       </Router>
       <div>
         <button onClick={sendAuthnToFCL}>LOGIN</button>

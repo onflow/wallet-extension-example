@@ -6,6 +6,11 @@ document.addEventListener("_my_custom_event", function (e) {
   buildAuthnService(e.detail.id)
 })
 
+document.addEventListener("popup_event", function (e) {
+  console.log("event from popup", e.detail.id)
+  window && window.postMessage(JSON.parse(JSON.stringify(e || {})), "*")
+})
+
 function buildAuthnService(id) {
   const AuthnService = {
     f_type: "Service",

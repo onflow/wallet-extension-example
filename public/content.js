@@ -22,17 +22,6 @@ window.addEventListener("message", function (event) {
   }
 })
 
-var id = chrome.runtime.id
-setTimeout(() => {
-  document.dispatchEvent(
-    new CustomEvent("_my_custom_event", {
-      detail: {
-        id: id,
-      },
-    })
-  )
-}, 2000)
-
 const messagesFromReactAppListener = (msg, sender, sendResponse) => {
   console.log("[content.js]. Message received", msg)
 
@@ -41,6 +30,7 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
       "CS: recieved view ready",
       JSON.parse(JSON.stringify(msg || {}))
     )
+
     window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
   }
 
@@ -68,16 +58,21 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
       )
   }
 
-  const response = {
-    title: document.title,
-  }
-
-  console.log("[content.js]. Message response", response)
-
-  sendResponse(response)
+  return true
 }
 
 /**
  * Fired when a message is sent from either an extension process or a content script.
  */
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
+
+var id = chrome.runtime.id
+setTimeout(() => {
+  document.dispatchEvent(
+    new CustomEvent("_my_custom_event", {
+      detail: {
+        id: id,
+      },
+    })
+  )
+}, 2000)
