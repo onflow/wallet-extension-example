@@ -5,7 +5,7 @@ import * as styles from "../styles"
 import {useHistory} from "react-router-dom"
 import Layout from "../components/Layout"
 
-const FirstTime = ({location}) => {
+const Initial = ({location}) => {
   const history = useHistory()
 
   return (
@@ -53,4 +53,4 @@ const FirstTime = ({location}) => {
   )
 }
 
-export default FirstTime
+export default Initial

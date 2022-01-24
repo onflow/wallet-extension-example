@@ -24,7 +24,7 @@ function buildAuthnService(id) {
       address: "0x1234",
     },
     provider: {
-      address: null,
+      address: 0x1234,
       name: "Flow Wallet",
       icon: null,
       description: "Flow Non-Custodial Wallet Extension for Chrome",

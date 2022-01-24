@@ -32,6 +32,7 @@ const CreateAccount = ({location}) => {
         // privateKey = await derivePrivKey(seedPhrase)
       }
       // await validateFlowAccountInfo(accountAddress, privateKey, keyID)
+      console.log(privateKey)
     } catch (e) {
       toast({
         description: e.toString(),
@@ -138,7 +139,6 @@ const CreateAccount = ({location}) => {
         }}
         value={keyID}
         mx='auto'
-        mt='6'
         p={4}
         mt='2'
         mb='6'

@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react"
 import {MemoryRouter, Switch, Route} from "react-router"
-import FirstTime from "../pages/FirstTime"
-import LogIn from "../pages/LogIn"
+import Initial from "../pages/Initial"
 import CreateAccount from "../pages/CreateAccount"
+import SetPassword from "../pages/SetPassword"
+import LogIn from "../pages/LogIn"
+import Balances from "../pages/Balances"
 import {keyVault} from "../lib/keyVault"
 import {accountManager} from "../lib/AccountManager"
 
@@ -26,7 +28,7 @@ function AuthnRouter() {
         if (allAccounts.size > 0) {
           setInitial("/LogIn")
         } else {
-          setInitial("/FirstTime")
+          setInitial("/Initial")
         }
       }
       setLoading(false)
@@ -85,14 +87,16 @@ function AuthnRouter() {
     return null
   }
 
-  const entryRoutes = ["/FirstTime", "/LogIn", "/Balances", "/SelectAccount"]
+  const entryRoutes = ["/Initial", "/LogIn", "/Balances", "/SelectAccount"]
   const initialIndex = entryRoutes.indexOf(initial) || 0
   return (
     <MemoryRouter initialEntries={entryRoutes} initialIndex={initialIndex}>
       <Switch>
-        <Route path='/FirstTime' component={FirstTime}></Route>
+        <Route path='/Initial' component={Initial}></Route>
         <Route path='/CreateAccount' component={CreateAccount}></Route>
+        <Route path='/SetPassword' component={SetPassword}></Route>
         <Route path='/LogIn' component={LogIn}></Route>
+        <Route path='/Balances' component={Balances}></Route>
       </Switch>
     </MemoryRouter>
   )

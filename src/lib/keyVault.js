@@ -195,10 +195,10 @@ class KeyVault {
   // TODO: These don't look so great, commenting them out until we
   // can make this look nice
   _setBadgeLocked() {
-    chrome.action.setBadgeText({ text: '🔐' })
+    chrome.action.setBadgeText({text: "🔐"})
   }
   _setBadgeUnlocked() {
-    chrome.action.setBadgeText({ text: '🔓' })
+    chrome.action.setBadgeText({text: "🔓"})
   }
 }
 
