@@ -57,6 +57,15 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
         "*"
       )
   }
+
+  if (msg.type === "FCL:VIEW:CLOSE") {
+    console.log(
+      "CS: recieved view close",
+      JSON.parse(JSON.stringify(msg || {}))
+    )
+
+    window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
+  }
 }
 
 /**

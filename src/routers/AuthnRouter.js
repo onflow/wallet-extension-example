@@ -5,9 +5,9 @@ import CreateAccount from "../pages/CreateAccount"
 import SelectAccount from "../pages/SelectAccount"
 import SetPassword from "../pages/SetPassword"
 import LogIn from "../pages/LogIn"
-import Balances from "../pages/Balances"
 import {keyVault} from "../lib/keyVault"
 import {accountManager} from "../lib/AccountManager"
+import Authn from "../pages/services/Authn"
 
 function AuthnRouter() {
   const [loading, setLoading] = useState(true)
@@ -98,7 +98,7 @@ function AuthnRouter() {
         <Route path='/SelectAccount' component={SelectAccount}></Route>
         <Route path='/SetPassword' component={SetPassword}></Route>
         <Route path='/LogIn' component={LogIn}></Route>
-        <Route path='/Balances' component={Balances}></Route>
+        <Route path='/Balances' component={Authn}></Route>
       </Switch>
     </MemoryRouter>
   )

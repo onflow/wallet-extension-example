@@ -27,6 +27,7 @@ const hashMsgHex = (msgHex, hashAlg) => {
 export const sign = async (account, keyID, privateKey, msgHex) => {
   const pubKey = account.getKey(keyID)
 
+  console.log("account pubKey", pubKey, pubKey.sigAlg)
   // These codes differ from docs, need to check
   const ec = pubKey.sigAlg === 1 ? p256 : pubKey.sigAlg === 2 ? secp256 : null
 

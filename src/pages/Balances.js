@@ -15,14 +15,10 @@ const Balances = ({}) => {
     }
     getAccount()
   }, [])
-  /* useEffect(async () => {
-    setAccount(await accountManager.getFavoriteAccount())
-  }, []) */
 
   useEffect(() => {
     async function getAccount() {
       const account = await accountManager.getFavoriteAccount()
-      //const account = {address: "0x123"}
       setAccount(account)
     }
     getAccount()

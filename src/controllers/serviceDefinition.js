@@ -3,7 +3,7 @@ function serviceDefinition(address, keyId, type, opts) {
     f_type: "Service",
     f_vsn: "1.0.0",
     type: type,
-    uid: `zaywallet#${type}`,
+    uid: `flowwallet#${type}`,
     endpoint: chrome.runtime.getURL(`index.html#/${type}`),
   }
 
@@ -16,12 +16,12 @@ function serviceDefinition(address, keyId, type, opts) {
       f_type: "ServiceProvider", // Its a Service Provider
       f_vsn: "1.0.0", // Follows the v1.0.0 spec for service providers
       address: "0x3277199d6c1eeaa4", // A flow address owned by the wallet
-      name: "Zay Wallet", // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
+      name: "Flow Wallet", // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
     }
   }
 
   if (type === "authz") {
-    definition.method = "POP/RPC"
+    definition.method = "EXT/RPC"
     definition.identity = {
       address: address,
       keyId: Number(keyId),
@@ -29,7 +29,7 @@ function serviceDefinition(address, keyId, type, opts) {
   }
 
   if (type === "pre-authz") {
-    definition.method = "POP/RPC"
+    definition.method = "EXT/RPC"
     definition.data = {
       address: address,
       keyId: Number(keyId),

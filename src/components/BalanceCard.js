@@ -17,10 +17,6 @@ const BalanceCard = ({currency, address}) => {
   currency = currency.toLowerCase()
   const [balance, setBalance] = useState("--")
 
-  /*   useEffect(async () => {
-    setBalance(await retrieveBalance(currency, address))
-  }, [currency, address]) */
-
   useEffect(() => {
     async function getAccounts() {
       const balance = await retrieveBalance(currency, address)
