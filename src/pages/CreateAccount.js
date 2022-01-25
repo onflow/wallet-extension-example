@@ -13,7 +13,7 @@ import Title from "../components/Title"
 import {useHistory} from "react-router-dom"
 import Layout from "../components/Layout"
 import SubmitInput from "../components/SubmitInput"
-// import {derivePrivKey, validateFlowAccountInfo} from "../controllers/accounts"
+import {derivePrivKey, validateFlowAccountInfo} from "../controllers/accounts"
 import {useToast} from "@chakra-ui/toast"
 
 const CreateAccount = ({location}) => {
@@ -29,10 +29,9 @@ const CreateAccount = ({location}) => {
     let privateKey = privKey
     try {
       if (!onPrivateKeyTab) {
-        // privateKey = await derivePrivKey(seedPhrase)
+        privateKey = await derivePrivKey(seedPhrase)
       }
-      // await validateFlowAccountInfo(accountAddress, privateKey, keyID)
-      console.log(privateKey)
+      await validateFlowAccountInfo(accountAddress, privateKey, keyID)
     } catch (e) {
       toast({
         description: e.toString(),

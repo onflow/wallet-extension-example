@@ -1,4 +1,4 @@
-// import configureFcl from '../../flowConfig';
+import configureFcl from "../../flowConfig"
 import FlowAccountManager from "./flowAccountManager"
 let flowMainnetAccountManager = new FlowAccountManager({
   accountStoragePrefix: "flow_mainnet",
@@ -24,10 +24,10 @@ async function loadAccounts() {
       if (res.selectedAccountManager) {
         accountManager = getManager(res.selectedAccountManager)
         // make sure fcl has the correct endpoint for this network
-        // configureFcl(res.selectedAccountManager)
+        configureFcl(res.selectedAccountManager)
       } else {
         accountManager = flowTestnetAccountManager
-        // configureFcl(res.selectedAccountManager)
+        configureFcl(res.selectedAccountManager)
       }
       resolve(true)
     })
@@ -39,7 +39,7 @@ function switchManager(manager) {
   accountManager = getManager(manager)
   // make sure fcl has the correct endpoint for this network
 
-  //configureFcl(manager)
+  configureFcl(manager)
 
   // store which account manager to use at startup
   chrome.storage.local.set({selectedAccountManager: manager})

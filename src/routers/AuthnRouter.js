@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react"
 import {MemoryRouter, Switch, Route} from "react-router"
 import Initial from "../pages/Initial"
 import CreateAccount from "../pages/CreateAccount"
+import SelectAccount from "../pages/SelectAccount"
 import SetPassword from "../pages/SetPassword"
 import LogIn from "../pages/LogIn"
 import Balances from "../pages/Balances"
@@ -94,6 +95,7 @@ function AuthnRouter() {
       <Switch>
         <Route path='/Initial' component={Initial}></Route>
         <Route path='/CreateAccount' component={CreateAccount}></Route>
+        <Route path='/SelectAccount' component={SelectAccount}></Route>
         <Route path='/SetPassword' component={SetPassword}></Route>
         <Route path='/LogIn' component={LogIn}></Route>
         <Route path='/Balances' component={Balances}></Route>

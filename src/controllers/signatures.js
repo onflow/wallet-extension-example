@@ -6,6 +6,7 @@ import * as t from "@onflow/types"
 var Buffer = require("buffer/").Buffer
 const p256 = new EC("p256")
 const secp256 = new EC("secp256k1")
+const ecdsa = new EC("ed25519")
 
 // Takes in a msg that is already in hex form, and a
 // hashAlg in flow's key format for hash algorithms
@@ -27,12 +28,14 @@ const hashMsgHex = (msgHex, hashAlg) => {
 export const sign = async (account, keyID, privateKey, msgHex) => {
   const pubKey = account.getKey(keyID)
 
-  const ec = pubKey.sigAlg === 2 ? p256 : pubKey.sigAlg === 3 ? secp256 : null
+  const ec = pubKey.sigAlg === 2 ? p256 : pubKey.sigAlg === 3 ? secp256 : ecdsa
 
   // We store keys in HEX - so, this privateKey arg
   // is expected to be in hex already
   const key = ec.keyFromPrivate(privateKey)
 
+  console.log("HEX vs EC privKey", privateKey, key)
+  
   const sig = key.sign(hashMsgHex(msgHex, pubKey.hashAlg))
   const n = 32
   const r = sig.r.toArrayLike(Buffer, "be", n)
@@ -46,6 +49,7 @@ export const verifyUserSignature = async (
   signature,
   signedData
 ) => {
+  console.log("verify", rawPublicKey, weight, signature, signedData)
   // TODO: This cadence code should come from a cadence-to-json generated package
   // dedicated to this wallet and all cadence needed for it.
   const CODE = `

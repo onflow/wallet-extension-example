@@ -87,9 +87,10 @@ export const validateFlowAccountInfo = async (
   const account = new FlowAccount({
     address: accountAddress,
   })
+
   await account.addKey(
     keyID,
-    accountInfo,
+    selectedKey.publicKey,
     selectedKey.weight,
     selectedKey.signAlgo,
     selectedKey.hashAlgo
@@ -97,6 +98,7 @@ export const validateFlowAccountInfo = async (
 
   const msg = toHex(`${accountAddress}`)
   const sig = await sign(account, keyID, privKey, prependUserDomainTag(msg))
+
   const verification = await verifyUserSignature(
     selectedKey.publicKey,
     selectedKey.weight,
