@@ -2,7 +2,7 @@ import {keyVault} from "../lib/keyVault"
 import FlowAccount from "../lib/flowAccount"
 import {accountManager} from "../lib/AccountManager"
 import * as fcl from "@onflow/fcl"
-import {sign, verifyUserSignature} from "./signatures"
+import {sign} from "./signatures"
 import {toHex, prependUserDomainTag} from "./helpers"
 
 export const importAccount = async (
@@ -90,7 +90,7 @@ export const validateFlowAccountInfo = async (
 
   await account.addKey(
     keyID,
-    selectedKey.publicKey,
+    accountInfo,
     selectedKey.weight,
     selectedKey.signAlgo,
     selectedKey.hashAlgo
@@ -99,12 +99,13 @@ export const validateFlowAccountInfo = async (
   const msg = toHex(`${accountAddress}`)
   const sig = await sign(account, keyID, privKey, prependUserDomainTag(msg))
 
-  const verification = await verifyUserSignature(
-    selectedKey.publicKey,
-    selectedKey.weight,
-    sig,
-    msg
+  const compSig = new fcl.WalletUtils.CompositeSignature(
+    accountAddress,
+    keyID,
+    sig
   )
+  const verification = await fcl.verifyUserSignatures(msg, [compSig])
+
   if (!verification) {
     throw new Error("Private key not valid for this account")
   }

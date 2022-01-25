@@ -17,6 +17,7 @@
     "buffer": "^6.0.3",
     "elliptic": "^6.5.4",
     "framer-motion": "^4.1.17",
+    "node-forge": "^1.2.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",

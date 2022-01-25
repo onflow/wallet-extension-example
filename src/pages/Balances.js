@@ -3,19 +3,26 @@ import Title from "../components/Title"
 import PopupLayout from "../components/PopupLayout"
 import BalanceCard from "../components/BalanceCard"
 import {Text} from "@chakra-ui/react"
-// import {accountManager} from "../lib/AccountManager"
+import {accountManager} from "../lib/AccountManager"
 
 const Balances = ({}) => {
-  console.log("hit balances")
   const [account, setAccount] = useState(null)
+  useEffect(() => {
+    async function getAccount() {
+      const account = await accountManager.getFavoriteAccount()
+      console.log("get account", account)
+      setAccount(account)
+    }
+    getAccount()
+  }, [])
   /* useEffect(async () => {
     setAccount(await accountManager.getFavoriteAccount())
   }, []) */
 
   useEffect(() => {
     async function getAccount() {
-      // const account = await accountManager.getFavoriteAccount()
-      const account = {address: "0x123"}
+      const account = await accountManager.getFavoriteAccount()
+      //const account = {address: "0x123"}
       setAccount(account)
     }
     getAccount()
