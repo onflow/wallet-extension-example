@@ -10,23 +10,21 @@ const retrieveBalance = async (currency, address) => {
   if (!address) {
     return "--"
   }
-  await getTokenBalance(currency, address)
+  return await getTokenBalance(currency, address)
 }
 
 const BalanceCard = ({currency, address}) => {
   currency = currency.toLowerCase()
   const [balance, setBalance] = useState("--")
+  const ftTokenName = currency === "flow" ? "Flow" : "FUSD"
 
   useEffect(() => {
     async function getBalance() {
-      const balance = await retrieveBalance(currency, address)
-      console.log("get balance", balance)
-      setBalance(balance)
+      setBalance(await retrieveBalance(currency, address))
     }
     getBalance()
   }, [currency, address])
 
-  const ftTokenName = currency === "flow" ? "Flow" : "FUSD"
   return (
     <Box
       bg='#333'
@@ -35,6 +33,7 @@ const BalanceCard = ({currency, address}) => {
       w='100%'
       p='20px'
       fontSize='20px'
+      bg='#222'
       borderRadius='10px'
     >
       <Flex>

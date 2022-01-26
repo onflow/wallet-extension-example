@@ -22,10 +22,7 @@ export default function Authn({location}) {
   const [opener, setOpener] = useState(null)
   const [account, setAccount] = useState(null)
   const history = useHistory()
-  const website =
-    new URLSearchParams(window.location.search).get("l6n") || "https://flow.com"
-
-  console.log("search is", window.location.search)
+  const website = "https://flow.com" // need to get from fcl/contentScript
 
   useEffect(() => {
     /**
@@ -46,21 +43,12 @@ export default function Authn({location}) {
            * The runtime.onMessage event is fired in each content script running
            * in the specified tab for the current extension.
            */
-          console.log("authn send view ready", tabs[0].id)
           setOpener(tabs[0].id)
-          chrome.tabs.sendMessage(
-            tabs[0].id || 0,
-            {type: "FCL:VIEW:READY"},
-            response => {
-              console.log(response)
-            }
-          )
+          chrome.tabs.sendMessage(tabs[0].id || 0, {type: "FCL:VIEW:READY"})
         }
       )
 
     const messagesFromReactAppListener = (msg, sender, sendResponse) => {
-      console.log("[App.js]. Message received", msg)
-
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
         console.log(
           "AUTHN page recieved view ready response",
@@ -79,7 +67,6 @@ export default function Authn({location}) {
     async function getAccount() {
       const account = await accountManager.getFavoriteAccount()
       setAccount(account)
-      WalletUtils.sendMsgToFCL("FCL:VIEW:READY")
     }
     getAccount()
   }, [])
@@ -95,7 +82,6 @@ export default function Authn({location}) {
     const keyId = account.listKeys()[0].id
     const services = authnServiceDefinition(address, keyId)
 
-    console.log("AUTHN SERVICES", services)
     chrome.tabs.sendMessage(parseInt(opener), {
       f_type: "AuthnResponse",
       f_vsn: "1.0.0",

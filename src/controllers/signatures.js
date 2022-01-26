@@ -26,13 +26,8 @@ const hashMsgHex = (msgHex, hashAlg) => {
 
 export const sign = async (account, keyID, privateKey, msgHex) => {
   const pubKey = account.getKey(keyID)
-
-  console.log("account pubKey", pubKey, pubKey.sigAlg)
-  // These codes differ from docs, need to check
   const ec = pubKey.sigAlg === 1 ? p256 : pubKey.sigAlg === 2 ? secp256 : null
-
   const key = ec.keyFromPrivate(Buffer.from(privateKey, "hex"))
-
   const sig = key.sign(hashMsgHex(msgHex, pubKey.hashAlg))
   const n = 32
   const r = sig.r.toArrayLike(Buffer, "be", n)
@@ -46,7 +41,6 @@ export const verifyUserSignature = async (
   signature,
   signedData
 ) => {
-  console.log("verify", rawPublicKey, weight, signature, signedData)
   // TODO: This cadence code should come from a cadence-to-json generated package
   // dedicated to this wallet and all cadence needed for it.
   const CODE = `

@@ -3,7 +3,7 @@ import {HashRouter as Router, Switch, Route} from "react-router-dom"
 import {Box} from "@chakra-ui/react"
 import AuthnRouter from "./routers/AuthnRouter"
 import PopupRouter from "./routers/PopupRouter"
-import Authz from "./pages/Authz"
+import Authz from "./pages/services/Authz"
 import {keyVault} from "./lib/keyVault"
 import {loadAccounts} from "./lib/AccountManager"
 import "./App.css"
@@ -14,57 +14,10 @@ function App() {
   useEffect(() => {
     async function load() {
       await keyVault.loadVault()
-      const accounts = await loadAccounts()
-      console.log("load accounts", accounts)
+      await loadAccounts()
       setLoading(false)
     }
     load()
-  }, [])
-
-  useEffect(() => {
-    /**
-     * We can't use "chrome.runtime.sendMessage" for sending messages from React.
-     * For sending messages from React we need to specify which tab to send it to.
-     */
-    chrome.tabs &&
-      chrome.tabs.query(
-        {
-          active: true,
-          currentWindow: false,
-        },
-        tabs => {
-          /**
-           * Sends a single message to the content script(s) in the specified tab,
-           * with an optional callback to run when a response is sent back.
-           *
-           * The runtime.onMessage event is fired in each content script running
-           * in the specified tab for the current extension.
-           */
-          chrome.tabs.sendMessage(
-            tabs[0].id || 0,
-            {type: "FCL:VIEW:READY"},
-            response => {
-              console.log(response)
-            }
-          )
-        }
-      )
-
-    const messagesFromReactAppListener = (msg, sender, sendResponse) => {
-      console.log("[App.js]. Message received", msg)
-
-      if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        console.log(
-          "recieved view ready response",
-          JSON.parse(JSON.stringify(msg || {}))
-        )
-      }
-    }
-
-    /**
-     * Fired when a message is sent from either an extension process or a content script.
-     */
-    chrome.runtime?.onMessage.addListener(messagesFromReactAppListener)
   }, [])
 
   if (loading) {
@@ -89,7 +42,7 @@ function App() {
             <AuthnRouter />
           </Route>
           <Route exact path='/authz'>
-            <Authz></Authz>
+            <Authz />
           </Route>
         </Switch>
       </Box>

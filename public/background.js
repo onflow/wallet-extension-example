@@ -14,7 +14,6 @@ const messagesFromReactAppListener = (
       },
       tabs => {
         let popUrl = chrome.runtime.getURL(`index.html#/${service.type}`)
-        console.log("pop url", popUrl)
         chrome.windows.create(
           {
             url: popUrl,
@@ -39,32 +38,3 @@ const messagesFromReactAppListener = (
  * Fired when a message is sent from either an extension process or a content script.
  */
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
-
-/* chrome.action.onClicked.addListener(function (tab) {
-  chrome.tabs.query(
-    {
-      active: true,
-      currentWindow: true,
-    },
-    tabs => {
-      let popUrl = chrome.runtime.getURL(`index.html`)
-
-      console.log("popup browser action url", `${popUrl}?opener=${tabs[0].id}`)
-      chrome.windows.create(
-        {
-          url: `${popUrl}?opener=${tabs[0].id}`,
-          type: "popup",
-          height: 598,
-          width: 375,
-          left: 1000,
-        },
-        function (win) {
-          console.log("window obj", win)
-          // win represents the Window object from windows API
-          // Send VIEW READY to content script
-          // here or in react?
-        }
-      )
-    }
-  )
-}) */

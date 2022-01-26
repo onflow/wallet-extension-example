@@ -1,9 +1,9 @@
 export const bgColor = "#fff"
-export const fgColor = "#ff5e41"
-export const primaryColor = "#02ef8b"
+export const fgColor = "#02ef8b"
+export const primaryColor = "#ff5e41"
+export const flowColor = "#02ef8b"
 export const dividerColor = "#666"
 export const secondaryColor = "rgb(40,40,40)"
 export const tertiaryColor = "rgb(10,10,10)"
 export const bgNavbar = "rgb(34,34,34)"
-export const toastDuration = 3000
-export const flowColor = "#02ef8b"
+export const toastDuration = 2500

@@ -28,13 +28,13 @@ function serviceDefinition(address, keyId, type, opts) {
     }
   }
 
-  if (type === "pre-authz") {
+  /*   if (type === "pre-authz") {
     definition.method = "EXT/RPC"
     definition.data = {
       address: address,
       keyId: Number(keyId),
     }
-  }
+  } */
 
   return definition
 }
@@ -53,6 +53,6 @@ export function authnServiceDefinition(address, keyId) {
   return [
     serviceDefinition(address, keyId, "authn"),
     serviceDefinition(address, keyId, "authz"),
-    serviceDefinition(address, keyId, "pre-authz"),
+    // serviceDefinition(address, keyId, "pre-authz"),
   ]
 }

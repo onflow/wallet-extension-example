@@ -5,15 +5,8 @@ import BalanceCard from "../components/BalanceCard"
 import {Text} from "@chakra-ui/react"
 import {accountManager} from "../lib/AccountManager"
 
-const Balances = ({}) => {
+const Balances = () => {
   const [account, setAccount] = useState(null)
-  useEffect(() => {
-    async function getAccount() {
-      const account = await accountManager.getFavoriteAccount()
-      setAccount(account)
-    }
-    getAccount()
-  }, [])
 
   useEffect(() => {
     async function getAccount() {

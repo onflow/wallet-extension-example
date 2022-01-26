@@ -58,6 +58,19 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
       )
   }
 
+  if (msg.f_type && msg.f_type === "PollingResponse") {
+    console.log(
+      "CS: recieved authz response",
+      JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {}))
+    )
+
+    window &&
+      window.postMessage(
+        JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {})),
+        "*"
+      )
+  }
+
   if (msg.type === "FCL:VIEW:CLOSE") {
     console.log(
       "CS: recieved view close",

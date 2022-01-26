@@ -7,7 +7,6 @@ document.addEventListener("_my_custom_event", function (e) {
 })
 
 document.addEventListener("popup_event", function (e) {
-  console.log("event from popup", e.detail.id)
   window && window.postMessage(JSON.parse(JSON.stringify(e || {})), "*")
 })
 
@@ -24,7 +23,7 @@ function buildAuthnService(id) {
       address: "0x1234",
     },
     provider: {
-      address: 0x1234,
+      address: "0x1234",
       name: "Flow Wallet",
       icon: null,
       description: "Flow Non-Custodial Wallet Extension for Chrome",

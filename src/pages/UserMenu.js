@@ -6,7 +6,6 @@ import {accountManager} from "../lib/AccountManager"
 import {keyVault} from "../lib/keyVault"
 import Title from "../components/Title"
 import SelectableListItem from "../components/SelectableListItem"
-import NetworkSelector from "../components/NetworkSelector"
 import Layout from "../components/Layout"
 import * as styles from "../styles"
 
@@ -77,11 +76,6 @@ const UserMenu = ({location}) => {
               isClosable: true,
             })
           }}
-        />
-        <NetworkSelector
-          onChange={async () =>
-            setAccount(await accountManager.getFavoriteAccount())
-          }
         />
       </VStack>
     </Layout>

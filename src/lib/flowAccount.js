@@ -10,7 +10,6 @@ export default class FlowAccount {
   addKey(id, hexKey, weight, sigAlg, hashAlg) {
     // what kind of validations are needed here?
     // should we check no other key has this ID before adding?
-    // console.log("ADD KEY", id, hexKey, weight, sigAlg, hashAlg)
     var key = new FlowPubKey({
       id: id,
       publicKey: hexKey,

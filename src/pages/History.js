@@ -8,7 +8,6 @@ const History = ({}) => {
   useEffect(() => {
     async function getAccount() {
       const account = await accountManager.getFavoriteAccount()
-      console.log("get account", account)
       setAccount(account)
     }
     getAccount()
