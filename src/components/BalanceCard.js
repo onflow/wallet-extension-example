@@ -4,13 +4,13 @@ import {ExternalLinkIcon} from "@chakra-ui/icons"
 import {AiFillDollarCircle} from "react-icons/ai"
 import * as styles from "../styles"
 import FlowLogo from "../assets/flow-logo.png"
-// import {getTokenBalance} from "../controllers/fungibleTokens"
+import {getTokenBalance} from "../controllers/fungibleTokens"
 
 const retrieveBalance = async (currency, address) => {
   if (!address) {
     return "--"
   }
-  return "100" // await getTokenBalance(currency, address)
+  await getTokenBalance(currency, address)
 }
 
 const BalanceCard = ({currency, address}) => {
@@ -35,7 +35,6 @@ const BalanceCard = ({currency, address}) => {
       w='100%'
       p='20px'
       fontSize='20px'
-      bg='#222'
       borderRadius='10px'
     >
       <Flex>
