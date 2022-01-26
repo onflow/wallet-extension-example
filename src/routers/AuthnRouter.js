@@ -12,7 +12,6 @@ import Authn from "../pages/services/Authn"
 function AuthnRouter() {
   const [loading, setLoading] = useState(true)
   const [initial, setInitial] = useState(null)
-  const [opener, setOpener] = useState(null)
 
   useEffect(() => {
     async function setRoute() {
@@ -35,53 +34,6 @@ function AuthnRouter() {
       setLoading(false)
     }
     setRoute()
-  }, [])
-
-  useEffect(() => {
-    /**
-     * We can't use "chrome.runtime.sendMessage" for sending messages from React.
-     * For sending messages from React we need to specify which tab to send it to.
-     */
-    chrome.tabs &&
-      chrome.tabs.query(
-        {
-          active: true,
-          currentWindow: false,
-        },
-        tabs => {
-          /**
-           * Sends a single message to the content script(s) in the specified tab,
-           * with an optional callback to run when a response is sent back.
-           *
-           * The runtime.onMessage event is fired in each content script running
-           * in the specified tab for the current extension.
-           */
-          setOpener(tabs[0].id)
-          chrome.tabs.sendMessage(
-            tabs[0].id || 0,
-            {type: "FCL:VIEW:READY"},
-            response => {
-              console.log(response)
-            }
-          )
-        }
-      )
-
-    const messagesFromReactAppListener = (msg, sender, sendResponse) => {
-      console.log("[App.js]. Message received", msg)
-
-      if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        console.log(
-          "recieved view ready response",
-          JSON.parse(JSON.stringify(msg || {}))
-        )
-      }
-    }
-
-    /**
-     * Fired when a message is sent from either an extension process or a content script.
-     */
-    chrome.runtime?.onMessage.addListener(messagesFromReactAppListener)
   }, [])
 
   if (loading) {

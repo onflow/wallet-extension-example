@@ -9,7 +9,6 @@ import {loadAccounts} from "./lib/AccountManager"
 import "./App.css"
 
 function App() {
-  const [opener, setOpener] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -41,7 +40,6 @@ function App() {
            * The runtime.onMessage event is fired in each content script running
            * in the specified tab for the current extension.
            */
-          setOpener(tabs[0].id)
           chrome.tabs.sendMessage(
             tabs[0].id || 0,
             {type: "FCL:VIEW:READY"},
@@ -82,7 +80,6 @@ function App() {
         p={0}
         m={0}
         background='transparent'
-        //zIndex='-1'
       >
         <Switch>
           <Route exact path='/'>

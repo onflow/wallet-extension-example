@@ -1,94 +1,73 @@
-import React, {useEffect, useState} from "react"
-import {Button} from "@chakra-ui/react"
+import React, {useState} from "react"
+import {Img, Button} from "@chakra-ui/react"
+import FlowWalletImg from "../assets/flow-logo.png"
+import * as styles from "../styles"
+import {useHistory} from "react-router-dom"
+import Title from "../components/Title"
+import {accountManager} from "../lib/AccountManager"
+import {keyVault} from "../lib/keyVault"
+import {useToast} from "@chakra-ui/toast"
+import Layout from "../components/Layout"
+import SubmitInput from "../components/SubmitInput"
 
-function LogIn() {
-  const [opener, setOpener] = useState(null)
+const FirstTime = ({location}) => {
+  const [password, setPassword] = useState("")
 
-  function sendAuthnToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), {
-      f_type: "AuthnResponse",
-      f_vsn: "1.0.0",
-      addr: "0x1",
-      services: [
-        {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authn",
-          uid: "fcl-dev-wallet#authn",
-          endpoint: `fcl/authn`,
-          id: "0x1",
-          identity: {
-            address: "0x1",
-          },
-          provider: {
-            address: null,
-            name: "FCL Dev Wallet",
-            icon: null,
-            description: "For Local Development Only",
-          },
-        },
-        {
-          f_type: "Service",
-          f_vsn: "1.0.0",
-          type: "authz",
-          uid: "fcl-dev-wallet#authz",
-          endpoint: `fcl/authz`,
-          method: "IFRAME/RPC",
-          identity: {
-            address: "0x1",
-            keyId: Number(0),
-          },
-        },
-      ],
-    })
-  }
-  useEffect(() => {
-    /**
-     * We can't use "chrome.runtime.sendMessage" for sending messages from React.
-     * For sending messages from React we need to specify which tab to send it to.
-     */
-    chrome.tabs &&
-      chrome.tabs.query(
-        {
-          active: true,
-          currentWindow: false,
-        },
-        tabs => {
-          /**
-           * Sends a single message to the content script(s) in the specified tab,
-           * with an optional callback to run when a response is sent back.
-           *
-           * The runtime.onMessage event is fired in each content script running
-           * in the specified tab for the current extension.
-           */
-          setOpener(tabs[0].id)
-          chrome.tabs.sendMessage(
-            tabs[0].id || 0,
-            {type: "FCL:VIEW:READY"},
-            response => {
-              console.log(response)
-            }
-          )
-        }
-      )
+  const history = useHistory()
+  const toast = useToast()
 
-    const messagesFromReactAppListener = (msg, sender, sendResponse) => {
-      console.log("[App.js]. Message received", msg)
-
-      if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        console.log(
-          "recieved view ready response",
-          JSON.parse(JSON.stringify(msg || {}))
-        )
+  const submitPassword = async () => {
+    try {
+      await keyVault.unlockVault(password)
+      const address = await accountManager.getFavoriteAccount()
+      if (address) {
+        history.push({
+          pathname: "/Balances",
+        })
+      } else {
+        history.push({
+          pathname: "/SelectAccount",
+        })
       }
+    } catch (e) {
+      toast({
+        description: "Invalid password",
+        status: "error",
+        duration: styles.toastDuration,
+        isClosable: true,
+      })
     }
+  }
 
-    /**
-     * Fired when a message is sent from either an extension process or a content script.
-     */
-    chrome.runtime?.onMessage.addListener(messagesFromReactAppListener)
-  }, [])
-  return <Button onClick={sendAuthnToFCL}>LOGIN</Button>
+  return (
+    <Layout
+      withGoBack={location && location.state && location.state.withGoBack}
+    >
+      <Img src={FlowWalletImg} />
+      <Title mt='20px'>Unlock Wallet</Title>
+      <SubmitInput
+        mt='20px'
+        type='password'
+        placeholder='Enter Password'
+        maxW='200px'
+        mx='auto'
+        value={password}
+        onChange={e => {
+          setPassword(e.target.value)
+        }}
+        onEnter={submitPassword}
+      />
+      <Button
+        bg={styles.primaryColor}
+        onClick={submitPassword}
+        maxW='200px'
+        mt='32px'
+        mx='auto'
+      >
+        Continue
+      </Button>
+    </Layout>
+  )
 }
 
-export default LogIn
+export default FirstTime

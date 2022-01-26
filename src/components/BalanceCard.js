@@ -18,12 +18,12 @@ const BalanceCard = ({currency, address}) => {
   const [balance, setBalance] = useState("--")
 
   useEffect(() => {
-    async function getAccounts() {
+    async function getBalance() {
       const balance = await retrieveBalance(currency, address)
-      console.log("get accounts", balance)
+      console.log("get balance", balance)
       setBalance(balance)
     }
-    getAccounts()
+    getBalance()
   }, [currency, address])
 
   const ftTokenName = currency === "flow" ? "Flow" : "FUSD"
