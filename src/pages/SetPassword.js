@@ -64,14 +64,14 @@ const SetPassword = ({location}) => {
           state: {type: "create"},
         })
         toast({
-          description: `Account Imported!`,
+          description: `Account Created!`,
           status: "success",
           duration: styles.toastDuration,
           isClosable: true,
         })
       } catch (e) {
         toast({
-          description: `Failed to import account - ${e.message}`,
+          description: `Failed to create account - ${e.message}`,
           status: "error",
           duration: styles.toastDuration,
           isClosable: true,

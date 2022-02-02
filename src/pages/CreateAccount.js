@@ -44,7 +44,6 @@ const CreateAccount = ({location}) => {
     const key = p256.genKeyPair()
     const pubKey = key.getPublic("hex").slice(2)
     const privateKey = key.getPrivate("hex")
-    console.log(pubKey, privateKey)
     const data = {
       publicKey: pubKey,
       signatureAlgorithm: "ECDSA_P256",
@@ -54,7 +53,6 @@ const CreateAccount = ({location}) => {
       "https://hardware-wallet-api-testnet.staging.onflow.org/accounts"
 
     try {
-      console.log("create new account", privateKey)
       let response = await fetch(url, {
         method: "POST",
         headers: {
