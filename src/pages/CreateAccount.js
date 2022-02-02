@@ -125,12 +125,12 @@ const CreateAccount = ({location}) => {
     >
       {location.state.type === "create" ? (
         <>
-          <Title align='left'>Creating Flow Account...</Title>
+          <Title align='center'>Creating Flow Account...</Title>
           <LoadingSpinner />
         </>
       ) : (
         <>
-          <Title align='left'>Import Flow Account</Title>
+          <Title align='center'>Import Flow Account</Title>
           <SubmitInput
             onChange={e => {
               setAccountAddress(e.target.value)
