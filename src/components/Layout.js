@@ -21,10 +21,12 @@ const Layout = ({children, withGoBack, title}) => {
       }}
     >
       <Flex direction='column' w='100%' h='100%' p='20px'>
-        <div>
+        <Flex direction='row'>
           <GoBack shouldShow={withGoBack} />
-          <Title align='center'>{title}</Title>
-        </div>
+          <Box flex='1'>
+            <Title align='left'>{title}</Title>
+          </Box>
+        </Flex>
         <Box h='20px' />
         {children}
       </Flex>
