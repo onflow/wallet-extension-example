@@ -37,6 +37,7 @@ const CreateAccount = ({location}) => {
   const [seedPhrase, setSeedPhrase] = useState("")
   const [keyID, setKeyID] = useState("0")
   const [onPrivateKeyTab, setOnPrivateKeyTab] = useState(true)
+  const [pageTitle, setPageTitle] = useState("")
 
   const createAccount = async () => {
     let account
@@ -114,6 +115,8 @@ const CreateAccount = ({location}) => {
   }
 
   useEffect(() => {
+    setPageTitle(location.state.type === 'create' ? 'Creating Flow Account' : 'Import Flow Account')
+
     if (location.state.type === "create") {
       createAccount()
     }
@@ -122,15 +125,14 @@ const CreateAccount = ({location}) => {
   return (
     <Layout
       withGoBack={location && location.state && location.state.withGoBack}
+      title={pageTitle}
     >
       {location.state.type === "create" ? (
         <>
-          <Title align='center'>Creating Flow Account...</Title>
           <LoadingSpinner />
         </>
       ) : (
         <>
-          <Title align='center'>Import Flow Account</Title>
           <SubmitInput
             onChange={e => {
               setAccountAddress(e.target.value)

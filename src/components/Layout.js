@@ -2,8 +2,9 @@ import React from "react"
 import {Box, Flex} from "@chakra-ui/react"
 import GoBack from "./GoBack"
 import * as styles from "../styles"
+import Title from "./Title"
 
-const Layout = ({children, withGoBack}) => {
+const Layout = ({children, withGoBack, title}) => {
   return (
     <Box
       w={"375px"}
@@ -20,7 +21,10 @@ const Layout = ({children, withGoBack}) => {
       }}
     >
       <Flex direction='column' w='100%' h='100%' p='20px'>
-        <GoBack shouldShow={withGoBack} />
+        <div>
+          <GoBack shouldShow={withGoBack} />
+          <Title align='center'>{title}</Title>
+        </div>
         <Box h='20px' />
         {children}
       </Flex>
