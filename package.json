@@ -29,6 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "INLINE_RUNTIME_CHUNK=false react-scripts build",
+    "dev-build": "nodemon --watch src --exec \"npm run build\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -52,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
