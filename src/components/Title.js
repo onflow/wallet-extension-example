@@ -6,7 +6,7 @@ const Title = ({children, align}) => {
     <Text
       fontWeight='semibold'
       textAlign={align ? align : "center"}
-      fontSize='3xl'
+      fontSize='2xl'
     >
       {children}
     </Text>

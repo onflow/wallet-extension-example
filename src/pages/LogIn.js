@@ -59,6 +59,7 @@ const FirstTime = ({location}) => {
       />
       <Button
         bg={styles.primaryColor}
+        color={styles.whiteColor}
         onClick={submitPassword}
         maxW='200px'
         mt='32px'

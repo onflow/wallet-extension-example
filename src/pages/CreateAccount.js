@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {
   Button,
   Tabs,
@@ -7,15 +7,17 @@ import {
   TabList,
   Tab,
   Spacer,
+  Box,
+  Flex
 } from "@chakra-ui/react"
 import * as styles from "../styles"
-import Title from "../components/Title"
 import {useHistory} from "react-router-dom"
 import Layout from "../components/Layout"
 import SubmitInput from "../components/SubmitInput"
 import {derivePrivKey, validateFlowAccountInfo} from "../controllers/accounts"
 import {useToast} from "@chakra-ui/toast"
 import {ec as EC} from "elliptic"
+import LoadingSpinner from "../components/LoadingSpinner"
 const p256 = new EC("p256")
 
 export function ECDSAPublicKey(algo, keyPair) {
@@ -36,6 +38,7 @@ const CreateAccount = ({location}) => {
   const [seedPhrase, setSeedPhrase] = useState("")
   const [keyID, setKeyID] = useState("0")
   const [onPrivateKeyTab, setOnPrivateKeyTab] = useState(true)
+  const [pageTitle, setPageTitle] = useState("")
 
   const createAccount = async () => {
     let account
@@ -112,28 +115,25 @@ const CreateAccount = ({location}) => {
     })
   }
 
+  useEffect(() => {
+    setPageTitle(location.state.type === 'create' ? 'Creating Flow Account' : 'Import Flow Account')
+
+    if (location.state.type === "create") {
+      createAccount()
+    }
+  }, [location.state.type])
+
   return (
     <Layout
       withGoBack={location && location.state && location.state.withGoBack}
+      title={pageTitle}
     >
       {location.state.type === "create" ? (
-        <>
-          <Title align='left'>Create Flow Account</Title>
-          <Button
-            onClick={createAccount}
-            textAlign='center'
-            m='16'
-            bg={styles.secondaryColor}
-            mx='auto'
-            maxW='150px'
-            mt='4'
-          >
-            Generate Key Pair
-          </Button>
-        </>
+        <Flex direction='row' w='100%' h='100%' align='center' justify='center'>
+          <LoadingSpinner />
+        </Flex>
       ) : (
         <>
-          <Title align='left'>Import Flow Account</Title>
           <SubmitInput
             onChange={e => {
               setAccountAddress(e.target.value)
@@ -227,6 +227,7 @@ const CreateAccount = ({location}) => {
             textAlign='center'
             m='16'
             bg={styles.secondaryColor}
+            color={styles.whiteColor}
             mx='auto'
             maxW='150px'
             mt='4'
