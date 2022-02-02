@@ -9,7 +9,6 @@ import {
   Spacer,
 } from "@chakra-ui/react"
 import * as styles from "../styles"
-import Title from "../components/Title"
 import {useHistory} from "react-router-dom"
 import Layout from "../components/Layout"
 import SubmitInput from "../components/SubmitInput"
