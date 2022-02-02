@@ -7,6 +7,8 @@ import {
   TabList,
   Tab,
   Spacer,
+  Box,
+  Flex
 } from "@chakra-ui/react"
 import * as styles from "../styles"
 import {useHistory} from "react-router-dom"
@@ -127,9 +129,9 @@ const CreateAccount = ({location}) => {
       title={pageTitle}
     >
       {location.state.type === "create" ? (
-        <>
+        <Flex direction='row' w='100%' h='100%' align='center' justify='center'>
           <LoadingSpinner />
-        </>
+        </Flex>
       ) : (
         <>
           <SubmitInput
