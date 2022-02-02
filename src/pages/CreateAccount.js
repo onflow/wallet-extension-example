@@ -227,6 +227,7 @@ const CreateAccount = ({location}) => {
             textAlign='center'
             m='16'
             bg={styles.secondaryColor}
+            color={styles.whiteColor}
             mx='auto'
             maxW='150px'
             mt='4'

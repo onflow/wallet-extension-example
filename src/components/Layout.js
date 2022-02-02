@@ -11,7 +11,6 @@ const Layout = ({children, withGoBack, title}) => {
       h={"600px"}
       bg={styles.bgColor}
       color={styles.fgColor}
-      bgGradient={`linear(to-t, ${styles.bgColor}, gray.900)`}
       overflowX='hidden'
       overflowY='scroll'
       css={{

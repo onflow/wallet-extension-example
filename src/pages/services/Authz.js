@@ -140,6 +140,7 @@ export default function Authz() {
               textAlign='center'
               mt='4'
               bg={styles.primaryColor}
+              color={styles.whiteColor}
               mx='auto'
               maxW='150px'
             >

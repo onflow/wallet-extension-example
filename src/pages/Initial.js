@@ -26,6 +26,7 @@ const Initial = ({location}) => {
         maxW='150px'
         textAlign='center'
         bg={styles.primaryColor}
+        color={styles.whiteColor}
       >
         Create Account
       </Button>
@@ -45,6 +46,7 @@ const Initial = ({location}) => {
         maxW='150px'
         textAlign='center'
         bg={styles.secondaryColor}
+        color={styles.whiteColor}
       >
         Import Account
       </Button>
