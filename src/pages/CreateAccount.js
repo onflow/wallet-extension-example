@@ -34,7 +34,7 @@ const CreateAccount = ({location}) => {
   const [accountAddress, setAccountAddress] = useState("")
   const [privKey, setPrivKey] = useState("")
   const [seedPhrase, setSeedPhrase] = useState("")
-  const [keyID, setKeyID] = useState("")
+  const [keyID, setKeyID] = useState("0")
   const [onPrivateKeyTab, setOnPrivateKeyTab] = useState(true)
 
   const createAccount = async () => {
@@ -64,8 +64,7 @@ const CreateAccount = ({location}) => {
         body: JSON.stringify(data),
       })
       account = await response.json()
-      console.log("new account", account)
-      await validateFlowAccountInfo(account.address, privateKey, "0")
+      await validateFlowAccountInfo(account.address, privateKey, keyID)
     } catch (e) {
       toast({
         description: e.toString(),
@@ -80,7 +79,7 @@ const CreateAccount = ({location}) => {
       state: {
         ...location.state,
         privKey: privateKey,
-        keyID: "0",
+        keyID,
         accountAddress: account.address,
         withGoBack: true,
       },
