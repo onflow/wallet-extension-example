@@ -37,7 +37,6 @@ const CreateAccount = ({location}) => {
   const [seedPhrase, setSeedPhrase] = useState("")
   const [keyID, setKeyID] = useState("0")
   const [onPrivateKeyTab, setOnPrivateKeyTab] = useState(true)
-  const [pageState, setPageState] = useState()
 
   const createAccount = async () => {
     let account
