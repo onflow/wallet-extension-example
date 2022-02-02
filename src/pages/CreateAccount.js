@@ -65,7 +65,7 @@ const CreateAccount = ({location}) => {
       })
       account = await response.json()
       console.log("new account", account)
-      await validateFlowAccountInfo(account.address, privateKey, 0)
+      await validateFlowAccountInfo(account.address, privateKey, "0")
     } catch (e) {
       toast({
         description: e.toString(),
@@ -80,7 +80,7 @@ const CreateAccount = ({location}) => {
       state: {
         ...location.state,
         privKey: privateKey,
-        keyID: keyID,
+        keyID: "0",
         accountAddress: account.address,
         withGoBack: true,
       },

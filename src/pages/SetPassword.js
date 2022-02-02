@@ -57,11 +57,26 @@ const SetPassword = ({location}) => {
         })
       }
     } else {
-      // TODO: Implement create account
-      toast({
-        description: "Not implemented yet",
-        status: "error",
-      })
+      try {
+        await importAccount(accountAddress, privKey, keyID, pwd)
+        history.push({
+          pathname: "/Balances",
+          state: {type: "create"},
+        })
+        toast({
+          description: `Account Imported!`,
+          status: "success",
+          duration: styles.toastDuration,
+          isClosable: true,
+        })
+      } catch (e) {
+        toast({
+          description: `Failed to import account - ${e.message}`,
+          status: "error",
+          duration: styles.toastDuration,
+          isClosable: true,
+        })
+      }
     }
     setLoading(false)
   }
