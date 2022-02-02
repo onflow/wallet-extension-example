@@ -3,7 +3,7 @@ import {Text, Button, useToast} from "@chakra-ui/react"
 import Title from "../components/Title"
 import GoBack from "../components/GoBack"
 import * as styles from "../styles"
-import {importAccount} from "../controllers/accounts"
+import {createOrImportAccount} from "../controllers/accounts"
 import {useHistory} from "react-router"
 import {keyVault} from "../lib/keyVault"
 import Layout from "../components/Layout"
@@ -37,7 +37,7 @@ const SetPassword = ({location}) => {
     setLoading(true)
     if (actionType === "import") {
       try {
-        await importAccount(accountAddress, privKey, keyID, pwd)
+        await createOrImportAccount(accountAddress, privKey, keyID, pwd)
         history.push({
           pathname: "/Balances",
           state: {type: "create"},
@@ -58,7 +58,7 @@ const SetPassword = ({location}) => {
       }
     } else {
       try {
-        await importAccount(accountAddress, privKey, keyID, pwd)
+        await createOrImportAccount(accountAddress, privKey, keyID, pwd)
         history.push({
           pathname: "/Balances",
           state: {type: "create"},

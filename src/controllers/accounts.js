@@ -5,7 +5,7 @@ import * as fcl from "@onflow/fcl"
 import {sign} from "./signatures"
 import {toHex, prependUserDomainTag} from "./helpers"
 
-export const importAccount = async (
+export const createOrImportAccount = async (
   accountAddress,
   privKey,
   keyID,
