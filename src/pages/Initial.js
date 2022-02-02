@@ -26,7 +26,6 @@ const Initial = ({location}) => {
         maxW='150px'
         textAlign='center'
         bg={styles.primaryColor}
-        isDisabled={true}
       >
         Create Account
       </Button>
