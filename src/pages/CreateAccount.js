@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {
   Button,
   Tabs,
@@ -16,6 +16,7 @@ import SubmitInput from "../components/SubmitInput"
 import {derivePrivKey, validateFlowAccountInfo} from "../controllers/accounts"
 import {useToast} from "@chakra-ui/toast"
 import {ec as EC} from "elliptic"
+import LoadingSpinner from "../components/LoadingSpinner"
 const p256 = new EC("p256")
 
 export function ECDSAPublicKey(algo, keyPair) {
@@ -36,6 +37,7 @@ const CreateAccount = ({location}) => {
   const [seedPhrase, setSeedPhrase] = useState("")
   const [keyID, setKeyID] = useState("0")
   const [onPrivateKeyTab, setOnPrivateKeyTab] = useState(true)
+  const [pageState, setPageState] = useState()
 
   const createAccount = async () => {
     let account
@@ -112,24 +114,20 @@ const CreateAccount = ({location}) => {
     })
   }
 
+  useEffect(() => {
+    if (location.state.type === "create") {
+      createAccount()
+    }
+  }, [location.state.type])
+
   return (
     <Layout
       withGoBack={location && location.state && location.state.withGoBack}
     >
       {location.state.type === "create" ? (
         <>
-          <Title align='left'>Create Flow Account</Title>
-          <Button
-            onClick={createAccount}
-            textAlign='center'
-            m='16'
-            bg={styles.secondaryColor}
-            mx='auto'
-            maxW='150px'
-            mt='4'
-          >
-            Generate Key Pair
-          </Button>
+          <Title align='left'>Creating Flow Account...</Title>
+          <LoadingSpinner />
         </>
       ) : (
         <>
