@@ -8,7 +8,7 @@ import {
   Tab,
   Spacer,
   Box,
-  Flex
+  Flex,
 } from "@chakra-ui/react"
 import * as styles from "../styles"
 import {useHistory} from "react-router-dom"
@@ -116,7 +116,11 @@ const CreateAccount = ({location}) => {
   }
 
   useEffect(() => {
-    setPageTitle(location.state.type === 'create' ? 'Creating Flow Account' : 'Import Flow Account')
+    setPageTitle(
+      location.state.type === "create"
+        ? "Creating Flow Account"
+        : "Import Flow Account"
+    )
 
     if (location.state.type === "create") {
       createAccount()

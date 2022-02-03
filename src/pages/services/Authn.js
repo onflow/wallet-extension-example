@@ -133,20 +133,6 @@ export default function Authn({location}) {
           </Center>
         </Flex>
       </Box>
-      <Button
-        onClick={() =>
-          history.push({
-            pathname: "/SelectAccount",
-            state: {withGoBack: true},
-          })
-        }
-        w='200px'
-        mx='auto'
-        bg={styles.tertiaryColor}
-        mt='18px'
-      >
-        Switch Account
-      </Button>
       <Spacer />
       <Flex>
         <Spacer />
@@ -166,6 +152,7 @@ export default function Authn({location}) {
           textAlign='center'
           mt='4'
           bg={styles.primaryColor}
+          color={styles.whiteColor}
           mx='auto'
           maxW='150px'
         >
