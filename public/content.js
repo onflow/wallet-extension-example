@@ -21,6 +21,14 @@ window.addEventListener("message", function (event) {
     chrome.runtime.sendMessage(event.data)
   }
 })
+// Listener for Flow Transaction
+window.addEventListener("FLOW::TX", function (event) {
+  console.log("FLOW::TX Message Received from window in contentScript", {
+    type: "FLOW::TX",
+    ...event.detail,
+  })
+  chrome.runtime.sendMessage({type: "FLOW::TX", ...event.detail})
+})
 
 const messagesFromReactAppListener = (msg, sender, sendResponse) => {
   console.log("[content.js]. Message received", msg)

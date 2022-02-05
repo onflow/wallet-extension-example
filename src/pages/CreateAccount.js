@@ -20,16 +20,6 @@ import {ec as EC} from "elliptic"
 import LoadingSpinner from "../components/LoadingSpinner"
 const p256 = new EC("p256")
 
-export function ECDSAPublicKey(algo, keyPair) {
-  if (!(this instanceof ECDSAPublicKey))
-    return new ECDSAPublicKey(algo, keyPair)
-  this.algo = algo
-  this.keyPair = keyPair
-  this.toBuffer = () => {
-    return Buffer.from(this.keyPair.getPublic("hex"), "hex")
-  }
-}
-
 const CreateAccount = ({location}) => {
   const history = useHistory()
   const toast = useToast()
