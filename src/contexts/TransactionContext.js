@@ -18,12 +18,12 @@ export const useTransaction = () => useContext(TransactionContext)
 
 export default function TransactionProvider({children}) {
   const [transactionInProgress, setTransactionInProgress] = useState(false)
-  const [transactionStatus, setTransactionStatus] = useState(-1)
+  const [transactionStatus, setTransactionStatus] = useState()
   const [txId, setTxId] = useState("")
 
   function initTransactionState() {
     setTransactionInProgress(true)
-    setTransactionStatus(-1)
+    setTransactionStatus(null)
   }
 
   const value = {
