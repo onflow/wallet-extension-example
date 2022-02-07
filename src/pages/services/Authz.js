@@ -283,31 +283,32 @@ export default function Authz() {
                       </VStack>
                     </Box>
                     <Spacer />
-                    <Flex>
-                      <Spacer />
-                      <Button
-                        onClick={sendCancelToFCL}
-                        textAlign='center'
-                        mt='4'
-                        bg={styles.tertiaryColor}
-                        mx='auto'
-                        mr='16px'
-                        maxW='150px'
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={sendAuthzToFCL}
-                        textAlign='center'
-                        mt='4'
-                        bg={styles.primaryColor}
-                        color={styles.whiteColor}
-                        mx='auto'
-                        maxW='150px'
-                        isLoading={loading}
-                      >
-                        Confirm
-                      </Button>
+                    <Flex direction='row' align='center' justify='center'>
+                      <div>
+                        <Button
+                          onClick={sendCancelToFCL}
+                          textAlign='center'
+                          mt='4'
+                          bg={styles.tertiaryColor}
+                          mx='auto'
+                          mr='16px'
+                          maxW='150px'
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={sendAuthzToFCL}
+                          textAlign='center'
+                          mt='4'
+                          bg={styles.primaryColor}
+                          color={styles.whiteColor}
+                          mx='auto'
+                          maxW='150px'
+                          isLoading={loading}
+                        >
+                          Confirm
+                        </Button>
+                      </div>
                     </Flex>
                   </>
                 )
