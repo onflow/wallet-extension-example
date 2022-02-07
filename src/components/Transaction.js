@@ -1,10 +1,16 @@
 import {useTransaction} from "../contexts/TransactionContext"
-import {Box} from "@chakra-ui/react"
+import {Box, Text, Button} from "@chakra-ui/react"
+import * as styles from "../styles"
 
 function Transaction() {
   const {transactionStatus, txId, transactionInProgress} = useTransaction()
 
   const STATUS_DETAILS = {
+    "null": {
+      name: "Unknown",
+      message: "Waiting for transaction approval.",
+      progressIndeterminate: true
+    },
     "0": {
       name: "Unknown",
       message: "Waiting for transaction approval.",
@@ -45,29 +51,46 @@ function Transaction() {
     const statusKey = String(transactionStatus)
 
     return (
-      <Box bg={"gray.700"} rounded={{md: "lg"}} shadow='base' overflow='hidden'>
-        <div>
+      <Box p='6' bg={"gray.700"} borderWidth='1px' borderRadius='lg'>
+        <Box>
           <span className='txId'>
             <a href={`https://testnet.flowscan.org/transaction/${txId}`}>
-              {txId?.slice(0, 8)}
+             <Text as='em'>Tx ID:</Text> <Text as='u'>{txId?.slice(0, 8)}</Text>
             </a>
           </span>
-          <span>
-            <kbd>{STATUS_DETAILS[statusKey].name}</kbd>
-            <small>
-              {" "}
-              {STATUS_DETAILS[statusKey].message}
-            </small>
-          </span>
+          <Text fontSize='lg'><strong>{STATUS_DETAILS[statusKey].name}</strong></Text>
+          <Text as='i'>{STATUS_DETAILS[statusKey].message}</Text>
           {!STATUS_DETAILS[statusKey].hideProgress && 
-            <progress indeterminate={STATUS_DETAILS[statusKey].progressIndeterminate} min='0' max='100' value={STATUS_DETAILS[statusKey].progressValue}>
-              {STATUS_DETAILS[statusKey].progressText}
-            </progress>
+            <div>
+              <progress indeterminate={STATUS_DETAILS[statusKey].progressIndeterminate} min='0' max='100' value={STATUS_DETAILS[statusKey].progressValue}>
+                {STATUS_DETAILS[statusKey].progressText}
+              </progress>
+            </div>
           }
-        </div>
-        <small>
-          <a href='https://docs.onflow.org/access-api/'>More info</a>
-        </small>
+          <div>
+            <Text as='u'>
+              <a
+                href={`https://testnet.flowscan.org/transaction/${txId}`}
+                target='_blank'
+                and
+                rel='noopener noreferrer'
+              >
+                View Transaction Details
+              </a>
+            </Text>
+          </div>
+        </Box>
+        <Button
+          onClick={() => window.close()}
+          textAlign='center'
+          mt='4'
+          bg={styles.tertiaryColor}
+          mx='auto'
+          mr='16px'
+          maxW='150px'
+        >
+          Close
+        </Button>
       </Box>
     )
   } else {
