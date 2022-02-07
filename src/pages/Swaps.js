@@ -6,12 +6,11 @@ import {accountManager} from "../lib/AccountManager"
 import {Tabs, TabList, Tab, TabPanels, TabPanel, Text} from "@chakra-ui/react"
 import * as styles from "../styles"
 
-const Swaps = ({}) => {
+const Swaps = () => {
   const [account, setAccount] = useState(null)
   useEffect(() => {
     async function getAccount() {
       const account = await accountManager.getFavoriteAccount()
-      console.log("get account", account)
       setAccount(account)
     }
     getAccount()

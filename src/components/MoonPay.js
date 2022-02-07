@@ -1,9 +1,7 @@
 import React from "react"
-import {Flex, Text} from "@chakra-ui/react"
+import {Flex} from "@chakra-ui/react"
 
-// TODO: This is a the test zaycodes moonpay api key,
-// a live one is needed for production
-const PUBLISHABLE_MOONPAY_API_KEY = `pk_test_rIUlRjwx0pIDzKEvyLqTQ61nFn116Hb`
+const PUBLISHABLE_MOONPAY_API_KEY = ``
 
 const MoonPay = accountAddress => {
   const moonPayUrl = `https://buy-staging.moonpay.com?apiKey=${PUBLISHABLE_MOONPAY_API_KEY}&walletAddress=${accountAddress}&defaultCurrencyCode=flow`
