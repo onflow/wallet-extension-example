@@ -33,7 +33,10 @@ export default function Authz() {
   const [password, setPassword] = useState(null)
   const [loading, setLoading] = useState(false)
   const [txResult, setTxResult] = useState(null)
-  const {initTransactionState, setTxId, setTransactionStatus} = useTransaction()
+  const [txView, setTxView] = useState("detail")
+
+  const {initTransactionState, setTxId, setTransactionStatus, txId} =
+    useTransaction()
   const toast = useToast()
 
   const website = "https://flow.com" // need to get from fcl/contentScript
@@ -70,10 +73,11 @@ export default function Authz() {
         setTxId(msg.txId)
         fcl.tx(msg.txId).subscribe(txStatus => {
           setTransactionStatus(txStatus.status)
+          // TODO handle other results
           if (txStatus.status === 4) {
             setTxResult(txStatus.statusString)
+            setTxView("result")
           }
-          console.log("TX:STATUS", msg.txId, txStatus)
         })
       }
     }
@@ -99,8 +103,6 @@ export default function Authz() {
 
   async function sendAuthzToFCL() {
     initTransactionState()
-
-    setLoading(true)
     const signedMessage = await createSignature(
       signable.message,
       signable.addr,
@@ -118,8 +120,7 @@ export default function Authz() {
         signedMessage
       ),
     })
-    // setLoading(false)
-    // window.close()
+    setTxView("sent")
   }
 
   function sendCancelToFCL() {
@@ -132,8 +133,18 @@ export default function Authz() {
       <VStack spacing={4} align='stretch'>
         <Title align='center'>Transaction Confirmed</Title>
         <Box p={5} shadow='md' borderWidth='1px'>
-          <Heading fontSize='xl'> {txResult}</Heading>
+          <Heading fontSize='xl'>{txResult}</Heading>
           <Text mt={4}>"Your transaction was successful..."</Text>
+          <span className='txId'>
+            <a
+              href={`https://testnet.flowscan.org/transaction/${txId}`}
+              target='_blank'
+              and
+              rel='noopener noreferrer'
+            >
+              view transaction details
+            </a>
+          </span>
         </Box>
         <Box>
           <Button
@@ -190,127 +201,134 @@ export default function Authz() {
             </Flex>
           </>
         ) : (
-          <>
-            {!loading && !txResult ? (
-              <>
-                <Title align='center'>Confirm Transaction</Title>
-                <Box mx='auto' w='280px'>
-                  <Text
-                    mt='32px'
-                    fontWeight='bold'
-                    fontSize='20px'
-                    color={"white"}
-                  >
-                    {website}
-                  </Text>
-                  <br />
-                  <Text fontSize='18px' mt='12px'>
-                    Estimated Fees
-                  </Text>
-                  <VStack
-                    mt='8px'
-                    p='12px'
-                    borderTopWidth='3px'
-                    borderBottomWidth='3px'
-                    borderColor='gray.500'
-                  >
-                    <Center>
+          (() => {
+            switch (txView) {
+              case "detail":
+                return (
+                  <>
+                    <Title align='center'>Confirm Transaction</Title>
+                    <Box mx='auto' w='280px'>
                       <Text
-                        align='center'
-                        color='gray.100'
-                        textAlign='center'
-                        fontWeight='medium'
-                        fontSize='16px'
+                        mt='32px'
+                        fontWeight='bold'
+                        fontSize='20px'
+                        color={"white"}
                       >
-                        Flow ₣0.0001
+                        {website}
                       </Text>
-                    </Center>
-                  </VStack>
-                  <br />
-                  <Text fontSize='18px' mt='12px'>
-                    Transaction
-                  </Text>
-                  <Text> {description} </Text>
-                  <VStack
-                    mt='4px'
-                    p='12px'
-                    borderTopWidth='3px'
-                    borderBottomWidth='3px'
-                    borderColor='gray.500'
+                      <br />
+                      <Text fontSize='18px' mt='12px'>
+                        Estimated Fees
+                      </Text>
+                      <VStack
+                        mt='8px'
+                        p='12px'
+                        borderTopWidth='3px'
+                        borderBottomWidth='3px'
+                        borderColor='gray.500'
+                      >
+                        <Center>
+                          <Text
+                            align='center'
+                            color='gray.100'
+                            textAlign='center'
+                            fontWeight='medium'
+                            fontSize='16px'
+                          >
+                            Flow ₣0.0001
+                          </Text>
+                        </Center>
+                      </VStack>
+                      <br />
+                      <Text fontSize='18px' mt='12px'>
+                        Transaction
+                      </Text>
+                      <Text> {description} </Text>
+                      <VStack
+                        mt='4px'
+                        p='12px'
+                        borderTopWidth='3px'
+                        borderBottomWidth='3px'
+                        borderColor='gray.500'
+                      >
+                        <Center>
+                          <Text
+                            align='center'
+                            color='gray.100'
+                            textAlign='center'
+                            fontWeight='medium'
+                            fontSize='16px'
+                            textDecoration='underline'
+                            cursor='pointer'
+                            onClick={() => {
+                              setShowTransactionCode(!showTransactionCode)
+                            }}
+                          >
+                            {!showTransactionCode
+                              ? `View Transaction Code`
+                              : `Hide Transaction Code`}
+                          </Text>
+                        </Center>
+                        {showTransactionCode ? (
+                          <>
+                            <Textarea
+                              readOnly='true'
+                              isReadOnly='true'
+                              value={transactionCode}
+                              w='100%'
+                              fontSize='11px'
+                            ></Textarea>
+                          </>
+                        ) : null}
+                      </VStack>
+                    </Box>
+                    <Spacer />
+                    <Flex>
+                      <Spacer />
+                      <Button
+                        onClick={sendCancelToFCL}
+                        textAlign='center'
+                        mt='4'
+                        bg={styles.tertiaryColor}
+                        mx='auto'
+                        mr='16px'
+                        maxW='150px'
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={sendAuthzToFCL}
+                        textAlign='center'
+                        mt='4'
+                        bg={styles.primaryColor}
+                        color={styles.whiteColor}
+                        mx='auto'
+                        maxW='150px'
+                        isLoading={loading}
+                      >
+                        Confirm
+                      </Button>
+                    </Flex>
+                  </>
+                )
+              case "sent":
+                return (
+                  <Flex
+                    direction='col'
+                    w='100%'
+                    h='100%'
+                    align='center'
+                    justify='center'
                   >
-                    <Center>
-                      <Text
-                        align='center'
-                        color='gray.100'
-                        textAlign='center'
-                        fontWeight='medium'
-                        fontSize='16px'
-                        textDecoration='underline'
-                        cursor='pointer'
-                        onClick={() => {
-                          setShowTransactionCode(!showTransactionCode)
-                        }}
-                      >
-                        {!showTransactionCode
-                          ? `View Transaction Code`
-                          : `Hide Transaction Code`}
-                      </Text>
-                    </Center>
-                    {showTransactionCode ? (
-                      <>
-                        <Textarea
-                          readOnly='true'
-                          isReadOnly='true'
-                          value={transactionCode}
-                          w='100%'
-                          fontSize='11px'
-                        ></Textarea>
-                      </>
-                    ) : null}
-                  </VStack>
-                </Box>
-              </>
-            ) : (
-              <Flex
-                direction='col'
-                w='100%'
-                h='100%'
-                align='center'
-                justify='center'
-              >
-                {!txResult ? <Transaction /> : <TxResult />}
-              </Flex>
-            )}
-            <Spacer />
-            {!txResult && (
-              <Flex>
-                <Spacer />
-                <Button
-                  onClick={sendCancelToFCL}
-                  textAlign='center'
-                  mt='4'
-                  bg={styles.tertiaryColor}
-                  mx='auto'
-                  mr='16px'
-                  maxW='150px'
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={sendAuthzToFCL}
-                  textAlign='center'
-                  mt='4'
-                  bg={styles.primaryColor}
-                  color={styles.whiteColor}
-                  mx='auto'
-                  maxW='150px'
-                  isLoading={loading}
-                >
-                  Confirm
-                </Button>
-              </Flex>
-            )}
-          </>
+                    <Transaction />
+                  </Flex>
+                )
+              case "result":
+                return <TxResult />
+              default:
+                return null
+            }
+          })()
         )}
       </ErrorBoundary>
     </Layout>
