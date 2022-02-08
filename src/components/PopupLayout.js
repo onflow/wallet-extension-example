@@ -50,7 +50,12 @@ const PopupLayout = ({children, selectedPage}) => {
           w='100%'
           bg={styles.bgNavbar}
           bgGradient={`linear(to-t, ${styles.bgNavbar}, gray.800)`}
-        >
+          css={{
+            'position': 'absolute',
+            'top': '0px',
+            'left': '0px',
+            'right': '0px'
+          }}>
           <Flex h='46px' w='100%'>
             <Center cursor='pointer'>
               <HamburgerIcon
@@ -65,11 +70,15 @@ const PopupLayout = ({children, selectedPage}) => {
           </Flex>
         </Box>
         <Box
-          h='494px'
+          h='594px'
           bg={styles.bgColor}
           w='100%'
           p='20px'
           bgGradient={`linear(to-tl, ${styles.bgColor}, gray.700)`}
+          css={{
+            paddingTop: '50px',
+            paddingBottom: '150px'
+          }}
         >
           {children}
         </Box>
@@ -79,6 +88,12 @@ const PopupLayout = ({children, selectedPage}) => {
           bg={styles.bgNavbar}
           cursor='pointer'
           bgGradient={`linear(to-b, ${styles.bgNavbar}, gray.800)`}
+          css={{
+            'position': 'absolute',
+            'bottom': '0px',
+            'left': '0px',
+            'right': '0px'
+          }}
         >
           <Flex h='60px' w='100%'>
             <Center

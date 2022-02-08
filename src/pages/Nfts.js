@@ -2,18 +2,29 @@ import React, {useEffect, useState} from "react"
 import Title from "../components/Title"
 import PopupLayout from "../components/PopupLayout"
 import {accountManager} from "../lib/AccountManager"
+import LoadingSpinner from "../components/LoadingSpinner"
+import {Box, Flex, Image, Text} from "@chakra-ui/react"
 
 const NFTs = () => {
   const [account, setAccount] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState([])
+
   useEffect(() => {
     async function getAccount() {
-      const account = await accountManager.getFavoriteAccount()
-      setAccount(account)
-      const url =
-        "https://flow-mainnet.g.alchemy.com/v2/89sw1zoybafxhqayvhjwf6se5yml2y99/getNFTs/?owner=0x9eef2e4511390ce4&offset=0&limit=5"
-      let response = await fetch(url)
-      const nfts = await response.json()
-      console.log(nfts)
+      try {
+        setLoading(true)
+        const account = await accountManager.getFavoriteAccount()
+        setAccount(account)
+        const url =
+          "https://flow-mainnet.g.alchemy.com/v2/89sw1zoybafxhqayvhjwf6se5yml2y99/getNFTs/?owner=0x9eef2e4511390ce4&offset=0&limit=5"
+        let response = await fetch(url)
+        const nftsRes = await response.json()
+        setData(nftsRes)
+        console.log(nftsRes)
+      } finally {
+        setLoading(false)
+      }
     }
     getAccount()
   }, [])
@@ -22,11 +33,40 @@ const NFTs = () => {
     return null
   }
 
-  const address = account ? account.address : ""
+  const metadataValueFinder = (metadata, name) => metadata?.find(md => md.name === name)?.value
 
   return (
     <PopupLayout selectedPage='nfts'>
-      <Title align='left'>NFTs for {address}</Title>
+      <Title align='left' mb='2'>NFTs for {account.address || ""}</Title>
+      {loading ? (
+        <Flex direction='row' w='100%' h='100%' align='center' justify='center'>
+          <LoadingSpinner />
+        </Flex>
+      ) : (
+        <div>
+          {data.nfts.map(nft => {
+            const nftMetadata = nft?.metadata?.metadata || []
+
+            return (
+              <Box 
+                key={nft.id.tokenId}
+                mb='2'
+                mt='2'
+                borderWidth='1px' 
+                borderRadius='lg' 
+                overflow='hidden'>
+                <Image src={metadataValueFinder(nftMetadata, 'img').replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')} />
+                
+                <Box p='4'>
+                  <Text fontSize='lg' mt={1}>{metadataValueFinder(nftMetadata, 'title')}</Text>
+                  <Text as='i'>{metadataValueFinder(nftMetadata, 'description')}</Text>
+                </Box>
+                
+              </Box>
+            )
+          })}
+        </div>
+      )}
     </PopupLayout>
   )
 }
