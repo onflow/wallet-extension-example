@@ -7,8 +7,7 @@ import {
   Text,
   VStack,
   Center,
-  Textarea,
-  Heading,
+  Textarea
 } from "@chakra-ui/react"
 import {useToast} from "@chakra-ui/toast"
 import {Flex, Spacer} from "@chakra-ui/layout"
@@ -73,11 +72,7 @@ export default function Authz() {
         setTxId(msg.txId)
         fcl.tx(msg.txId).subscribe(txStatus => {
           setTransactionStatus(txStatus.status)
-          // TODO handle other results
-          if (txStatus.status === 4) {
-            setTxResult(txStatus.statusString)
-            setTxView("result")
-          }
+          setTxResult(txStatus.statusString)
         })
       }
     }
@@ -126,41 +121,6 @@ export default function Authz() {
   function sendCancelToFCL() {
     chrome.tabs.sendMessage(parseInt(opener), {type: "FCL:VIEW:CLOSE"})
     window.close()
-  }
-
-  const TxResult = () => {
-    return (
-      <VStack spacing={4} align='stretch'>
-        <Title align='center'>Transaction Confirmed</Title>
-        <Box p={5} shadow='md' borderWidth='1px'>
-          <Heading fontSize='xl'>{txResult}</Heading>
-          <Text mt={4}>"Your transaction was successful..."</Text>
-          <span className='txId'>
-            <a
-              href={`https://testnet.flowscan.org/transaction/${txId}`}
-              target='_blank'
-              and
-              rel='noopener noreferrer'
-            >
-              view transaction details
-            </a>
-          </span>
-        </Box>
-        <Box>
-          <Button
-            onClick={() => window.close()}
-            textAlign='center'
-            mt='4'
-            bg={styles.tertiaryColor}
-            mx='auto'
-            mr='16px'
-            maxW='150px'
-          >
-            Close
-          </Button>
-        </Box>
-      </VStack>
-    )
   }
 
   return (
@@ -283,31 +243,32 @@ export default function Authz() {
                       </VStack>
                     </Box>
                     <Spacer />
-                    <Flex>
-                      <Spacer />
-                      <Button
-                        onClick={sendCancelToFCL}
-                        textAlign='center'
-                        mt='4'
-                        bg={styles.tertiaryColor}
-                        mx='auto'
-                        mr='16px'
-                        maxW='150px'
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={sendAuthzToFCL}
-                        textAlign='center'
-                        mt='4'
-                        bg={styles.primaryColor}
-                        color={styles.whiteColor}
-                        mx='auto'
-                        maxW='150px'
-                        isLoading={loading}
-                      >
-                        Confirm
-                      </Button>
+                    <Flex direction='row' align='center' justify='center'>
+                      <div>
+                        <Button
+                          onClick={sendCancelToFCL}
+                          textAlign='center'
+                          mt='4'
+                          bg={styles.tertiaryColor}
+                          mx='auto'
+                          mr='16px'
+                          maxW='150px'
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={sendAuthzToFCL}
+                          textAlign='center'
+                          mt='4'
+                          bg={styles.primaryColor}
+                          color={styles.whiteColor}
+                          mx='auto'
+                          maxW='150px'
+                          isLoading={loading}
+                        >
+                          Confirm
+                        </Button>
+                      </div>
                     </Flex>
                   </>
                 )
@@ -323,8 +284,6 @@ export default function Authz() {
                     <Transaction />
                   </Flex>
                 )
-              case "result":
-                return <TxResult />
               default:
                 return null
             }
