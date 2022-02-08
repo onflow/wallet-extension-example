@@ -8,14 +8,15 @@ function Transaction() {
   const STATUS_DETAILS = {
     "0": {
       name: "Unknown",
-      message: "Waiting for transaction approval.",
-      progressIndeterminate: true
+      message: "We are sending your transaction to the chain. One second while we get a response.",
+      progressIndeterminate: true,
+      progressText: "Waiting..."
     },
     "1": {
       name: "Pending",
       message: "The transaction has been received by a collector but not yet finalized in a block.",
       progressIndeterminate: true,
-      progressText: "Executing"
+      progressText: "Executing..."
     },
     "2": {
       name: "Finalized",
@@ -33,6 +34,7 @@ function Transaction() {
       name: "Sealed",
       message: "The verification nodes have verified the transaction, and the seal is included in the latest block.",
       progressValue: 100,
+      hideProgress: true,
       progressText: "Sealed!"
     },
     "5": {
@@ -53,14 +55,14 @@ function Transaction() {
              <Text as='em'>Tx ID:</Text> <Text as='u'>{txId?.slice(0, 8)}</Text>
             </a>
           </span>
-          <Text fontSize='lg'><strong>{STATUS_DETAILS[statusKey].name}</strong></Text>
+          <Text fontSize='lg' mt={3}><strong>{STATUS_DETAILS[statusKey].name}</strong></Text>
           <Text as='i'>{STATUS_DETAILS[statusKey].message}</Text>
           {!STATUS_DETAILS[statusKey].hideProgress && 
-            <div>
+            <Box mb={3}>
               <progress indeterminate={STATUS_DETAILS[statusKey].progressIndeterminate} min='0' max='100' value={STATUS_DETAILS[statusKey].progressValue}>
                 {STATUS_DETAILS[statusKey].progressText}
               </progress>
-            </div>
+            </Box>
           }
           <div>
             <Text as='u'>
