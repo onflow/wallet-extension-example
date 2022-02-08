@@ -32,12 +32,3 @@ const extMessageHandler = ({type, service}, sender, sendResponse) => {
  * Fired when a message is sent from either an extension process or a content script.
  */
 chrome.runtime.onMessage.addListener(extMessageHandler)
-
-chrome.runtime.onConnect.addListener(function (port) {
-  if (port.name === "popup") {
-    port.onDisconnect.addListener(function () {
-      console.log("popup has been closed")
-      chrome.runtime.sendMessage({type: "FCL:VIEW:CLOSE"})
-    })
-  }
-})
