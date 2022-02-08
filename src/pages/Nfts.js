@@ -3,7 +3,7 @@ import Title from "../components/Title"
 import PopupLayout from "../components/PopupLayout"
 import {accountManager} from "../lib/AccountManager"
 import LoadingSpinner from "../components/LoadingSpinner"
-import {Flex} from "@chakra-ui/react"
+import {Box, Flex, Image, Text} from "@chakra-ui/react"
 
 const NFTs = () => {
   const [account, setAccount] = useState(null)
@@ -33,11 +33,11 @@ const NFTs = () => {
     return null
   }
 
-  const address = account ? account.address : ""
+  const metadataValueFinder = (metadata, name) => metadata?.find(md => md.name === name)?.value
 
   return (
     <PopupLayout selectedPage='nfts'>
-      <Title align='left'>NFTs for {address}</Title>
+      <Title align='left' mb='2'>NFTs for {account.address || ""}</Title>
       {loading ? (
         <Flex direction='row' w='100%' h='100%' align='center' justify='center'>
           <LoadingSpinner />
@@ -45,8 +45,24 @@ const NFTs = () => {
       ) : (
         <div>
           {data.nfts.map(nft => {
+            const nftMetadata = nft?.metadata?.metadata || []
+
             return (
-              <div key={nft.id.tokenId}>{nft.id.tokenId}</div>
+              <Box 
+                key={nft.id.tokenId}
+                mb='2'
+                mt='2'
+                borderWidth='1px' 
+                borderRadius='lg' 
+                overflow='hidden'>
+                <Image src={metadataValueFinder(nftMetadata, 'img').replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')} />
+                
+                <Box p='4'>
+                  <Text fontSize='lg' mt={1}>{metadataValueFinder(nftMetadata, 'title')}</Text>
+                  <Text as='i'>{metadataValueFinder(nftMetadata, 'description')}</Text>
+                </Box>
+                
+              </Box>
             )
           })}
         </div>
