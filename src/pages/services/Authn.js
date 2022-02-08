@@ -9,11 +9,9 @@ import {
   Center,
   VStack,
 } from "@chakra-ui/react"
-import {WalletUtils} from "@onflow/fcl"
 import Title from "../../components/Title"
 import Layout from "../../components/Layout"
 import {accountManager} from "../../lib/AccountManager"
-import {useHistory} from "react-router-dom"
 import * as styles from "../../styles"
 import FlowLogo from "../../assets/flow-logo.png"
 import {authnServiceDefinition} from "../../controllers/serviceDefinition"
@@ -21,8 +19,7 @@ import {authnServiceDefinition} from "../../controllers/serviceDefinition"
 export default function Authn({location}) {
   const [opener, setOpener] = useState(null)
   const [account, setAccount] = useState(null)
-  const history = useHistory()
-  const website = "https://flow.com" // need to get from fcl/contentScript
+  const [host, setHost] = useState(null)
 
   useEffect(() => {
     /**
@@ -50,10 +47,7 @@ export default function Authn({location}) {
 
     const messagesFromReactAppListener = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        console.log(
-          "AUTHN page recieved view ready response",
-          JSON.parse(JSON.stringify(msg || {}))
-        )
+        setHost(msg.host)
       }
     }
 
@@ -83,10 +77,16 @@ export default function Authn({location}) {
     const services = authnServiceDefinition(address, keyId)
 
     chrome.tabs.sendMessage(parseInt(opener), {
-      f_type: "AuthnResponse",
+      f_type: "PollingResponse",
       f_vsn: "1.0.0",
-      addr: address,
-      services: services,
+      status: "APPROVED",
+      reason: null,
+      data: {
+        f_type: "AuthnResponse",
+        f_vsn: "1.0.0",
+        addr: address,
+        services: services,
+      },
     })
     window.close()
   }
@@ -101,7 +101,7 @@ export default function Authn({location}) {
       <Title align='center'>Sign In</Title>
       <Box mx='auto' w='280px'>
         <Text mt='32px' fontWeight='bold' fontSize='20px' color={"white"}>
-          {website}
+          {host}
         </Text>
         <br />
         <Text fontSize='16px' mt='20px'>

@@ -18,7 +18,29 @@ function App() {
       setLoading(false)
     }
     load()
+    chrome.runtime.connect({name: "popup"})
   }, [])
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", cancelOnClose)
+    return () => {
+      window.removeEventListener("beforeunload", cancelOnClose)
+    }
+  }, [])
+
+  const cancelOnClose = e => {
+    e.preventDefault()
+    chrome.tabs &&
+      chrome.tabs.query(
+        {
+          active: true,
+          currentWindow: false,
+        },
+        tabs => {
+          chrome.tabs.sendMessage(tabs[0].id || 0, {type: "FCL:VIEW:CLOSE"})
+        }
+      )
+  }
 
   if (loading) {
     return null

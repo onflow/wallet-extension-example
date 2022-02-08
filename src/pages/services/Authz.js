@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
   Center,
-  Textarea
+  Textarea,
 } from "@chakra-ui/react"
 import {useToast} from "@chakra-ui/toast"
 import {Flex, Spacer} from "@chakra-ui/layout"
@@ -31,7 +31,6 @@ export default function Authz() {
   )
   const [password, setPassword] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [txResult, setTxResult] = useState(null)
   const [txView, setTxView] = useState("detail")
 
   const {initTransactionState, setTxId, setTransactionStatus, txId} =
@@ -63,7 +62,7 @@ export default function Authz() {
         }
       )
 
-    const messagesFromReactAppListener = (msg, sender, sendResponse) => {
+    const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
         fclCallback(JSON.parse(JSON.stringify(msg || {})))
       }
@@ -72,12 +71,11 @@ export default function Authz() {
         setTxId(msg.txId)
         fcl.tx(msg.txId).subscribe(txStatus => {
           setTransactionStatus(txStatus.status)
-          setTxResult(txStatus.statusString)
         })
       }
     }
 
-    chrome.runtime?.onMessage.addListener(messagesFromReactAppListener)
+    chrome.runtime?.onMessage.addListener(extMessageHandler)
   }, [])
 
   async function submitPassword() {
