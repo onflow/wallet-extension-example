@@ -25,8 +25,6 @@ export default function TransactionProvider({children}) {
     setTransactionStatus,
   }
 
-  console.log("TransactionProvider", value)
-
   return (
     <TransactionContext.Provider value={value}>
       {children}

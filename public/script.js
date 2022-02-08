@@ -1,13 +1,9 @@
 console.log("Inject Script Loaded")
 
-document.addEventListener("_my_custom_event", function (e) {
+document.addEventListener("EXT:DETAIL", function (e) {
   window.ext_id = e.detail.id
   console.log("INJECTED SCRIPT EVENT", e.detail.id)
   buildAuthnService(e.detail.id)
-})
-
-document.addEventListener("popup_event", function (e) {
-  window && window.postMessage(JSON.parse(JSON.stringify(e || {})), "*")
 })
 
 function buildAuthnService(id) {

@@ -1,12 +1,8 @@
 // Function called when a new message is received
-const messagesFromReactAppListener = (
-  {type, service},
-  sender,
-  sendResponse
-) => {
-  console.log("[background-script.js]. Message received", type, service)
-
-  if (type === "FCL:OPEN:EXTENSION") {
+const extMessageHandler = ({type, service}, sender, sendResponse) => {
+  // Message from FCL, posted to window and proxied from content.js
+  // Launches extension popup window
+  if (type === "FCL:LAUNCH:EXTENSION") {
     chrome.tabs.query(
       {
         active: true,
@@ -23,10 +19,8 @@ const messagesFromReactAppListener = (
             left: 1000,
           },
           function (win) {
-            console.log("window obj", win)
             // win represents the Window object from windows API
-            // Send VIEW READY to content script
-            // here or in react?
+            console.log("window obj", win)
           }
         )
       }
@@ -37,4 +31,13 @@ const messagesFromReactAppListener = (
 /**
  * Fired when a message is sent from either an extension process or a content script.
  */
-chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
+chrome.runtime.onMessage.addListener(extMessageHandler)
+
+chrome.runtime.onConnect.addListener(function (port) {
+  if (port.name === "popup") {
+    port.onDisconnect.addListener(function () {
+      console.log("popup has been closed")
+      chrome.runtime.sendMessage({type: "FCL:VIEW:CLOSE"})
+    })
+  }
+})

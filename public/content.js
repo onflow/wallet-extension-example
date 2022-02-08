@@ -1,5 +1,5 @@
 /**
- * Inject script
+ * Inject script, to provide access to window shared with FCL
  */
 function injectScript(file_path, tag) {
   var node = document.getElementsByTagName(tag)[0]
@@ -13,65 +13,20 @@ injectScript(chrome.runtime.getURL("script.js"), "body")
 
 // Listener for messages from window/FCL
 window.addEventListener("message", function (event) {
-  console.log("Message Received from window in contentScript", event.data)
-  if (event.data.type && event.data.type === "FCL:OPEN:EXTENSION") {
-    chrome.runtime.sendMessage(event.data)
-  }
-  if (event.data.type && event.data.type === "FCL:VIEW:READY:RESPONSE") {
-    chrome.runtime.sendMessage(event.data)
-  }
+  chrome.runtime.sendMessage({host: window.location.hostname, ...event.data})
 })
-// Listener for Flow Transaction
+
+// Listener for Custom Flow Transaction event from FCL send
 window.addEventListener("FLOW::TX", function (event) {
-  console.log("FLOW::TX Message Received from window in contentScript", {
-    type: "FLOW::TX",
-    ...event.detail,
-  })
   chrome.runtime.sendMessage({type: "FLOW::TX", ...event.detail})
 })
 
-const messagesFromReactAppListener = (msg, sender, sendResponse) => {
-  console.log("[content.js]. Message received", msg)
-
+const extMessageHandler = (msg, sender, sendResponse) => {
   if (msg.type === "FCL:VIEW:READY") {
-    console.log(
-      "CS: recieved view ready",
-      JSON.parse(JSON.stringify(msg || {}))
-    )
-
     window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
   }
 
-  if (msg.f_type && msg.f_type === "AuthnResponse") {
-    console.log(
-      "CS: recieved authn response",
-      JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {}))
-    )
-
-    window &&
-      window.postMessage(
-        JSON.parse(
-          JSON.stringify(
-            {
-              f_type: "PollingResponse",
-              f_vsn: "1.0.0",
-              status: "APPROVED",
-              reason: null,
-              data: msg,
-              type: "FCL:VIEW:RESPONSE",
-            } || {}
-          )
-        ),
-        "*"
-      )
-  }
-
   if (msg.f_type && msg.f_type === "PollingResponse") {
-    console.log(
-      "CS: recieved authz response",
-      JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {}))
-    )
-
     window &&
       window.postMessage(
         JSON.parse(JSON.stringify({...msg, type: "FCL:VIEW:RESPONSE"} || {})),
@@ -80,27 +35,23 @@ const messagesFromReactAppListener = (msg, sender, sendResponse) => {
   }
 
   if (msg.type === "FCL:VIEW:CLOSE") {
-    console.log(
-      "CS: recieved view close",
-      JSON.parse(JSON.stringify(msg || {}))
-    )
-
     window && window.postMessage(JSON.parse(JSON.stringify(msg || {})), "*")
   }
 }
 
 /**
- * Fired when a message is sent from either an extension process or a content script.
+ * Fired when a message is sent from either an extension process or another content script.
  */
-chrome.runtime.onMessage.addListener(messagesFromReactAppListener)
+chrome.runtime.onMessage.addListener(extMessageHandler)
 
+// send extension id to injexted script
 var id = chrome.runtime.id
 setTimeout(() => {
   document.dispatchEvent(
-    new CustomEvent("_my_custom_event", {
+    new CustomEvent("EXT:DETAIL", {
       detail: {
         id: id,
       },
     })
   )
-}, 1000)
+}, 500)
