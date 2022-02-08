@@ -8,7 +8,7 @@ export const useTransaction = () => useContext(TransactionContext)
 
 export default function TransactionProvider({children}) {
   const [transactionInProgress, setTransactionInProgress] = useState(false)
-  const [transactionStatus, setTransactionStatus] = useState()
+  const [transactionStatus, setTransactionStatus] = useState(null)
   const [txId, setTxId] = useState("")
 
   function initTransactionState() {

@@ -6,11 +6,6 @@ function Transaction() {
   const {transactionStatus, txId, transactionInProgress} = useTransaction()
 
   const STATUS_DETAILS = {
-    "null": {
-      name: "Unknown",
-      message: "Waiting for transaction approval.",
-      progressIndeterminate: true
-    },
     "0": {
       name: "Unknown",
       message: "Waiting for transaction approval.",
@@ -47,8 +42,8 @@ function Transaction() {
     }
   }
 
-  if (transactionInProgress && transactionStatus) {
-    const statusKey = String(transactionStatus)
+  if (transactionInProgress) {
+    const statusKey = transactionStatus ?  String(transactionStatus) : "0"
 
     return (
       <Box p='6' bg={"gray.700"} borderWidth='1px' borderRadius='lg'>
@@ -94,7 +89,7 @@ function Transaction() {
       </Box>
     )
   } else {
-    return <span />
+    return <div />
   }
 }
 
