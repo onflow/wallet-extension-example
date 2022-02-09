@@ -3,14 +3,14 @@ import Title from "../components/Title"
 import PopupLayout from "../components/PopupLayout"
 import {accountManager} from "../lib/AccountManager"
 import LoadingSpinner from "../components/LoadingSpinner"
-import {Box, Flex, Image, Text, Button} from "@chakra-ui/react"
+import {Box, Flex, Image, Text, Button, Spacer} from "@chakra-ui/react"
 import * as styles from "../styles"
 
 const NFTs = () => {
   const [account, setAccount] = useState(null)
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
-  const [error, setError] = useState(null)
+  const [nftFetchErr, setNftFetchErr] = useState(null)
 
   const fetchNfts = async () => {
     try {
@@ -22,7 +22,7 @@ const NFTs = () => {
       setData(nftsRes)
     } catch (e) {
       console.log(e)
-      setError("Error Fetching NFTs")
+      setNftFetchErr("Error Fetching NFTs")
     } finally {
       setLoading(false)
     }
@@ -47,15 +47,16 @@ const NFTs = () => {
   return (
     <PopupLayout selectedPage='nfts'>
       <Title align='left' mb='2'>
-        NFTs for {account.address || ""}
+        NFTs for Account {account.address || ""}
       </Title>
+      <Spacer />
       {loading ? (
         <Flex direction='row' w='100%' h='100%' align='center' justify='center'>
           <LoadingSpinner />
         </Flex>
       ) : (
         <div>
-          {error && (
+          {nftFetchErr && (
             <Flex
               direction='row'
               w='100%'
@@ -63,7 +64,7 @@ const NFTs = () => {
               align='center'
               justify='center'
             >
-              {error}
+              {nftFetchErr}
               <Button
                 onClick={fetchNfts}
                 textAlign='center'

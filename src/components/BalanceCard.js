@@ -1,5 +1,14 @@
 import React, {useEffect, useState} from "react"
-import {Text, VStack, Box, Flex, Center, Icon, Image} from "@chakra-ui/react"
+import {
+  Text,
+  VStack,
+  Box,
+  Flex,
+  Center,
+  Icon,
+  Image,
+  Link,
+} from "@chakra-ui/react"
 import {ExternalLinkIcon} from "@chakra-ui/icons"
 import {AiFillDollarCircle} from "react-icons/ai"
 import * as styles from "../styles"
@@ -33,7 +42,6 @@ const BalanceCard = ({currency, address}) => {
       w='100%'
       p='20px'
       fontSize='20px'
-      bg='#222'
       borderRadius='10px'
     >
       <Flex>
@@ -60,7 +68,12 @@ const BalanceCard = ({currency, address}) => {
           </Text>
         </VStack>
         <Center>
-          <ExternalLinkIcon w={6} h={6} color={styles.primaryColor} />
+          <Link
+            href={`https://testnet.flowscan.org/account/${address}`}
+            isExternal
+          >
+            <ExternalLinkIcon w={6} h={6} color={styles.primaryColor} />
+          </Link>
         </Center>
       </Flex>
     </Box>
