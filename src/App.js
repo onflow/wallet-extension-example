@@ -18,7 +18,6 @@ function App() {
       setLoading(false)
     }
     load()
-    chrome.runtime.connect({name: "popup"})
   }, [])
 
   useEffect(() => {

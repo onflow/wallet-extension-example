@@ -32,8 +32,6 @@ const CreateAccount = ({location}) => {
 
   const createAccount = async () => {
     let account
-    // generate keyPair
-    // Generate keys
     const key = p256.genKeyPair()
     const pubKey = key.getPublic("hex").slice(2)
     const privateKey = key.getPrivate("hex")

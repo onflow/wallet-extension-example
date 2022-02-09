@@ -113,7 +113,7 @@ export default function Authz() {
         signedMessage
       ),
     })
-    setTxView("sent")
+    setTxView("sending")
   }
 
   function sendCancelToFCL() {
@@ -270,7 +270,7 @@ export default function Authz() {
                     </Flex>
                   </>
                 )
-              case "sent":
+              case "sending":
                 return (
                   <Flex
                     direction='col'
