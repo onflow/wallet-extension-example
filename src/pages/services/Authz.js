@@ -32,12 +32,11 @@ export default function Authz() {
   const [password, setPassword] = useState(null)
   const [loading, setLoading] = useState(false)
   const [txView, setTxView] = useState("detail")
+  const [host, setHost] = useState(null)
 
   const {initTransactionState, setTxId, setTransactionStatus, txId} =
     useTransaction()
   const toast = useToast()
-
-  const website = "https://flow.com" // need to get from fcl/contentScript
 
   function fclCallback(data) {
     if (typeof data != "object") return
@@ -64,6 +63,7 @@ export default function Authz() {
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
+        setHost(msg.host)
         fclCallback(JSON.parse(JSON.stringify(msg || {})))
       }
 
@@ -172,7 +172,7 @@ export default function Authz() {
                         fontSize='20px'
                         color={"white"}
                       >
-                        {website}
+                        {host}
                       </Text>
                       <br />
                       <Text fontSize='18px' mt='12px'>

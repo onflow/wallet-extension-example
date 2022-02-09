@@ -45,7 +45,7 @@ export default function Authn({location}) {
         }
       )
 
-    const messagesFromReactAppListener = (msg, sender, sendResponse) => {
+    const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
         setHost(msg.host)
       }
@@ -54,7 +54,7 @@ export default function Authn({location}) {
     /**
      * Fired when a message is sent from either an extension process or a content script.
      */
-    chrome.runtime?.onMessage.addListener(messagesFromReactAppListener)
+    chrome.runtime?.onMessage.addListener(extMessageHandler)
   }, [])
 
   useEffect(() => {

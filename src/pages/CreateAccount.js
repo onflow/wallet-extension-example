@@ -7,7 +7,6 @@ import {
   TabList,
   Tab,
   Spacer,
-  Box,
   Flex,
 } from "@chakra-ui/react"
 import * as styles from "../styles"
