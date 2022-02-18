@@ -12,9 +12,9 @@ import {
 import Title from "../../components/Title"
 import Layout from "../../components/Layout"
 import {accountManager} from "../../lib/AccountManager"
+import {authnServiceDefinition} from "../../controllers/serviceDefinition"
 import * as styles from "../../styles"
 import FlowLogo from "../../assets/flow-logo.png"
-import {authnServiceDefinition} from "../../controllers/serviceDefinition"
 
 export default function Authn({location}) {
   const [opener, setOpener] = useState(null)

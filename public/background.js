@@ -10,19 +10,13 @@ const extMessageHandler = ({type, service}, sender, sendResponse) => {
       },
       tabs => {
         let popUrl = chrome.runtime.getURL(`index.html#/${service.type}`)
-        chrome.windows.create(
-          {
-            url: popUrl,
-            type: "popup",
-            height: 628,
-            width: 375,
-            left: 1000,
-          },
-          function (win) {
-            // win represents the Window object from windows API
-            console.log("window obj", win)
-          }
-        )
+        chrome.windows.create({
+          url: popUrl,
+          type: "popup",
+          height: 628,
+          width: 375,
+          left: 1000,
+        })
       }
     )
   }
