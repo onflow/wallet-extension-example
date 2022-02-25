@@ -38,7 +38,7 @@ The following is an overview of these scripts and the functionality they need to
 - `script.js`: Injected by `content.js` into the dapp and waits for the id of the chrome extension to build the authn service and allow Discovery to launch the extension.
 
 
-![FCL Authz Sequence Diagram](/img/ext-rpc-message-passing.png)
+![FCL Authz Sequence Diagram](img/ext-rpc-message-passing.png)
 <details>
 <summary>Application Context Diagram</summary>
 <img src="/img/ext-rpc-message-passing.png"/>
