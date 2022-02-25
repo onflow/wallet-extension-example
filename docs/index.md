@@ -136,7 +136,7 @@ TODO: How to generate accounts and use the Account API
 ### FCL Authentication
 Authentication is triggered either through Discovery or through any FCL transaction that requires authentication. When authentication is requested, the following should happen:
 1. On opening of the authentication tab on the extension, it should fire a message of `{type: "FCL:VIEW:READY"}` via `chrome.tabs.sendMessage` to indicate to the dapp that it should wait for a response from the user within the extension. See [sample authn page](#).
-2. The dapp will respond with `FCL:VIEW:READY:RESPONSE` which is received by `content.js` and sent to the authn page. The authn page can use this to set the host for the communication back to the dapp. The dapp will wait for an approved polling response from the extension.
+2. The dapp will respond with `FCL:VIEW:READY:RESPONSE` which is received by `content.js` and sent to the authn page. The dapp will wait for an approved polling response from the extension.
 3. Once the user has successfully authenticated, the extension should send a message of type `PollingResponse` with the `status` field as `"APPROVED"` and the relevant service objects returned. See [sample authn page](#).
 
 All messages above are proxied through `content.js`.
