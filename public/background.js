@@ -3,10 +3,7 @@ const extMessageHandler = (msg, sender, sendResponse) => {
   // Messages from FCL, posted to window and proxied from content.js
   const {service} = msg
   // Launches extension popup window
-  if (
-    service?.endpoint &&
-    service?.endpoint === `${chrome.runtime.id}/${service.type}`
-  ) {
+  if (service?.endpoint && service?.endpoint === `flowwallet/${service.type}`) {
     chrome.tabs.query(
       {
         active: true,

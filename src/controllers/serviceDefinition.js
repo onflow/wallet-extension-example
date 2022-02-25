@@ -4,7 +4,7 @@ function serviceDefinition(address, keyId, type, opts) {
     f_vsn: "1.0.0",
     type: type,
     uid: "uniqueDedupeKey",
-    endpoint: `${chrome.runtime.id}/${type}`,
+    endpoint: `flowwallet/${type}`,
   }
 
   if (type === "authn") {
