@@ -37,6 +37,8 @@ The following is an overview of these scripts and the functionality they need to
 - `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage` and send the id of the chrome extension to `script.js` right after it's injected.
 - `script.js`: Injected by `content.js` into the dapp and waits for the id of the chrome extension to build the authn service and allow Discovery to launch the extension.
 
+
+![FCL Authz Sequence Diagram](/img/ext-rpc-message-passing.png)
 <details>
 <summary>Application Context Diagram</summary>
 <img src="/img/ext-rpc-message-passing.png"/>
@@ -157,9 +159,10 @@ Although a [sample implementation](#) has been provided, you should thoroughly r
 
 All messages above are proxied through `content.js`.
 
+![FCL Authz Sequence Diagram](img/ext-rpc-authz-sequence.png)
 <details>
 <summary>FCL Authz Sequence Diagram</summary>
-<img src="/img/ext-rpc-authz-sequence.png"/>
+<img src="img/ext-rpc-authz-sequence.png"/>
 </details>
 
 ### Other Services
