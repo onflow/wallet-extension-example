@@ -1,8 +1,12 @@
 // Function called when a new message is received
-const extMessageHandler = ({type, service}, sender, sendResponse) => {
-  // Message from FCL, posted to window and proxied from content.js
+const extMessageHandler = (msg, sender, sendResponse) => {
+  // Messages from FCL, posted to window and proxied from content.js
+  const {service} = msg
   // Launches extension popup window
-  if (type === "FCL:LAUNCH:EXTENSION") {
+  if (
+    service?.endpoint &&
+    service?.endpoint === `${chrome.runtime.id}/${service.type}`
+  ) {
     chrome.tabs.query(
       {
         active: true,

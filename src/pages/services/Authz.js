@@ -34,14 +34,15 @@ export default function Authz() {
   const [txView, setTxView] = useState("detail")
   const [host, setHost] = useState(null)
 
-  const {initTransactionState, setTxId, setTransactionStatus, txId} =
-    useTransaction()
+  const {initTransactionState, setTxId, setTransactionStatus} = useTransaction()
   const toast = useToast()
 
   function fclCallback(data) {
     if (typeof data != "object") return
     if (data.type !== "FCL:VIEW:READY:RESPONSE") return
     const signable = data.body
+    const {hostname} = data.config.client
+    hostname && setHost(hostname)
     if (signable.cadence) {
       setTransactionCode(signable.cadence)
     }
@@ -63,7 +64,6 @@ export default function Authz() {
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        setHost(msg.host)
         fclCallback(JSON.parse(JSON.stringify(msg || {})))
       }
 

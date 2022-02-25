@@ -3,8 +3,8 @@ function serviceDefinition(address, keyId, type, opts) {
     f_type: "Service",
     f_vsn: "1.0.0",
     type: type,
-    uid: `flowwallet#${type}`,
-    endpoint: chrome.runtime.getURL(`index.html#/${type}`),
+    uid: "uniqueDedupeKey",
+    endpoint: `${chrome.runtime.id}/${type}`,
   }
 
   if (type === "authn") {
@@ -15,7 +15,7 @@ function serviceDefinition(address, keyId, type, opts) {
     definition.provider = {
       f_type: "ServiceProvider", // Its a Service Provider
       f_vsn: "1.0.0", // Follows the v1.0.0 spec for service providers
-      address: "0x3277199d6c1eeaa4", // A flow address owned by the wallet
+      address: "0x1234", // A flow address owned by the wallet
       name: "Flow Wallet", // OPTIONAL - The name of your wallet. ie: "Dapper Wallet" or "Blocto Wallet"
     }
   }

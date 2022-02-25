@@ -13,8 +13,14 @@ injectScript(chrome.runtime.getURL("script.js"), "body")
 
 // Listener for messages from window/FCL
 window.addEventListener("message", function (event) {
-  chrome.runtime.sendMessage({host: window.location.hostname, ...event.data})
+  console.log("CS Listener", event.data)
+  chrome.runtime.sendMessage(event.data)
 })
+
+// Listener for Custom Flow Transaction event from FCL send, uses ext uid for CustomEvent name
+/* window.addEventListener(`FCL:LAUNCH:EXTENSION:flowwallet`, function (event) {
+  chrome.runtime.sendMessage({type: "FCL:LAUNCH:EXTENSION", ...event.detail})
+}) */
 
 // Listener for Custom Flow Transaction event from FCL send
 window.addEventListener("FLOW::TX", function (event) {
@@ -45,12 +51,12 @@ const extMessageHandler = (msg, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener(extMessageHandler)
 
 // send extension id to injexted script
-var id = chrome.runtime.id
+var extId = chrome.runtime.id
 setTimeout(() => {
   document.dispatchEvent(
-    new CustomEvent("EXT:DETAIL", {
+    new CustomEvent(`EXT:INJECT:SCRIPT:flowwallet`, {
       detail: {
-        id: id,
+        extId: extId,
       },
     })
   )

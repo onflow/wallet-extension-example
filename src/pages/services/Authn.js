@@ -47,7 +47,8 @@ export default function Authn({location}) {
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        setHost(msg.host)
+        const {hostname} = msg.config.client
+        hostname && setHost(hostname)
       }
     }
 
