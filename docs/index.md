@@ -37,6 +37,10 @@ The following is an overview of these scripts and the functionality they need to
 - `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage` and send the id of the chrome extension to `script.js` right after it's injected.
 - `script.js`: Injected by `content.js` into the dapp and waits for the id of the chrome extension to build the authn service and allow Discovery to launch the extension.
 
+<details>
+<summary>Application Context Diagram</summary>
+<img src="/img/ext-rpc-message-passing.png"/>
+</details>
 
 ## Implementation
 
@@ -119,6 +123,10 @@ In order for `script.js` to push to the `window`, and the user to launch the ext
 
 All future actions that require the user to authenticate or authorize are proxied through `content.js` directly as the extension is already launched and has listeners mounted on `content.js` to pass messages.
 
+<details>
+<summary>FCL Discovery and Authn Sequence Diagram</summary>
+<img src="/img/ext-rpc-authn-sequence.png"/>
+</details>
 
 ### Account Creation
 TODO: How to generate accounts and use the Account API
@@ -130,6 +138,11 @@ Authentication is triggered either through Discovery or through any FCL transact
 3. Once the user has successfully authenticated, the extension should send a message of type `PollingResponse` with the `status` field as `"APPROVED"` and the relevant service objects returned. See [sample authn page](#).
 
 All messages above are proxied through `content.js`.
+
+<details>
+<summary>FCL Discovery and Authn Sequence Diagram</summary>
+<img src="/img/ext-rpc-authn-sequence.png"/>
+</details>
 
 ### FCL Authorization
 Authorization is very similar to authentication with the exception that the `"FCL:VIEW:READY:RESPONSE"` will contain additional data that contains the signable object (containing the relevant Cadence transaction, etc.).
@@ -143,6 +156,11 @@ In the `PollingResponse`, there should be a `data` field that contains a composi
 Although a [sample implementation](#) has been provided, you should thoroughly review your own signing functionality and ensure its security.
 
 All messages above are proxied through `content.js`.
+
+<details>
+<summary>FCL Authz Sequence Diagram</summary>
+<img src="/img/ext-rpc-authz-sequence.png"/>
+</details>
 
 ### Other Services
 Guides on implementing other wallets services for EXT/RPC will be coming shortly.
