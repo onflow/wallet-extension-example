@@ -141,6 +141,7 @@ Authentication is triggered either through Discovery or through any FCL transact
 
 All messages above are proxied through `content.js`.
 
+![FCL Authz Sequence Diagram](img/ext-rpc-authn-sequence.png)
 <details>
 <summary>FCL Discovery and Authn Sequence Diagram</summary>
 <img src="/img/ext-rpc-authn-sequence.png"/>
