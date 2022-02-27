@@ -7,7 +7,7 @@ window.fcl_extensions.push({
   f_vsn: "1.0.0",
   type: "authn",
   uid: "uniqueDedupeKey",
-  endpoint: "flowwallet/authn",
+  endpoint: "flowwallet",
   method: "EXT/RPC",
   id: "xxxxxxxx-xxxx",
   identity: {
