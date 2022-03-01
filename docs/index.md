@@ -33,10 +33,9 @@ See [here](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-
 There are 3 key scripts that FCL relies on to allow message passing between the extension and the dapp. The global separation of context created by Chrome between the two and the availability of Chrome APIs within those contexts require these scripts to be setup in a particular sequence so that the communication channels needed by FCL's EXT/RPC service method will work.
 
 The following is an overview of these scripts and the functionality they need to support FCL:
-- `background.js`: Used to launch the extension if selected by the user from Discovery via `chrome.windows.create`.
-- `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage` and send the id of the chrome extension to `script.js` right after it's injected.
-- `script.js`: Injected by `content.js` into the dapp and waits for the id of the chrome extension to build the authn service and allow Discovery to launch the extension.
-
+- `background.js`: Used to launch the extension with `chrome.windows.create` if selected by the user from Discovery or set directly via `fcl.config.discovery.wallet`
+- `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage`.
+- `script.js`: Injected by `content.js` into the brower page shared with the dapp. Adds the extension `authn` service to `window.fcl_extensions` list on load. This allows FCL to confirm installation and send extension details to Discovery or launch as default wallet.
 
 ![FCL Authz Sequence Diagram](img/ext-rpc-message-passing.png)
 <details>
@@ -54,6 +53,7 @@ Use the following versions of FCL within your extension - available via [NPM](ht
     - Requires separate http-transport package from `@onflow/transport-http` installed as dependency
 
 Configure FCL to use the HTTP API on the Access Node with the HTTP transport layer.
+
 ```js
 import {config} from "@onflow/fcl"
 import {send as httpSend} from "@onflow/transport-http"
@@ -62,9 +62,11 @@ config()
   fclConfig.put("accessNode.api", "https://rest-testnet.onflow.org")
   fclConfig.put("sdk.transport", httpSend)
 ```
-See [here](https://docs.onflow.org/fcl/reference/configure-fcl/) for more configuration options. Note that many of these configuration options are dapp specific and not needed for the wallet.
+
+See [here](https://docs.onflow.org/fcl/reference/configure-fcl/) for more configuration options. Note, that many of these configuration options are dapp specific and not needed for the wallet.
 
 **Manifest V3 configurations:**
+
 ```json
   ...
 
@@ -92,38 +94,47 @@ See [here](https://docs.onflow.org/fcl/reference/configure-fcl/) for more config
 
   ...
 ```
+
 See [here](https://github.com/gregsantos/flow-wallet-extension/blob/master/public/manifest.json) for the full sample manifest v3 file.
 
 ### Harness & Testing
+
 In order to test your FCL integration as you build your extension, you may want to use a simple sample dapp that can send authentication and authorization requests. We have created a [basic harness](https://github.com/orodio/harness) to use for development that you can download, run, and use against your extension. View the instructions on the harness to get it running.
 
 
 
 ### FCL Discovery
-FCL Discovery relies on the global window object to find injected extensions in `window.fcl_extensions`. It expects extensions to have injected an specific object into the array that needs to proceed to authentication if the user chooses it and contains details like the extension endpoint to open on login, the FCL version and more. This object is created via [`script.js`](#) shouldn't need much modification past the `endpoint` key.
+
+FCL relies on the global window object to find injected extensions in `window.fcl_extensions` list. It expects the extension to have injected a specific object into the array that it needs to confirm installation and proceed with authentication if the user chooses it. This `authn` type Service object is added via [`script.js`](#) and passed to Discovery. It contains details like the extension endpoint to open on login (see below), the FCL version, and the wallet provider details.
+
 ```js
 const AuthnService = {
   f_type: "Service",
   f_vsn: "1.0.0",
   type: "authn",
-  uid: `${id}#authn`,
-  endpoint: `chrome-extension://${id}/index.html#/authn`,
-  method: "EXT/RPC",	
+  uid: `uniqueDedupeKey`,
+  endpoint: `ext:0x1234`,
+  method: "EXT/RPC",
   ...
 }
+
 if (!Array.isArray(window.fcl_extensions)) {
   window.fcl_extensions = []
 }
 window.fcl_extensions.push(AuthnService)
 ```
-In order for `script.js` to push to the `window`, and the user to launch the extension from an unopened state, the following actions need to run in the following order:
-1. `background.js` adds a listener for `FCL:LAUNCH:EXTENSION`
-2. `content.js` injects separate script (`script.js`) into the window as it has no access to page window variables.
-3. `content.js` sends `chrome.runtime.id` to `script.js` via `CustomEvent` (*timeout may be required) as Discovery will need this id to define the endpoint of the extension on initial open.
-4. `script.js` listens for event from `content.js` and adds `AuthnService` on `window.fcl_extensions`. FCL checks for injected services to sends to Discovery.
-5. Discovery is able display the extension as an available choice for the user as it pulls from the `window.fcl_extensions` array for the relevant information. If user selects the extension wallet, it uses the `endpoint` in the authn service and the `FCL:LAUNCH:EXTENSION` message to `background.js` to launch the extension. This is required due to the `chrome.windows.create` only being accessible by the background script.
 
-All future actions that require the user to authenticate or authorize are proxied through `content.js` directly as the extension is already launched and has listeners mounted on `content.js` to pass messages.
+The endpoint of your `authn` and other services should be of the form `ext:YOUR_WALLETS_FLOW_ACCOUNT_ADDRESS`. This endpoint is used by FCL and checked in your background script to conditionally open the extension popup window. It can optionally be used to set the extension as the default wallet via `fcl.discovery.wallet`
+
+In order for the user to launch the extension from an unopened state, the following actions need to run in the following order:
+
+1. `background.js` adds a listener via `chrome.runtime.onMessage.addListener(callback)`. The callback should confirm the service endpoint before opening the extension popup window.
+2. `content.js` adds an event listener for messages from window/FCL. Messages received will be proxied to the extension via `chrome.runtime.sendMessage`. It also adds another listener via `chrome.runtime.onMessage.addListener` to proxy messages back from the extension to the window/FCL.
+3. `content.js` injects a separate script (`script.js`) into the window as it has no access to page window variables.
+4. `script.js` adds `authn` type Service on `window.fcl_extensions`. FCL checks for injected services to send to Discovery.
+5. Discovery is able display the extension as an available choice for the user as it pulls from the `window.fcl_extensions` array for the relevant information. If the extension wallet is selected, FCL uses the authn service method (`EXT/RPC`) to send a postMessage with service `endpoint` and `type`. The content script receives this and proxies the message to the `background.js` to launch the extension. This is required due to the `chrome.windows.create` only being accessible by the background script.
+
+Once the extension popup window is open, communication is proxied directly through `content.js` to/from the extension popup via `chrome.runtime.sendMessage` (content script) and `chrome.tabs.sendMessage` (extension popup).
 
 <details>
 <summary>FCL Discovery and Authn Sequence Diagram</summary>
@@ -134,10 +145,12 @@ All future actions that require the user to authenticate or authorize are proxie
 TODO: How to generate accounts and use the Account API
 
 ### FCL Authentication
-Authentication is triggered either through Discovery or through any FCL transaction that requires authentication. When authentication is requested, the following should happen:
+
+Authentication is triggered either through Discovery, default configuration (fcl.config.discovery.wallet) or through any FCL transaction that requires authentication. When authentication is requested, the following should happen:
+
 1. On opening of the authentication tab on the extension, it should fire a message of `{type: "FCL:VIEW:READY"}` via `chrome.tabs.sendMessage` to indicate to the dapp that it should wait for a response from the user within the extension. See [sample authn page](#).
-2. The dapp will respond with `FCL:VIEW:READY:RESPONSE` which is received by `content.js` and sent to the authn page. The dapp will wait for an approved polling response from the extension.
-3. Once the user has successfully authenticated, the extension should send a message of type `PollingResponse` with the `status` field as `"APPROVED"` and the relevant service objects returned. See [sample authn page](#).
+2. The dapp/FCL will respond with `FCL:VIEW:READY:RESPONSE` which is received by `content.js` and proxied to the extension authentication page. The dapp will wait for an approved polling response from the extension.
+3. Once the user has successfully authenticated, the extension should send a message of type `PollingResponse` with the `status` field as `"APPROVED"` and an `AuthnResponse` with relevant service objects as data. See [sample authn page](#).
 
 All messages above are proxied through `content.js`.
 
@@ -150,11 +163,11 @@ All messages above are proxied through `content.js`.
 ### FCL Authorization
 Authorization is very similar to authentication with the exception that the `"FCL:VIEW:READY:RESPONSE"` will contain additional data that contains the signable object (containing the relevant Cadence transaction, etc.).
 
-The authorization should likely also listen for `FLOW::TX` messages to recieve the transactionID back from the dapp to recieve the status of the transaction.
+The content script can also listen for `FLOW::TX` messages and proxy to the popup to recieve the status of the transaction.
 
-In the `PollingResponse`, there should be a `data` field that contains a composite signature for the users transaction.
+In the `PollingResponse`, there should be a `data` field that contains a composite signature for the user's transaction.
 
-> **This composite signature will be generated using the users keys and should be done securely.** 
+> **This composite signature will be generated using the users keys and should be done securely.**
 
 Although a [sample implementation](#) has been provided, you should thoroughly review your own signing functionality and ensure its security.
 
