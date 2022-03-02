@@ -34,7 +34,7 @@ if (!chrome.action) {
 
 // This object will maintain a map from address to private key for the caller
 
-var passworder = require('browser-passworder');
+var passworder = require("browser-passworder");
 
 class KeyVault {
   constructor(opts = {}) {
@@ -49,9 +49,9 @@ class KeyVault {
     // take encrypted data from localStorage and push it into sessionStorage
     return await new Promise((resolve, reject) => {
       try {
-        chrome.storage.local.get('encrypted_vault', async (blob) => {
+        chrome.storage.local.get("encrypted_vault", async (blob) => {
           this.unlocked = true;
-          if (JSON.stringify(blob) === '{}') {
+          if (JSON.stringify(blob) === "{}") {
             // nothing has been saved to disk yet, start fresh
             this._setBadgeUnlocked();
             resolve(true);
@@ -91,12 +91,12 @@ class KeyVault {
   async loadVault() {
     // decrypted data should already be in sessionStorage, or it is considered "locked"
     return await new Promise((resolve, reject) => {
-      chrome.storage.session.get('vault', (res) => {
+      chrome.storage.session.get("vault", (res) => {
         if (res.vault) {
           var parsedVault = JSON.parse(res.vault);
           Object.keys(parsedVault).forEach((key) => {
             var value = parsedVault[key];
-            if (value.type == 'key-import') {
+            if (value.type == "key-import") {
               this.keyMap.set(key, { rawKey: value.rawKey, type: value.type });
             } else {
               // skip unsupported key types, how'd they get there ???
@@ -117,7 +117,7 @@ class KeyVault {
   // wipe this object and memory, then mark as locked
   async lockVault() {
     await new Promise((resolve, reject) => {
-      chrome.storage.session.set({ vault: '' }, () => {
+      chrome.storage.session.set({ vault: "" }, () => {
         this.keyMap = new Map();
         this.unlocked = false;
         this._setBadgeLocked();
@@ -129,9 +129,9 @@ class KeyVault {
   // when needed for a signing operation, retrieve the key
   getKey(pubKey) {
     if (!this.unlocked) {
-      throw new Error('KeyVault Locked');
+      throw new Error("KeyVault Locked");
     } else if (!this.keyMap.get(pubKey)) {
-      throw new Error('Key does not exist in KeyVault');
+      throw new Error("Key does not exist in KeyVault");
     }
     return this.keyMap.get(pubKey).rawKey;
   }
@@ -140,13 +140,13 @@ class KeyVault {
   // password is needed to add it to the encrypted storage
   async addKey(pubKey, hexKey, password) {
     if (!this.unlocked) {
-      throw new Error('KeyVault Locked');
+      throw new Error("KeyVault Locked");
     }
 
     var formattedKey = hexKey; // get into format we actually want or make sure it is correct already
 
     // update the KeyVault object
-    this.keyMap.set(pubKey, { rawKey: formattedKey, type: 'key-import' });
+    this.keyMap.set(pubKey, { rawKey: formattedKey, type: "key-import" });
     // update session and local storages
     await this._saveVault(password);
   }
@@ -186,7 +186,7 @@ class KeyVault {
   // don't have a good use for this outside debugging for now
   _listKeys() {
     if (!this.unlocked) {
-      throw new Error('KeyVault Locked');
+      throw new Error("KeyVault Locked");
     }
 
     return this.keyMap;
@@ -196,10 +196,10 @@ class KeyVault {
   // TODO: These don't look so great, commenting them out until we
   // can make this look nice
   _setBadgeLocked() {
-    chrome.action.setBadgeText({ text: '🔐' });
+    chrome.action.setBadgeText({ text: "🔐" });
   }
   _setBadgeUnlocked() {
-    chrome.action.setBadgeText({ text: '🔓' });
+    chrome.action.setBadgeText({ text: "🔓" });
   }
 }
 

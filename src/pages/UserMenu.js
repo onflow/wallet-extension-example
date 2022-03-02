@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
-import { Text, Box, VStack } from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/toast';
-import { accountManager } from '../lib/AccountManager';
-import { keyVault } from '../lib/keyVault';
-import Title from '../components/Title';
-import SelectableListItem from '../components/SelectableListItem';
-import Layout from '../components/Layout';
-import * as styles from '../styles';
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import { Text, Box, VStack } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/toast";
+import { accountManager } from "../lib/AccountManager";
+import { keyVault } from "../lib/keyVault";
+import Title from "../components/Title";
+import SelectableListItem from "../components/SelectableListItem";
+import Layout from "../components/Layout";
+import * as styles from "../styles";
 
 const UserMenu = ({ location }) => {
   const [account, setAccount] = useState(null);
@@ -17,7 +17,7 @@ const UserMenu = ({ location }) => {
   useEffect(() => {
     async function getAccount() {
       const account = await accountManager.getFavoriteAccount();
-      console.log('load accounts', account);
+      console.log("load accounts", account);
       setAccount(account);
     }
     getAccount();
@@ -26,12 +26,12 @@ const UserMenu = ({ location }) => {
   if (!account) {
     return null;
   }
-  const address = account ? account.address : '';
+  const address = account ? account.address : "";
 
   const lockWallet = async () => {
     await keyVault.lockVault();
     history.push({
-      pathname: '/LogIn',
+      pathname: "/LogIn",
     });
   };
 
@@ -41,15 +41,15 @@ const UserMenu = ({ location }) => {
     >
       <Title align="left">Settings</Title>
       <Text fontSize="lg" mt="20px">
-        Logged in to <span style={{ fontWeight: 'bold' }}>{address}</span>
+        Logged in to <span style={{ fontWeight: "bold" }}>{address}</span>
       </Text>
       <VStack>
         <SelectableListItem
           text="Switch Account"
           onClick={() => {
             history.push({
-              pathname: '/SelectAccount',
-              state: { withGoBack: true, type: 'switch' },
+              pathname: "/SelectAccount",
+              state: { withGoBack: true, type: "switch" },
             });
           }}
         />
@@ -58,8 +58,8 @@ const UserMenu = ({ location }) => {
           text="Manage Accounts"
           onClick={() => {
             history.push({
-              pathname: '/SelectAccount',
-              state: { withGoBack: true, type: 'manage' },
+              pathname: "/SelectAccount",
+              state: { withGoBack: true, type: "manage" },
             });
           }}
         />
@@ -70,8 +70,8 @@ const UserMenu = ({ location }) => {
           text="Change Password"
           onClick={() => {
             toast({
-              description: 'Password changes are not yet available.',
-              status: 'error',
+              description: "Password changes are not yet available.",
+              status: "error",
               duration: styles.toastDuration,
               isClosable: true,
             });

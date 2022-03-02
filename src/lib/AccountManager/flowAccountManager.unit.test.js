@@ -1,24 +1,24 @@
-import FlowAccountManager from './flowAccountManager';
-import { chrome } from 'jest-chrome';
-import FlowAccount from '../flowAccount';
+import FlowAccountManager from "./flowAccountManager";
+import { chrome } from "jest-chrome";
+import FlowAccount from "../flowAccount";
 
 let flowAccountManager = new FlowAccountManager({
-  accountStoragePrefix: 'flow_mainnet',
-  accountNetwork: 'Flow Mainnet',
+  accountStoragePrefix: "flow_mainnet",
+  accountNetwork: "Flow Mainnet",
 });
 
 afterEach(() => {
   // start each test with a clean account manager
   flowAccountManager = new FlowAccountManager({
-    accountStoragePrefix: 'flow_mainnet',
-    accountNetwork: 'Flow Mainnet',
+    accountStoragePrefix: "flow_mainnet",
+    accountNetwork: "Flow Mainnet",
   });
 });
 
-test('constructor', () => {
+test("constructor", () => {
   const expectedManager = {
-    accountStoragePrefix: 'flow_mainnet',
-    accountNetwork: 'Flow Mainnet',
+    accountStoragePrefix: "flow_mainnet",
+    accountNetwork: "Flow Mainnet",
     favoriteAccount: null,
     loaded: false,
     accountMap: new Map(),
@@ -26,9 +26,9 @@ test('constructor', () => {
   expect(flowAccountManager).toMatchObject(expectedManager);
 });
 
-test('getFavoriteAccount', async () => {
+test("getFavoriteAccount", async () => {
   const favoriteAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   await flowAccountManager.importAccount(favoriteAccount);
@@ -36,9 +36,9 @@ test('getFavoriteAccount', async () => {
   expect(await flowAccountManager.getFavoriteAccount()).toBe(favoriteAccount);
 });
 
-test('setFavoriteAccount', async () => {
+test("setFavoriteAccount", async () => {
   const favoriteAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   await flowAccountManager.importAccount(favoriteAccount);
@@ -46,15 +46,15 @@ test('setFavoriteAccount', async () => {
   expect(await flowAccountManager.getFavoriteAccount()).toBe(favoriteAccount);
 });
 
-test('setFavoriteAccount missing account', async () => {
+test("setFavoriteAccount missing account", async () => {
   await expect(
-    flowAccountManager.setFavoriteAccount('0x1')
-  ).rejects.toThrowError(new Error('Account 0x1 does not exist'));
+    flowAccountManager.setFavoriteAccount("0x1")
+  ).rejects.toThrowError(new Error("Account 0x1 does not exist"));
 });
 
-test('listAccounts', async () => {
+test("listAccounts", async () => {
   const testAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   await flowAccountManager.importAccount(testAccount);
@@ -64,9 +64,9 @@ test('listAccounts', async () => {
   expect(await flowAccountManager.listAccounts()).toStrictEqual(expectedMap);
 });
 
-test('importAccount', async () => {
+test("importAccount", async () => {
   const testAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   await flowAccountManager.importAccount(testAccount);
@@ -76,9 +76,9 @@ test('importAccount', async () => {
   expect(await flowAccountManager.listAccounts()).toStrictEqual(expectedMap);
 });
 
-test('removeAccount', async () => {
+test("removeAccount", async () => {
   const testAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   await flowAccountManager.importAccount(testAccount);
@@ -93,13 +93,13 @@ test('removeAccount', async () => {
   expect(await flowAccountManager.listAccounts()).toStrictEqual(new Map());
 });
 
-test('load', async () => {
+test("load", async () => {
   // set up expected manager state
   const testAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
-  testAccount.addKey('0x1', '0x123', 1000, 'testSigAlg', 'testHashAlg');
+  testAccount.addKey("0x1", "0x123", 1000, "testSigAlg", "testHashAlg");
   const expectedMap = new Map();
   expectedMap.set(testAccount.address, testAccount);
   await flowAccountManager.importAccount(testAccount);
@@ -113,8 +113,8 @@ test('load', async () => {
 
   // make sure we are going to have to load the state the localStorage
   flowAccountManager = new FlowAccountManager({
-    accountStoragePrefix: 'flow_mainnet',
-    accountNetwork: 'Flow Mainnet',
+    accountStoragePrefix: "flow_mainnet",
+    accountNetwork: "Flow Mainnet",
   });
   expect(await flowAccountManager.getFavoriteAccount()).toBe(null);
 
@@ -129,8 +129,8 @@ test('load', async () => {
   expect(await flowAccountManager.listAccounts()).toStrictEqual(expectedMap);
 });
 
-test('_saveToLocalStorage', async () => {
-  const spy = jest.spyOn(chrome.storage.local, 'set');
+test("_saveToLocalStorage", async () => {
+  const spy = jest.spyOn(chrome.storage.local, "set");
   const expectedToStore = {
     flow_mainnet_account_manager: flowAccountManager._serialize(),
   };
@@ -139,18 +139,18 @@ test('_saveToLocalStorage', async () => {
   expect(spy).toBeCalledWith(expectedToStore);
 });
 
-test('_serialize', () => {
+test("_serialize", () => {
   const expectedString = '{"accounts":{}}';
 
   expect(flowAccountManager._serialize()).toBe(expectedString);
 });
 
-test('_serialize with account', () => {
+test("_serialize with account", () => {
   const expectedString =
     '{"accounts":{"0x1":{"address":"0x1","balance":100,"publicKeys":{}}}}';
 
   const testAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   flowAccountManager.importAccount(testAccount);
@@ -158,26 +158,26 @@ test('_serialize with account', () => {
   expect(flowAccountManager._serialize()).toBe(expectedString);
 });
 
-test('_serialize with account with key', () => {
+test("_serialize with account with key", () => {
   const expectedString =
     '{"accounts":{"0x1":{"address":"0x1","balance":100,"publicKeys":{"0x1":{"id":"0x1","publicKey":"0x123","sigAlg":"testSigAlg","hashAlg":"testHashAlg","weight":1000}}}}}';
 
   var testAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
-  testAccount.addKey('0x1', '0x123', 1000, 'testSigAlg', 'testHashAlg');
+  testAccount.addKey("0x1", "0x123", 1000, "testSigAlg", "testHashAlg");
   flowAccountManager.importAccount(testAccount);
 
   expect(flowAccountManager._serialize()).toBe(expectedString);
 });
 
-test('_seralize with favorite', () => {
+test("_seralize with favorite", () => {
   const expectedString =
     '{"accounts":{"0x1":{"address":"0x1","balance":100,"publicKeys":{}}},"favoriteAccount":"0x1"}';
 
   const favoriteAccount = new FlowAccount({
-    address: '0x1',
+    address: "0x1",
     balance: 100,
   });
   flowAccountManager.importAccount(favoriteAccount);

@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Text, Button, useToast } from '@chakra-ui/react';
-import Title from '../components/Title';
-import GoBack from '../components/GoBack';
-import * as styles from '../styles';
-import { createOrImportAccount } from '../controllers/accounts';
-import { useHistory } from 'react-router';
-import { keyVault } from '../lib/keyVault';
-import Layout from '../components/Layout';
-import SubmitInput from '../components/SubmitInput';
+import React, { useState } from "react";
+import { Text, Button, useToast } from "@chakra-ui/react";
+import Title from "../components/Title";
+import GoBack from "../components/GoBack";
+import * as styles from "../styles";
+import { createOrImportAccount } from "../controllers/accounts";
+import { useHistory } from "react-router";
+import { keyVault } from "../lib/keyVault";
+import Layout from "../components/Layout";
+import SubmitInput from "../components/SubmitInput";
 
 const SetPassword = ({ location }) => {
-  const [loading, setLoading] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [confirmPwd, setConfirmPwd] = useState('');
+  const [loading, setLoading] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
   const history = useHistory();
 
   const loggedIn = !!keyVault.unlocked;
@@ -27,31 +27,31 @@ const SetPassword = ({ location }) => {
   const importOrCreateAccount = async (skipConfirmPwd) => {
     if (!skipConfirmPwd && pwd !== confirmPwd) {
       toast({
-        description: 'Password and Confirm Password fields must match',
-        status: 'error',
+        description: "Password and Confirm Password fields must match",
+        status: "error",
         duration: styles.toastDuration,
         isClosable: true,
       });
       return;
     }
     setLoading(true);
-    if (actionType === 'import') {
+    if (actionType === "import") {
       try {
         await createOrImportAccount(accountAddress, privKey, keyID, pwd);
         history.push({
-          pathname: '/Balances',
-          state: { type: 'create' },
+          pathname: "/Balances",
+          state: { type: "create" },
         });
         toast({
           description: `Account Imported!`,
-          status: 'success',
+          status: "success",
           duration: styles.toastDuration,
           isClosable: true,
         });
       } catch (e) {
         toast({
           description: `Failed to import account - ${e.message}`,
-          status: 'error',
+          status: "error",
           duration: styles.toastDuration,
           isClosable: true,
         });
@@ -60,19 +60,19 @@ const SetPassword = ({ location }) => {
       try {
         await createOrImportAccount(accountAddress, privKey, keyID, pwd);
         history.push({
-          pathname: '/Balances',
-          state: { type: 'create' },
+          pathname: "/Balances",
+          state: { type: "create" },
         });
         toast({
           description: `Account Created!`,
-          status: 'success',
+          status: "success",
           duration: styles.toastDuration,
           isClosable: true,
         });
       } catch (e) {
         toast({
           description: `Failed to create account - ${e.message}`,
-          status: 'error',
+          status: "error",
           duration: styles.toastDuration,
           isClosable: true,
         });

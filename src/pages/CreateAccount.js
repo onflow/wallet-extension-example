@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Tabs,
@@ -8,49 +8,49 @@ import {
   Tab,
   Spacer,
   Flex,
-} from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/toast';
-import { ec as EC } from 'elliptic';
-import * as styles from '../styles';
-import { useHistory } from 'react-router-dom';
-import Layout from '../components/Layout';
-import SubmitInput from '../components/SubmitInput';
+} from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/toast";
+import { ec as EC } from "elliptic";
+import * as styles from "../styles";
+import { useHistory } from "react-router-dom";
+import Layout from "../components/Layout";
+import SubmitInput from "../components/SubmitInput";
 import {
   derivePrivKey,
   validateFlowAccountInfo,
-} from '../controllers/accounts';
-import LoadingSpinner from '../components/LoadingSpinner';
-const p256 = new EC('p256');
+} from "../controllers/accounts";
+import LoadingSpinner from "../components/LoadingSpinner";
+const p256 = new EC("p256");
 
 const CreateAccount = ({ location }) => {
   const history = useHistory();
   const toast = useToast();
-  const [accountAddress, setAccountAddress] = useState('');
-  const [privKey, setPrivKey] = useState('');
-  const [seedPhrase, setSeedPhrase] = useState('');
-  const [keyID, setKeyID] = useState('0');
+  const [accountAddress, setAccountAddress] = useState("");
+  const [privKey, setPrivKey] = useState("");
+  const [seedPhrase, setSeedPhrase] = useState("");
+  const [keyID, setKeyID] = useState("0");
   const [onPrivateKeyTab, setOnPrivateKeyTab] = useState(true);
-  const [pageTitle, setPageTitle] = useState('');
+  const [pageTitle, setPageTitle] = useState("");
 
   const createAccount = async () => {
     let account;
     const key = p256.genKeyPair();
-    const pubKey = key.getPublic('hex').slice(2);
-    const privateKey = key.getPrivate('hex');
+    const pubKey = key.getPublic("hex").slice(2);
+    const privateKey = key.getPrivate("hex");
     const data = {
       publicKey: pubKey,
-      signatureAlgorithm: 'ECDSA_P256',
-      hashAlgorithm: 'SHA3_256',
+      signatureAlgorithm: "ECDSA_P256",
+      hashAlgorithm: "SHA3_256",
     };
     const url =
-      'https://hardware-wallet-api-testnet.staging.onflow.org/accounts';
+      "https://hardware-wallet-api-testnet.staging.onflow.org/accounts";
 
     try {
       let response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
@@ -59,14 +59,14 @@ const CreateAccount = ({ location }) => {
     } catch (e) {
       toast({
         description: e.toString(),
-        status: 'error',
+        status: "error",
         duration: styles.toastDuration,
         isClosable: true,
       });
       return;
     }
     history.push({
-      pathname: '/SetPassword',
+      pathname: "/SetPassword",
       state: {
         ...location.state,
         privKey: privateKey,
@@ -87,14 +87,14 @@ const CreateAccount = ({ location }) => {
     } catch (e) {
       toast({
         description: e.toString(),
-        status: 'error',
+        status: "error",
         duration: styles.toastDuration,
         isClosable: true,
       });
       return;
     }
     history.push({
-      pathname: '/SetPassword',
+      pathname: "/SetPassword",
       state: {
         ...location.state,
         privKey: privateKey,
@@ -107,12 +107,12 @@ const CreateAccount = ({ location }) => {
 
   useEffect(() => {
     setPageTitle(
-      location.state.type === 'create'
-        ? 'Creating Flow Account'
-        : 'Import Flow Account'
+      location.state.type === "create"
+        ? "Creating Flow Account"
+        : "Import Flow Account"
     );
 
-    if (location.state.type === 'create') {
+    if (location.state.type === "create") {
       createAccount();
     }
   }, [location.state.type]);
@@ -122,7 +122,7 @@ const CreateAccount = ({ location }) => {
       withGoBack={location && location.state && location.state.withGoBack}
       title={pageTitle}
     >
-      {location.state.type === 'create' ? (
+      {location.state.type === "create" ? (
         <Flex direction="row" w="100%" h="100%" align="center" justify="center">
           <LoadingSpinner />
         </Flex>
@@ -156,7 +156,7 @@ const CreateAccount = ({ location }) => {
               <Tab
                 borderRadius="20px"
                 color="white"
-                _selected={{ color: 'white', bg: styles.primaryColor }}
+                _selected={{ color: "white", bg: styles.primaryColor }}
               >
                 Import With
                 <br />
@@ -165,7 +165,7 @@ const CreateAccount = ({ location }) => {
               <Tab
                 borderRadius="20px"
                 color="white"
-                _selected={{ color: 'white', bg: styles.primaryColor }}
+                _selected={{ color: "white", bg: styles.primaryColor }}
               >
                 Import With
                 <br />

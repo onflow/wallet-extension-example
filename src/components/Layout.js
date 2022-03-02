@@ -1,21 +1,21 @@
-import React from 'react';
-import { Box, Flex } from '@chakra-ui/react';
-import GoBack from './GoBack';
-import * as styles from '../styles';
-import Title from './Title';
+import React from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import GoBack from "./GoBack";
+import * as styles from "../styles";
+import Title from "./Title";
 
 const Layout = ({ children, withGoBack, title }) => {
   return (
     <Box
-      w={'375px'}
-      h={'600px'}
+      w={"375px"}
+      h={"600px"}
       bg={styles.bgColor}
       color={styles.fgColor}
       overflowX="hidden"
       overflowY="scroll"
       css={{
-        '&::-webkit-scrollbar': {
-          display: 'none',
+        "&::-webkit-scrollbar": {
+          display: "none",
         },
       }}
     >

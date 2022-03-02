@@ -1,6 +1,6 @@
-import React from 'react';
-import Title from '../components/Title';
-import PopupLayout from '../components/PopupLayout';
+import React from "react";
+import Title from "../components/Title";
+import PopupLayout from "../components/PopupLayout";
 
 const SelectAccount = () => {
   return (

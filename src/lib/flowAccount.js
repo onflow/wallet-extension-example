@@ -1,4 +1,4 @@
-import FlowPubKey from './flowPubKey';
+import FlowPubKey from "./flowPubKey";
 
 export default class FlowAccount {
   constructor(opts = {}) {

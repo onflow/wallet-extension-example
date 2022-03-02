@@ -1,7 +1,7 @@
-import React from 'react';
-import { useHistory } from 'react-router';
-import { Link, Box } from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+import React from "react";
+import { useHistory } from "react-router";
+import { Link, Box } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const GoBack = ({ shouldShow }) => {
   let history = useHistory();

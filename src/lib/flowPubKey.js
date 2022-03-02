@@ -1,7 +1,7 @@
 export default class FlowPubKey {
   constructor(opts = {}) {
     if (opts.weight < 1 || opts.weight > 1000) {
-      throw new Error('FlowPubKey weight must be an integer between 1-1000');
+      throw new Error("FlowPubKey weight must be an integer between 1-1000");
     }
 
     this.id = opts.id;
@@ -13,7 +13,7 @@ export default class FlowPubKey {
 
   updateWeight(weight) {
     if (weight < 1 || weight > 1000) {
-      throw new Error('FlowPubKey weight must be an integer between 1-1000');
+      throw new Error("FlowPubKey weight must be an integer between 1-1000");
     }
     this.weight = weight;
   }

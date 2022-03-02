@@ -1,5 +1,5 @@
-import * as fcl from '@onflow/fcl';
-import * as t from '@onflow/types';
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 /*
     TODO
@@ -39,7 +39,7 @@ pub fun main(account: Address): UFix64 {
 
 export const getTokenBalance = async (currency, address) => {
   let result;
-  const CODE = currency === 'flow' ? getFlowCode : getFusdCode;
+  const CODE = currency === "flow" ? getFlowCode : getFusdCode;
   try {
     result = await fcl
       .send([

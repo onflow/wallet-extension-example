@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Title from '../components/Title';
-import PopupLayout from '../components/PopupLayout';
-import MoonPay from '../components/MoonPay';
-import { accountManager } from '../lib/AccountManager';
+import React, { useEffect, useState } from "react";
+import Title from "../components/Title";
+import PopupLayout from "../components/PopupLayout";
+import MoonPay from "../components/MoonPay";
+import { accountManager } from "../lib/AccountManager";
 import {
   Tabs,
   TabList,
@@ -10,8 +10,8 @@ import {
   TabPanels,
   TabPanel,
   Text,
-} from '@chakra-ui/react';
-import * as styles from '../styles';
+} from "@chakra-ui/react";
+import * as styles from "../styles";
 
 const Swaps = () => {
   const [account, setAccount] = useState(null);
@@ -26,7 +26,7 @@ const Swaps = () => {
   if (!account) {
     return null;
   }
-  const address = account ? account.address : '';
+  const address = account ? account.address : "";
   return (
     <PopupLayout selectedPage="swaps">
       <Title align="left">Swaps</Title>
@@ -43,7 +43,7 @@ const Swaps = () => {
             p={2}
             borderRadius="20px"
             color="white"
-            _selected={{ color: 'white', bg: styles.primaryColor }}
+            _selected={{ color: "white", bg: styles.primaryColor }}
           >
             Buy Flow (or FUSD) with MoonPay
           </Tab>
@@ -51,7 +51,7 @@ const Swaps = () => {
             p={2}
             borderRadius="20px"
             color="white"
-            _selected={{ color: 'white', bg: styles.primaryColor }}
+            _selected={{ color: "white", bg: styles.primaryColor }}
           >
             Swap Flow, FUSD and more with Blocto
           </Tab>

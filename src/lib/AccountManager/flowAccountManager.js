@@ -1,5 +1,5 @@
-import FlowAccount from '../flowAccount';
-import AccountManager from './accountManager';
+import FlowAccount from "../flowAccount";
+import AccountManager from "./accountManager";
 
 export default class FlowAccountManager extends AccountManager {
   constructor(opts = {}) {
@@ -20,7 +20,7 @@ export default class FlowAccountManager extends AccountManager {
       this.favoriteAccount = address;
       await this._saveToLocalStorage();
     } else {
-      throw new Error('Account ' + address + ' does not exist');
+      throw new Error("Account " + address + " does not exist");
     }
   }
 
@@ -94,16 +94,16 @@ export default class FlowAccountManager extends AccountManager {
   // should put account and public keys into a single object for storage
   _serialize() {
     var data = {};
-    data['accounts'] = {};
+    data["accounts"] = {};
     this.accountMap.forEach((value, key) => {
-      data['accounts'][key] = {
+      data["accounts"][key] = {
         address: value.address,
         balance: value.balance,
         publicKeys: Object.fromEntries(value.publicKeys),
       };
     });
     if (this.favoriteAccount) {
-      data['favoriteAccount'] = this.favoriteAccount;
+      data["favoriteAccount"] = this.favoriteAccount;
     }
     return JSON.stringify(data);
   }

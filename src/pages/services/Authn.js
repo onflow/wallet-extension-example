@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Text,
@@ -8,13 +8,13 @@ import {
   Image,
   Center,
   VStack,
-} from '@chakra-ui/react';
-import Title from '../../components/Title';
-import Layout from '../../components/Layout';
-import { accountManager } from '../../lib/AccountManager';
-import { authnServiceDefinition } from '../../controllers/serviceDefinition';
-import * as styles from '../../styles';
-import FlowLogo from '../../assets/flow-logo.png';
+} from "@chakra-ui/react";
+import Title from "../../components/Title";
+import Layout from "../../components/Layout";
+import { accountManager } from "../../lib/AccountManager";
+import { authnServiceDefinition } from "../../controllers/serviceDefinition";
+import * as styles from "../../styles";
+import FlowLogo from "../../assets/flow-logo.png";
 
 export default function Authn({ location }) {
   const [opener, setOpener] = useState(null);
@@ -41,12 +41,12 @@ export default function Authn({ location }) {
            * in the specified tab for the current extension.
            */
           setOpener(tabs[0].id);
-          chrome.tabs.sendMessage(tabs[0].id || 0, { type: 'FCL:VIEW:READY' });
+          chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:READY" });
         }
       );
 
     const extMessageHandler = (msg, sender, sendResponse) => {
-      if (msg.type === 'FCL:VIEW:READY:RESPONSE') {
+      if (msg.type === "FCL:VIEW:READY:RESPONSE") {
         const { hostname } = msg.config.client;
         hostname && setHost(hostname);
       }
@@ -70,7 +70,7 @@ export default function Authn({ location }) {
     return null;
   }
 
-  const address = account ? account.address : '';
+  const address = account ? account.address : "";
 
   function sendAuthnToFCL() {
     // Since we only allow keys >1000 weight, it doesn't matter which key we select
@@ -78,13 +78,13 @@ export default function Authn({ location }) {
     const services = authnServiceDefinition(address, keyId);
 
     chrome.tabs.sendMessage(parseInt(opener), {
-      f_type: 'PollingResponse',
-      f_vsn: '1.0.0',
-      status: 'APPROVED',
+      f_type: "PollingResponse",
+      f_vsn: "1.0.0",
+      status: "APPROVED",
       reason: null,
       data: {
-        f_type: 'AuthnResponse',
-        f_vsn: '1.0.0',
+        f_type: "AuthnResponse",
+        f_vsn: "1.0.0",
         addr: address,
         services: services,
       },
@@ -93,7 +93,7 @@ export default function Authn({ location }) {
   }
 
   function sendCancelToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), { type: 'FCL:VIEW:CLOSE' });
+    chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
     window.close();
   }
 
@@ -101,7 +101,7 @@ export default function Authn({ location }) {
     <Layout withGoBack={false}>
       <Title align="center">Sign In</Title>
       <Box mx="auto" w="280px">
-        <Text mt="32px" fontWeight="bold" fontSize="20px" color={'white'}>
+        <Text mt="32px" fontWeight="bold" fontSize="20px" color={"white"}>
           {host}
         </Text>
         <br />

@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { MemoryRouter, Route } from 'react-router';
-import { AnimatedSwitch } from 'react-router-transition';
-import Initial from '../pages/Initial';
-import CreateAccount from '../pages/CreateAccount';
-import LogIn from '../pages/LogIn';
-import Balances from '../pages/Balances';
-import NFTs from '../pages/NFTs';
-import Swaps from '../pages/Swaps';
-import History from '../pages/History';
-import SetPassword from '../pages/SetPassword';
-import SelectAccount from '../pages/SelectAccount';
-import UserMenu from '../pages/UserMenu';
-import { keyVault } from '../lib/keyVault';
-import { accountManager } from '../lib/AccountManager';
+import React, { useEffect, useState } from "react";
+import { MemoryRouter, Route } from "react-router";
+import { AnimatedSwitch } from "react-router-transition";
+import Initial from "../pages/Initial";
+import CreateAccount from "../pages/CreateAccount";
+import LogIn from "../pages/LogIn";
+import Balances from "../pages/Balances";
+import NFTs from "../pages/NFTs";
+import Swaps from "../pages/Swaps";
+import History from "../pages/History";
+import SetPassword from "../pages/SetPassword";
+import SelectAccount from "../pages/SelectAccount";
+import UserMenu from "../pages/UserMenu";
+import { keyVault } from "../lib/keyVault";
+import { accountManager } from "../lib/AccountManager";
 
 const PopupRouter = () => {
   const [loading, setLoading] = useState(true);
@@ -22,17 +22,17 @@ const PopupRouter = () => {
       if (keyVault.unlocked) {
         const selectedAccount = await accountManager.getFavoriteAccount();
         if (selectedAccount) {
-          setInitial('/Balances');
+          setInitial("/Balances");
         } else {
-          setInitial('/SelectAccount');
+          setInitial("/SelectAccount");
         }
       } else {
         // if we have an account, go to Login page
         const allAccounts = await accountManager.listAccounts();
         if (allAccounts.size > 0) {
-          setInitial('/LogIn');
+          setInitial("/LogIn");
         } else {
-          setInitial('/Initial');
+          setInitial("/Initial");
         }
       }
       setLoading(false);
@@ -44,13 +44,13 @@ const PopupRouter = () => {
     return null;
   }
   const entryRoutes = [
-    '/Initial',
-    '/LogIn',
-    '/Balances',
-    '/SelectAccount',
-    '/NFTs',
-    '/Swaps',
-    '/History',
+    "/Initial",
+    "/LogIn",
+    "/Balances",
+    "/SelectAccount",
+    "/NFTs",
+    "/Swaps",
+    "/History",
   ];
   const initialIndex = entryRoutes.indexOf(initial) || 0;
   return (

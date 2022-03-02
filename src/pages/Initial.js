@@ -1,9 +1,9 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { Img, Button, Text } from '@chakra-ui/react';
-import FlowLogo from '../assets/flow-logo.png';
-import * as styles from '../styles';
-import Layout from '../components/Layout';
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { Img, Button, Text } from "@chakra-ui/react";
+import FlowLogo from "../assets/flow-logo.png";
+import * as styles from "../styles";
+import Layout from "../components/Layout";
 
 const Initial = ({ location }) => {
   const history = useHistory();
@@ -16,8 +16,8 @@ const Initial = ({ location }) => {
       <Button
         onClick={() => {
           history.push({
-            pathname: '/CreateAccount',
-            state: { type: 'create', withGoBack: true },
+            pathname: "/CreateAccount",
+            state: { type: "create", withGoBack: true },
           });
         }}
         mt="14"
@@ -36,8 +36,8 @@ const Initial = ({ location }) => {
       <Button
         onClick={() => {
           history.push({
-            pathname: '/CreateAccount',
-            state: { type: 'import', withGoBack: true },
+            pathname: "/CreateAccount",
+            state: { type: "import", withGoBack: true },
           });
         }}
         mt="6"

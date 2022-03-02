@@ -1,9 +1,9 @@
-import React from 'react';
-import { Input, Textarea } from '@chakra-ui/react';
+import React from "react";
+import { Input, Textarea } from "@chakra-ui/react";
 
 const SubmitInput = (props) => {
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       if (props.onEnter) {
         props.onEnter();
       }

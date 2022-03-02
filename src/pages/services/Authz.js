@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import * as fcl from '@onflow/fcl';
+import React, { useState, useEffect } from "react";
+import * as fcl from "@onflow/fcl";
 import {
   Input,
   Button,
@@ -8,17 +8,17 @@ import {
   VStack,
   Center,
   Textarea,
-} from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/toast';
-import { Flex, Spacer } from '@chakra-ui/layout';
-import Transaction from '../../components/Transaction';
-import Layout from '../../components/Layout';
-import Title from '../../components/Title';
-import ErrorBoundary from '../../components/ErrorBoundary';
-import { keyVault } from '../../lib/keyVault';
-import { createSignature } from '../../controllers/authz';
-import { useTransaction } from '../../contexts/TransactionContext';
-import * as styles from '../../styles';
+} from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/toast";
+import { Flex, Spacer } from "@chakra-ui/layout";
+import Transaction from "../../components/Transaction";
+import Layout from "../../components/Layout";
+import Title from "../../components/Title";
+import ErrorBoundary from "../../components/ErrorBoundary";
+import { keyVault } from "../../lib/keyVault";
+import { createSignature } from "../../controllers/authz";
+import { useTransaction } from "../../contexts/TransactionContext";
+import * as styles from "../../styles";
 
 export default function Authz() {
   const [opener, setOpener] = useState(null);
@@ -27,11 +27,11 @@ export default function Authz() {
   const [transactionCode, setTransactionCode] = useState(``);
   const [showTransactionCode, setShowTransactionCode] = useState(false);
   const [description, setDescription] = useState(
-    'This transaction has not been audited.'
+    "This transaction has not been audited."
   );
   const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [txView, setTxView] = useState('detail');
+  const [txView, setTxView] = useState("detail");
   const [host, setHost] = useState(null);
 
   const { initTransactionState, setTxId, setTransactionStatus } =
@@ -39,8 +39,8 @@ export default function Authz() {
   const toast = useToast();
 
   function fclCallback(data) {
-    if (typeof data != 'object') return;
-    if (data.type !== 'FCL:VIEW:READY:RESPONSE') return;
+    if (typeof data != "object") return;
+    if (data.type !== "FCL:VIEW:READY:RESPONSE") return;
     const signable = data.body;
     const { hostname } = data.config.client;
     hostname && setHost(hostname);
@@ -59,16 +59,16 @@ export default function Authz() {
         },
         (tabs) => {
           setOpener(tabs[0].id);
-          chrome.tabs.sendMessage(tabs[0].id || 0, { type: 'FCL:VIEW:READY' });
+          chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:READY" });
         }
       );
 
     const extMessageHandler = (msg, sender, sendResponse) => {
-      if (msg.type === 'FCL:VIEW:READY:RESPONSE') {
+      if (msg.type === "FCL:VIEW:READY:RESPONSE") {
         fclCallback(JSON.parse(JSON.stringify(msg || {})));
       }
 
-      if (msg.type === 'FLOW::TX') {
+      if (msg.type === "FLOW::TX") {
         setTxId(msg.txId);
         fcl.tx(msg.txId).subscribe((txStatus) => {
           setTransactionStatus(txStatus.status);
@@ -86,8 +86,8 @@ export default function Authz() {
       setUnlocked(true);
     } catch (e) {
       toast({
-        description: 'Invalid password',
-        status: 'error',
+        description: "Invalid password",
+        status: "error",
         duration: styles.toastDuration,
         isClosable: true,
       });
@@ -104,9 +104,9 @@ export default function Authz() {
     );
 
     chrome.tabs.sendMessage(parseInt(opener), {
-      f_type: 'PollingResponse',
-      f_vsn: '1.0.0',
-      status: 'APPROVED',
+      f_type: "PollingResponse",
+      f_vsn: "1.0.0",
+      status: "APPROVED",
       reason: null,
       data: new fcl.WalletUtils.CompositeSignature(
         signable.addr,
@@ -114,11 +114,11 @@ export default function Authz() {
         signedMessage
       ),
     });
-    setTxView('sending');
+    setTxView("sending");
   }
 
   function sendCancelToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), { type: 'FCL:VIEW:CLOSE' });
+    chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
     window.close();
   }
 
@@ -162,7 +162,7 @@ export default function Authz() {
         ) : (
           (() => {
             switch (txView) {
-              case 'detail':
+              case "detail":
                 return (
                   <>
                     <Title align="center">Confirm Transaction</Title>
@@ -171,7 +171,7 @@ export default function Authz() {
                         mt="32px"
                         fontWeight="bold"
                         fontSize="20px"
-                        color={'white'}
+                        color={"white"}
                       >
                         {host}
                       </Text>
@@ -271,7 +271,7 @@ export default function Authz() {
                     </Flex>
                   </>
                 );
-              case 'sending':
+              case "sending":
                 return (
                   <Flex
                     direction="col"

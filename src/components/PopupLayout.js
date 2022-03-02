@@ -1,13 +1,13 @@
-import React from 'react';
-import { useHistory } from 'react-router';
-import { Box, Flex, Icon, Center } from '@chakra-ui/react';
-import { TimeIcon, HamburgerIcon } from '@chakra-ui/icons';
+import React from "react";
+import { useHistory } from "react-router";
+import { Box, Flex, Icon, Center } from "@chakra-ui/react";
+import { TimeIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   MdOutlineAttachMoney,
   MdOutlineCollections,
   MdOutlineSwapVert,
-} from 'react-icons/md';
-import * as styles from '../styles';
+} from "react-icons/md";
+import * as styles from "../styles";
 
 const PopupLayout = ({ children, selectedPage }) => {
   const history = useHistory();
@@ -24,23 +24,23 @@ const PopupLayout = ({ children, selectedPage }) => {
     history.push({
       pathname: pathname,
       state: {
-        withGoBack: pathname === '/UserMenu',
+        withGoBack: pathname === "/UserMenu",
       },
     });
   };
 
   return (
     <Box
-      w={'375px'}
-      h={'600px'}
+      w={"375px"}
+      h={"600px"}
       bg={styles.bgColor}
       color={styles.fgColor}
       bgGradient={`linear(to-t, ${styles.bgColor}, gray.900)`}
       overflowX="hidden"
       overflowY="scroll"
       css={{
-        '&::-webkit-scrollbar': {
-          display: 'none',
+        "&::-webkit-scrollbar": {
+          display: "none",
         },
       }}
     >
@@ -51,10 +51,10 @@ const PopupLayout = ({ children, selectedPage }) => {
           bg={styles.bgNavbar}
           bgGradient={`linear(to-t, ${styles.bgNavbar}, gray.800)`}
           css={{
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            right: '0px',
+            position: "absolute",
+            top: "0px",
+            left: "0px",
+            right: "0px",
           }}
         >
           <Flex h="46px" w="100%">
@@ -64,7 +64,7 @@ const PopupLayout = ({ children, selectedPage }) => {
                 w={6}
                 h={6}
                 onClick={() => {
-                  navigate('/UserMenu');
+                  navigate("/UserMenu");
                 }}
               />
             </Center>
@@ -77,8 +77,8 @@ const PopupLayout = ({ children, selectedPage }) => {
           p="20px"
           bgGradient={`linear(to-tl, ${styles.bgColor}, gray.700)`}
           css={{
-            paddingTop: '50px',
-            paddingBottom: '150px',
+            paddingTop: "50px",
+            paddingBottom: "150px",
           }}
         >
           {children}
@@ -90,53 +90,53 @@ const PopupLayout = ({ children, selectedPage }) => {
           cursor="pointer"
           bgGradient={`linear(to-b, ${styles.bgNavbar}, gray.800)`}
           css={{
-            position: 'absolute',
-            bottom: '0px',
-            left: '0px',
-            right: '0px',
+            position: "absolute",
+            bottom: "0px",
+            left: "0px",
+            right: "0px",
           }}
         >
           <Flex h="60px" w="100%">
             <Center
               grow={true}
               width="25%"
-              onClick={() => navigate('/Balances')}
+              onClick={() => navigate("/Balances")}
             >
               <Icon
                 as={MdOutlineAttachMoney}
                 w={6}
                 h={6}
                 color={
-                  selectedPage === 'balances' ? styles.primaryColor : '#fff'
+                  selectedPage === "balances" ? styles.primaryColor : "#fff"
                 }
               ></Icon>
             </Center>
-            <Center grow={true} width="25%" onClick={() => navigate('/NFTs')}>
+            <Center grow={true} width="25%" onClick={() => navigate("/NFTs")}>
               <Icon
                 as={MdOutlineCollections}
                 w={6}
                 h={6}
-                color={selectedPage === 'nfts' ? styles.primaryColor : '#fff'}
+                color={selectedPage === "nfts" ? styles.primaryColor : "#fff"}
               />
             </Center>
-            <Center grow={true} width="25%" onClick={() => navigate('/Swaps')}>
+            <Center grow={true} width="25%" onClick={() => navigate("/Swaps")}>
               <Icon
                 as={MdOutlineSwapVert}
                 w={6}
                 h={6}
-                color={selectedPage === 'swaps' ? styles.primaryColor : '#fff'}
+                color={selectedPage === "swaps" ? styles.primaryColor : "#fff"}
               />
             </Center>
             <Center
               grow={true}
               width="25%"
-              onClick={() => navigate('/History')}
+              onClick={() => navigate("/History")}
             >
               <TimeIcon
                 w={6}
                 h={6}
                 color={
-                  selectedPage === 'history' ? styles.primaryColor : '#fff'
+                  selectedPage === "history" ? styles.primaryColor : "#fff"
                 }
               />
             </Center>

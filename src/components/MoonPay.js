@@ -1,5 +1,5 @@
-import React from 'react';
-import { Flex } from '@chakra-ui/react';
+import React from "react";
+import { Flex } from "@chakra-ui/react";
 
 const PUBLISHABLE_MOONPAY_API_KEY = ``;
 
@@ -10,10 +10,10 @@ const MoonPay = (accountAddress) => {
       <iframe
         title="moonpay"
         style={{
-          height: '326px',
-          width: '100vw',
-          marginLeft: '-36px',
-          marginTop: '-3px',
+          height: "326px",
+          width: "100vw",
+          marginLeft: "-36px",
+          marginTop: "-3px",
         }}
         allow="accelerometer; autoplay; camera; gyroscope; payment"
         frameBorder="0"

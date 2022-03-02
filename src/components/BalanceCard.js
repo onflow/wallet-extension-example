@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Text,
   VStack,
@@ -8,24 +8,24 @@ import {
   Icon,
   Image,
   Link,
-} from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { AiFillDollarCircle } from 'react-icons/ai';
-import * as styles from '../styles';
-import FlowLogo from '../assets/flow-logo.png';
-import { getTokenBalance } from '../controllers/fungibleTokens';
+} from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { AiFillDollarCircle } from "react-icons/ai";
+import * as styles from "../styles";
+import FlowLogo from "../assets/flow-logo.png";
+import { getTokenBalance } from "../controllers/fungibleTokens";
 
 const retrieveBalance = async (currency, address) => {
   if (!address) {
-    return '--';
+    return "--";
   }
   return await getTokenBalance(currency, address);
 };
 
 const BalanceCard = ({ currency, address }) => {
   currency = currency.toLowerCase();
-  const [balance, setBalance] = useState('--');
-  const ftTokenName = currency === 'flow' ? 'Flow' : 'FUSD';
+  const [balance, setBalance] = useState("--");
+  const ftTokenName = currency === "flow" ? "Flow" : "FUSD";
 
   useEffect(() => {
     async function getBalance() {
@@ -46,7 +46,7 @@ const BalanceCard = ({ currency, address }) => {
     >
       <Flex>
         <Center>
-          {currency === 'flow' ? (
+          {currency === "flow" ? (
             <Image src={FlowLogo} w={10} h={10} />
           ) : (
             <Icon
@@ -63,7 +63,7 @@ const BalanceCard = ({ currency, address }) => {
             {ftTokenName} Balance
           </Text>
           <Text fontWeight="bold" fontSize="24px">
-            {currency === 'flow' ? '₣' : '$'}
+            {currency === "flow" ? "₣" : "$"}
             {balance}
           </Text>
         </VStack>

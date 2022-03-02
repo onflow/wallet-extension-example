@@ -1,12 +1,12 @@
-import { keyVault } from './keyVault';
-import { chrome } from 'jest-chrome';
-var passworder = require('browser-passworder');
+import { keyVault } from "./keyVault";
+import { chrome } from "jest-chrome";
+var passworder = require("browser-passworder");
 
-const TEST_PASSWORD = 'TEST_PASSWORD';
+const TEST_PASSWORD = "TEST_PASSWORD";
 
 beforeEach(() => {
-  jest.spyOn(keyVault, '_setBadgeUnlocked').mockImplementation(() => {});
-  jest.spyOn(keyVault, '_setBadgeLocked').mockImplementation(() => {});
+  jest.spyOn(keyVault, "_setBadgeUnlocked").mockImplementation(() => {});
+  jest.spyOn(keyVault, "_setBadgeLocked").mockImplementation(() => {});
 });
 
 afterEach(() => {
@@ -14,7 +14,7 @@ afterEach(() => {
   keyVault._reset();
 });
 
-test('constructor', () => {
+test("constructor", () => {
   var expectedVault = {
     unlocked: false,
     keyMap: new Map(),
@@ -22,8 +22,8 @@ test('constructor', () => {
   expect(keyVault).toMatchObject(expectedVault);
 });
 
-test('unlockVault', async () => {
-  jest.spyOn(keyVault, 'loadVault').mockImplementation(() => {});
+test("unlockVault", async () => {
+  jest.spyOn(keyVault, "loadVault").mockImplementation(() => {});
 
   // store the expected state in localStorage
   chrome.storage.local.get.mockImplementation((message, callback) => {
@@ -35,24 +35,24 @@ test('unlockVault', async () => {
   expect(keyVault.unlocked).toBe(true);
 });
 
-test('unlockVault with key', async () => {
-  jest.spyOn(keyVault, 'loadVault').mockImplementation(() => {});
+test("unlockVault with key", async () => {
+  jest.spyOn(keyVault, "loadVault").mockImplementation(() => {});
 
   // store the expected state in localStorage
   chrome.storage.local.get.mockImplementation((message, callback) => {
-    callback({ encrypted_vault: 'encrypted_blob' });
+    callback({ encrypted_vault: "encrypted_blob" });
   });
   var sessionSpy = jest
-    .spyOn(keyVault, '_setSessionUnlocked')
+    .spyOn(keyVault, "_setSessionUnlocked")
     .mockImplementation(() => {
       return true;
     });
 
   const passworderSpy = jest
-    .spyOn(passworder, 'decrypt')
+    .spyOn(passworder, "decrypt")
     .mockImplementation(() => {
       return new Promise((resolve, reject) => {
-        resolve('encrypted_blob');
+        resolve("encrypted_blob");
       });
     });
 
@@ -60,12 +60,12 @@ test('unlockVault with key', async () => {
   expect(keyVault.unlocked).toBe(true);
 });
 
-test('loadVault', async () => {
+test("loadVault", async () => {
   // TODO: Remove below line once jest-chrome supports session storage
   // This works because session and local have the same API
   chrome.storage.session = chrome.storage.local;
   chrome.storage.session.get.mockImplementation((message, callback) => {
-    callback({ vault: '{}' });
+    callback({ vault: "{}" });
   });
 
   expect(keyVault.unlocked).toBe(false);
@@ -73,7 +73,7 @@ test('loadVault', async () => {
   expect(keyVault.unlocked).toBe(true);
 });
 
-test('loadVault with key', async () => {
+test("loadVault with key", async () => {
   // TODO: Remove below line once jest-chrome supports session storage
   // This works because session and local have the same API
   chrome.storage.session = chrome.storage.local;
@@ -84,10 +84,10 @@ test('loadVault with key', async () => {
   expect(keyVault.unlocked).toBe(false);
   await keyVault.loadVault();
   expect(keyVault.unlocked).toBe(true);
-  expect(await keyVault.getKey('0x1')).toBe('0x123');
+  expect(await keyVault.getKey("0x1")).toBe("0x123");
 });
 
-test('lockVault', async () => {
+test("lockVault", async () => {
   // TODO: Remove below line once jest-chrome supports session storage
   // This works because session and local have the same API
   chrome.storage.session = chrome.storage.local;
@@ -97,22 +97,22 @@ test('lockVault', async () => {
   await keyVault.lockVault();
 });
 
-test('getKey', async () => {
-  await unlockVaultAndAddKey('0x1', '0x123', TEST_PASSWORD);
-  expect(keyVault.getKey('0x1')).toBe('0x123');
+test("getKey", async () => {
+  await unlockVaultAndAddKey("0x1", "0x123", TEST_PASSWORD);
+  expect(keyVault.getKey("0x1")).toBe("0x123");
 });
 
-test('addKey', async () => {
-  await unlockVaultAndAddKey('0x1', '0x123', TEST_PASSWORD);
-  expect(keyVault.getKey('0x1')).toBe('0x123');
+test("addKey", async () => {
+  await unlockVaultAndAddKey("0x1", "0x123", TEST_PASSWORD);
+  expect(keyVault.getKey("0x1")).toBe("0x123");
 });
 
-test('_saveVault', async () => {
+test("_saveVault", async () => {
   var sessionSpy = jest
-    .spyOn(keyVault, '_saveVaultToSessionStorage')
+    .spyOn(keyVault, "_saveVaultToSessionStorage")
     .mockImplementation(() => {});
   var localSpy = jest
-    .spyOn(keyVault, '_saveVaultToLocalStorage')
+    .spyOn(keyVault, "_saveVaultToLocalStorage")
     .mockImplementation(() => {});
 
   await keyVault._saveVault(TEST_PASSWORD);
@@ -121,14 +121,14 @@ test('_saveVault', async () => {
   expect(localSpy).toBeCalledWith(TEST_PASSWORD);
 });
 
-test('_saveVaultToSessionStorage', async () => {
+test("_saveVaultToSessionStorage", async () => {
   // TODO: Remove below line once jest-chrome supports session storage
   // This works because session and local have the same API
   chrome.storage.session = chrome.storage.local;
   // the session.set callback is not used in _saveVaultToSessionStorage
   chrome.storage.session.set.mockImplementation(() => {});
 
-  const sessionSpy = jest.spyOn(chrome.storage.session, 'set');
+  const sessionSpy = jest.spyOn(chrome.storage.session, "set");
   const expectedToStore = {
     vault: keyVault._serialize(),
   };
@@ -137,19 +137,19 @@ test('_saveVaultToSessionStorage', async () => {
   expect(sessionSpy).toBeCalledWith(expectedToStore);
 });
 
-test('_saveVaultToLocalStorage', async () => {
+test("_saveVaultToLocalStorage", async () => {
   // the local.set callback is not used in _saveVaultToLocalStorage
   chrome.storage.local.set.mockImplementation(() => {});
 
-  const localSpy = jest.spyOn(chrome.storage.local, 'set');
+  const localSpy = jest.spyOn(chrome.storage.local, "set");
   const expectedToStore = {
-    encrypted_vault: 'encrypted_blob',
+    encrypted_vault: "encrypted_blob",
   };
   const passworderSpy = jest
-    .spyOn(passworder, 'encrypt')
+    .spyOn(passworder, "encrypt")
     .mockImplementation(() => {
       return new Promise((resolve, reject) => {
-        resolve('encrypted_blob');
+        resolve("encrypted_blob");
       });
     });
 
@@ -157,16 +157,16 @@ test('_saveVaultToLocalStorage', async () => {
   expect(localSpy).toBeCalledWith(expectedToStore);
 });
 
-test('_serialize', () => {
-  const expectedString = '{}';
+test("_serialize", () => {
+  const expectedString = "{}";
 
   expect(keyVault._serialize()).toBe(expectedString);
 });
 
-test('_serialize with key', async () => {
+test("_serialize with key", async () => {
   const expectedString = '{"0x1":{"rawKey":"0x123","type":"key-import"}}';
 
-  await unlockVaultAndAddKey('0x1', '0x123', TEST_PASSWORD);
+  await unlockVaultAndAddKey("0x1", "0x123", TEST_PASSWORD);
 
   expect(keyVault._serialize()).toBe(expectedString);
 });
@@ -178,7 +178,7 @@ async function unlockVaultAndAddKey(pubKey, privKey, password) {
     // no keys yet
     callback({});
   });
-  jest.spyOn(keyVault, '_saveVault').mockImplementation(() => {});
+  jest.spyOn(keyVault, "_saveVault").mockImplementation(() => {});
 
   await keyVault.unlockVault(TEST_PASSWORD);
   await keyVault.addKey(pubKey, privKey, password);

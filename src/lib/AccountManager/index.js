@@ -1,12 +1,12 @@
-import configureFcl from '../../flowConfig';
-import FlowAccountManager from './flowAccountManager';
+import configureFcl from "../../flowConfig";
+import FlowAccountManager from "./flowAccountManager";
 let flowMainnetAccountManager = new FlowAccountManager({
-  accountStoragePrefix: 'flow_mainnet',
-  accountNetwork: 'Flow Mainnet',
+  accountStoragePrefix: "flow_mainnet",
+  accountNetwork: "Flow Mainnet",
 });
 let flowTestnetAccountManager = new FlowAccountManager({
-  accountStoragePrefix: 'flow_testnet',
-  accountNetwork: 'Flow Testnet',
+  accountStoragePrefix: "flow_testnet",
+  accountNetwork: "Flow Testnet",
 });
 
 // what everything should use to access accounts
@@ -20,7 +20,7 @@ async function loadAccounts() {
 
   // set the global account manager to the latest used
   return await new Promise((resolve, reject) => {
-    chrome.storage.local.get('selectedAccountManager', (res) => {
+    chrome.storage.local.get("selectedAccountManager", (res) => {
       if (res.selectedAccountManager) {
         accountManager = getManager(res.selectedAccountManager);
         // make sure fcl has the correct endpoint for this network
@@ -48,10 +48,10 @@ function switchManager(manager) {
 function getManager(manager) {
   let ret = null;
   switch (manager) {
-    case 'flow_mainnet':
+    case "flow_mainnet":
       ret = flowMainnetAccountManager;
       break;
-    case 'flow_testnet':
+    case "flow_testnet":
       ret = flowTestnetAccountManager;
       break;
     default:

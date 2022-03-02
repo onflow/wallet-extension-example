@@ -1,9 +1,9 @@
-import { keyVault } from '../lib/keyVault';
-import FlowAccount from '../lib/flowAccount';
-import { accountManager } from '../lib/AccountManager';
-import * as fcl from '@onflow/fcl';
-import { sign } from './signatures';
-import { toHex, prependUserDomainTag } from './helpers';
+import { keyVault } from "../lib/keyVault";
+import FlowAccount from "../lib/flowAccount";
+import { accountManager } from "../lib/AccountManager";
+import * as fcl from "@onflow/fcl";
+import { sign } from "./signatures";
+import { toHex, prependUserDomainTag } from "./helpers";
 
 export const createOrImportAccount = async (
   accountAddress,
@@ -13,13 +13,13 @@ export const createOrImportAccount = async (
 ) => {
   accountAddress = fcl.withPrefix(accountAddress);
   if (!accountAddress || accountAddress.length !== 18) {
-    throw new Error('Invalid account provided');
+    throw new Error("Invalid account provided");
   }
   if (!privKey || privKey.length === 0) {
-    throw new Error('Invalid private key provided');
+    throw new Error("Invalid private key provided");
   }
   if (!keyID || parseInt(keyID) === NaN) {
-    throw new Error('Invalid Key ID provided');
+    throw new Error("Invalid Key ID provided");
   }
   const accountInfo = await fcl
     .send([fcl.getAccount(accountAddress)])
@@ -28,13 +28,13 @@ export const createOrImportAccount = async (
   const keys = accountInfo.keys;
   const selectedKey = keys[keyID];
   if (!selectedKey) {
-    throw new Error('Given key ID does not exist on given account.');
+    throw new Error("Given key ID does not exist on given account.");
   }
   if (selectedKey.weight !== 1000) {
-    throw new Error('Key with weight of 1000 required for import.');
+    throw new Error("Key with weight of 1000 required for import.");
   }
   if (selectedKey.revoked) {
-    throw new Error('Provided Key ID is revoked');
+    throw new Error("Provided Key ID is revoked");
   }
 
   const account = new FlowAccount({
@@ -60,13 +60,13 @@ export const validateFlowAccountInfo = async (
 ) => {
   accountAddress = fcl.withPrefix(accountAddress);
   if (!accountAddress || accountAddress.length !== 18) {
-    throw new Error('Invalid account provided');
+    throw new Error("Invalid account provided");
   }
   if (!privKey || privKey.length === 0) {
-    throw new Error('Invalid private key provided');
+    throw new Error("Invalid private key provided");
   }
   if (!keyID || parseInt(keyID) === NaN) {
-    throw new Error('Invalid Key ID provided');
+    throw new Error("Invalid Key ID provided");
   }
 
   const accountInfo = await fcl
@@ -75,13 +75,13 @@ export const validateFlowAccountInfo = async (
   const keys = accountInfo.keys;
   const selectedKey = keys[keyID];
   if (!selectedKey) {
-    throw new Error('Given key ID does not exist on given account.');
+    throw new Error("Given key ID does not exist on given account.");
   }
   if (selectedKey.weight !== 1000) {
-    throw new Error('Key with weight of 1000 required for import.');
+    throw new Error("Key with weight of 1000 required for import.");
   }
   if (selectedKey.revoked) {
-    throw new Error('Provided Key ID is revoked');
+    throw new Error("Provided Key ID is revoked");
   }
   // Create (but don't save) an ephemeral account with this key. This will be used to make signatures
   const account = new FlowAccount({
@@ -107,16 +107,16 @@ export const validateFlowAccountInfo = async (
   const verification = await fcl.verifyUserSignatures(msg, [compSig]);
 
   if (!verification) {
-    throw new Error('Private key not valid for this account');
+    throw new Error("Private key not valid for this account");
   }
 };
 
 export const derivePrivKey = async (seedPhrase) => {
   throw new Error(
-    'Seed phrases not yet supported - raw private keys only for now!'
+    "Seed phrases not yet supported - raw private keys only for now!"
   );
 };
 
 export const rotateFlowAccountKey = async (accountAddress) => {
-  throw new Error('Key rotation not yet supported');
+  throw new Error("Key rotation not yet supported");
 };

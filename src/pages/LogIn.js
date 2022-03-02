@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Img, Button } from '@chakra-ui/react';
-import { useToast } from '@chakra-ui/toast';
-import FlowWalletImg from '../assets/flow-logo.png';
-import * as styles from '../styles';
-import Title from '../components/Title';
-import { accountManager } from '../lib/AccountManager';
-import { keyVault } from '../lib/keyVault';
-import Layout from '../components/Layout';
-import SubmitInput from '../components/SubmitInput';
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Img, Button } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/toast";
+import FlowWalletImg from "../assets/flow-logo.png";
+import * as styles from "../styles";
+import Title from "../components/Title";
+import { accountManager } from "../lib/AccountManager";
+import { keyVault } from "../lib/keyVault";
+import Layout from "../components/Layout";
+import SubmitInput from "../components/SubmitInput";
 
 const FirstTime = ({ location }) => {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
 
   const history = useHistory();
   const toast = useToast();
@@ -22,17 +22,17 @@ const FirstTime = ({ location }) => {
       const address = await accountManager.getFavoriteAccount();
       if (address) {
         history.push({
-          pathname: '/Balances',
+          pathname: "/Balances",
         });
       } else {
         history.push({
-          pathname: '/SelectAccount',
+          pathname: "/SelectAccount",
         });
       }
     } catch (e) {
       toast({
-        description: 'Invalid password',
-        status: 'error',
+        description: "Invalid password",
+        status: "error",
         duration: styles.toastDuration,
         isClosable: true,
       });

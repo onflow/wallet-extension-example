@@ -1,6 +1,6 @@
-import React from 'react';
-import { Text, Box } from '@chakra-ui/react';
-import * as styles from '../styles';
+import React from "react";
+import { Text, Box } from "@chakra-ui/react";
+import * as styles from "../styles";
 
 const SelectableListItem = ({ text, onClick }) => {
   return (

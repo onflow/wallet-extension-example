@@ -1,61 +1,61 @@
-import React from 'react';
-import { useTransaction } from '../contexts/TransactionContext';
-import { Box, Text, Button } from '@chakra-ui/react';
-import * as styles from '../styles';
+import React from "react";
+import { useTransaction } from "../contexts/TransactionContext";
+import { Box, Text, Button } from "@chakra-ui/react";
+import * as styles from "../styles";
 
 function Transaction() {
   const { transactionStatus, txId, transactionInProgress } = useTransaction();
 
   const STATUS_DETAILS = {
     0: {
-      name: 'Unknown',
+      name: "Unknown",
       message:
-        'We are sending your transaction to the chain. One second while we get a response.',
+        "We are sending your transaction to the chain. One second while we get a response.",
       progressIndeterminate: true,
-      progressText: 'Waiting...',
+      progressText: "Waiting...",
     },
     1: {
-      name: 'Pending',
+      name: "Pending",
       message:
-        'The transaction has been received by a collector but not yet finalized in a block.',
+        "The transaction has been received by a collector but not yet finalized in a block.",
       progressIndeterminate: true,
-      progressText: 'Executing...',
+      progressText: "Executing...",
     },
     2: {
-      name: 'Finalized',
+      name: "Finalized",
       message:
-        'The consensus nodes have finalized the block that the transaction is included in.',
+        "The consensus nodes have finalized the block that the transaction is included in.",
       progressValue: 80,
-      progressText: 'Executing...',
+      progressText: "Executing...",
     },
     3: {
-      name: 'Executed',
+      name: "Executed",
       message:
-        'The execution nodes have produced a result for the transaction.',
+        "The execution nodes have produced a result for the transaction.",
       progressValue: 80,
-      progressText: 'Sealing...',
+      progressText: "Sealing...",
     },
     4: {
-      name: 'Sealed',
+      name: "Sealed",
       message:
-        'The verification nodes have verified the transaction, and the seal is included in the latest block.',
+        "The verification nodes have verified the transaction, and the seal is included in the latest block.",
       progressValue: 100,
       hideProgress: true,
-      progressText: 'Sealed!',
+      progressText: "Sealed!",
     },
     5: {
-      name: 'Expired',
+      name: "Expired",
       message:
-        'The transaction was submitted past its expiration block height.',
+        "The transaction was submitted past its expiration block height.",
       hideProgress: true,
     },
   };
 
   if (transactionInProgress) {
-    const statusKey = transactionStatus ? String(transactionStatus) : '0';
+    const statusKey = transactionStatus ? String(transactionStatus) : "0";
 
     return (
-      <Box p="6" bg={'gray.700'} borderWidth="1px" borderRadius="lg">
+      <Box p="6" bg={"gray.700"} borderWidth="1px" borderRadius="lg">
         <Box>
           <span className="txId">
             <a
@@ -64,7 +64,7 @@ function Transaction() {
               and
               rel="noopener noreferrer"
             >
-              <Text as="em">Tx ID:</Text>{' '}
+              <Text as="em">Tx ID:</Text>{" "}
               <Text as="u">{txId?.slice(0, 8)}</Text>
             </a>
           </span>
