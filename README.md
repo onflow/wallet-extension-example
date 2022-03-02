@@ -4,7 +4,7 @@
   <p align="center">
     <i>Demo and guide to creating a FCL Chrome wallet extension on Flow.</i>
     <br />
-    <a href="https://github.com/gregsantos/flow-wallet-extension/blob/master/docs/docs/index.md"><strong>Read the docs»</strong></a>
+    <a href="https://github.com/gregsantos/flow-wallet-extension/blob/master/docs/index.md"><strong>Read the docs»</strong></a>
     <br />
     <br />
     <a href="https://docs.onflow.org/fcl/">FCL Readme</a>
@@ -14,8 +14,6 @@
     <a href="https://developer.chrome.com/docs/extensions/reference/">Chrome API Docs</a>
   </p>
 </p>
-
----
 
 ## Getting Started
 
