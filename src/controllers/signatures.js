@@ -1,39 +1,39 @@
-import {ec as EC} from "elliptic"
-import {SHA3} from "sha3"
-import forge from "node-forge"
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
-var Buffer = require("buffer/").Buffer
-const p256 = new EC("p256")
-const secp256 = new EC("secp256k1")
+import { ec as EC } from 'elliptic';
+import { SHA3 } from 'sha3';
+import forge from 'node-forge';
+import * as fcl from '@onflow/fcl';
+import * as t from '@onflow/types';
+var Buffer = require('buffer/').Buffer;
+const p256 = new EC('p256');
+const secp256 = new EC('secp256k1');
 
 // Takes in a msg that is already in hex form, and a
 // hashAlg in flow's key format for hash algorithms
 // Return binary digest
 const hashMsgHex = (msgHex, hashAlg) => {
   if (hashAlg === 3) {
-    const sha = new SHA3(256)
-    sha.update(Buffer.from(msgHex, "hex"))
-    return sha.digest()
+    const sha = new SHA3(256);
+    sha.update(Buffer.from(msgHex, 'hex'));
+    return sha.digest();
   } else if (hashAlg === 1) {
-    const md = forge.md.sha256.create()
-    md.update(Buffer.from(msgHex, "hex"))
-    return md.digest()
+    const md = forge.md.sha256.create();
+    md.update(Buffer.from(msgHex, 'hex'));
+    return md.digest();
   } else {
-    throw new Error("Unsupported hash alg provided")
+    throw new Error('Unsupported hash alg provided');
   }
-}
+};
 
 export const sign = async (account, keyID, privateKey, msgHex) => {
-  const pubKey = account.getKey(keyID)
-  const ec = pubKey.sigAlg === 1 ? p256 : pubKey.sigAlg === 2 ? secp256 : null
-  const key = ec.keyFromPrivate(Buffer.from(privateKey, "hex"))
-  const sig = key.sign(hashMsgHex(msgHex, pubKey.hashAlg))
-  const n = 32
-  const r = sig.r.toArrayLike(Buffer, "be", n)
-  const s = sig.s.toArrayLike(Buffer, "be", n)
-  return Buffer.concat([r, s]).toString("hex")
-}
+  const pubKey = account.getKey(keyID);
+  const ec = pubKey.sigAlg === 1 ? p256 : pubKey.sigAlg === 2 ? secp256 : null;
+  const key = ec.keyFromPrivate(Buffer.from(privateKey, 'hex'));
+  const sig = key.sign(hashMsgHex(msgHex, pubKey.hashAlg));
+  const n = 32;
+  const r = sig.r.toArrayLike(Buffer, 'be', n);
+  const s = sig.s.toArrayLike(Buffer, 'be', n);
+  return Buffer.concat([r, s]).toString('hex');
+};
 
 export const verifyUserSignature = async (
   rawPublicKey,
@@ -78,9 +78,9 @@ export const verifyUserSignature = async (
         signedData: signedData.decodeHex(),
       )
     }
-    `
+    `;
 
-  let result
+  let result;
   try {
     result = await fcl
       .send([
@@ -93,10 +93,10 @@ export const verifyUserSignature = async (
         ]),
         fcl.limit(9999),
       ])
-      .then(fcl.decode)
+      .then(fcl.decode);
   } catch (e) {
-    console.error(e)
-    throw new Error("Poorly formed private key entered")
+    console.error(e);
+    throw new Error('Poorly formed private key entered');
   }
-  return result
-}
+  return result;
+};

@@ -91,13 +91,13 @@ Important fields
 
 ```js
 // in the browser
-import * as fcl from "@onflow/fcl"
+import * as fcl from '@onflow/fcl';
 
 fcl.config({
-  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn", // Endpoint set to Testnet
-})
+  'discovery.wallet': 'https://fcl-discovery.onflow.org/testnet/authn', // Endpoint set to Testnet
+});
 
-fcl.authenticate()
+fcl.authenticate();
 ```
 
 ---
@@ -138,7 +138,7 @@ we will add an event listener which will listen for any message coming from cont
 - _Mutate the chain_: Send arbitrary transactions with your own signatures or via a user's wallet to perform state changes on chain.
 
 ```js
-import * as fcl from "@onflow/fcl"
+import * as fcl from '@onflow/fcl';
 // in the browser, FCL will automatically connect to the user's wallet to request signatures to run the transaction
 const txId = await fcl.mutate({
   cadence: `
@@ -150,8 +150,8 @@ const txId = await fcl.mutate({
       }
     }
   `,
-  args: (arg, t) => [arg("myName", t.String)],
-})
+  args: (arg, t) => [arg('myName', t.String)],
+});
 ```
 
 [Learn more about on-chain interactions >](https://docs.onflow.org/fcl/reference/api/#on-chain-interactions)

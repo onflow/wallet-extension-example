@@ -1,14 +1,18 @@
 {
-  "name": "Flow Wallet Extension",
-  "description": "Non-custodial wallet extension for Flow",
-  "version": "1.0",
   "manifest_version": 3,
+  "name": "Flow Wallet Extension",
+  "description": "Chrome wallet extension for Flow",
   "background": {
-    "service_worker": "./background.js"
+    "service_worker": "background.js"
   },
   "action": {
     "default_popup": "index.html",
     "default_title": "Open the popup"
+  },
+  "icons": {
+    "16": "flow-logo.png",
+    "48": "flow-logo.png",
+    "128": "flow-logo.png"
   },
   "content_scripts": [
     {
@@ -16,20 +20,11 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": [
-    "activeTab", 
-    "storage", 
-    "alarms"
-  ],
+  "permissions": ["activeTab", "storage", "alarms"],
   "web_accessible_resources": [
     {
       "resources": ["index.html", "script.js"],
       "matches": ["<all_urls>"]
     }
-  ],
-  "icons": {
-    "16": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
-  }
+  ]
 }
