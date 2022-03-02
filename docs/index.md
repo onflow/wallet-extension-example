@@ -178,7 +178,7 @@ Although a [sample implementation](#) has been provided, you should thoroughly r
 All messages above are proxied through `content.js`.
 
 <details>
-<summary>FCL Authz Sequence Diagram</summary>
+<summary><b>FCL Authz Sequence Diagram</b></summary>
 <img src="img/ext-rpc-authz-sequence.png"/>
 </details>
 
@@ -188,8 +188,8 @@ Guides on implementing other wallets services for EXT/RPC will be coming shortly
 ### Transaction History & Event Indexing
 As a wallet, you may want to index events in order to track and display your user's past transactions. We have two recommended pre-built options on Flow:
 - [Flowscan API](#): Hosted API (private beta access only - contact Flow team) to get historical transactions from an account address among other data on Flow.
-- [Graffle](#): Hosted Service Provider to index and provide webhooks for events on smart contracts. 
-- [Flow Scanner](#): Open-source event indexing service that you will have configure and host.
+- [Graffle](https://graffle.io/): Hosted Service Provider to index and provide webhooks for events on smart contracts. 
+- [Flow Scanner](https://github.com/rayvin-flow/flow-scanner): Open-source event indexing service that you will have configure and host.
 
 ### NFT Viewing & Metadata
 If you would like to support showing user's their NFTs and associated metadata, the current recommendation is to use the [Alchemy Flow API](https://docs.alchemy.com/flow/documentation/flow-nft-apis). The usage of the API is also demonstrated in the sample extension. While Alchemy will provide some basic metadata on the most popular Flow NFT projects, other projects and project specific fields will rely on their specific smart contract implementation. We have recently rolled out a NFT metadata standard that continues to evolve to solve this problem, read more about it [here](https://forum.onflow.org/t/introducing-nft-metadata-on-flow/2798).
@@ -197,8 +197,9 @@ If you would like to support showing user's their NFTs and associated metadata, 
 ### Other Resources
 
 - Block Explorers
-  - Flowscan [Mainnet]() / [Testnet]()
-  - [Flow-view-source]()
+  - Flowscan [Mainnet](https://flowscan.org/) / [Testnet](https://testnet.flowscan.org/)
+  - [Flow-view-source](https://flow-view-source.com/)
 - On-ramp Providers
-  - [Moonpay](#)
-  - [Ramp](#)
+  - [Moonpay](https://www.moonpay.com/)
+  - [Wyre](https://www.sendwyre.com/)
+  - [Ramp](https://ramp.network/)
