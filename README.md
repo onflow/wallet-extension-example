@@ -48,27 +48,26 @@ TODO: Fill out instructions here.
 TODO: Fill out instructions here.
 
 ## Build your own wallet
-See the full guide to building an extension on Flow [here](#).
-- [FCL EXT/RPC Guide](docs/#fcl-ext-rpc-guide)
-  * [Overview](docs/#overview)
-    + [FCL Fundamentals](docs/#fcl-fundamentals)
-      - [Discovery](docs/#discovery)
-      - [Service Methods](docs/#service-methods)
-      - [Wallet Services](docs/#wallet-services)
-    + [Browser & Extension Requirements](docs/#browser---extension-requirements)
-    + [Key Scripts](docs/#key-scripts)
-  * [Implementation](docs/#implementation)
-    + [Manifest V3 configurations](docs/#manifest-v3-configurations)
-    + [FCL Installation & Configuration](docs/#fcl-installation---configuration)
-    + [Harness & Testing](docs/#harness---testing)
-    + [FCL Discovery](docs/#fcl-discovery)
-    + [Account Creation](docs/#account-creation)
-    + [FCL Authentication](docs/#fcl-authentication)
-    + [FCL Authorization](docs/#fcl-authorization)
-    + [Other Services](docs/#other-services)
-    + [Transaction History & Event Indexing](docs/#transaction-history---event-indexing)
-    + [NFT Viewing & Metadata](docs/#nft-viewing---metadata)
-    + [Other Resources](docs/#other-resources)
+See the full guide to building an extension on Flow [here](docs/index.md).
+  * [Overview](docs/index.md#overview)
+    + [FCL Fundamentals](docs/index.md#fcl-fundamentals)
+      - [Discovery](docs/index.md#discovery)
+      - [Service Methods](docs/index.md#service-methods)
+      - [Wallet Services](docs/index.md#wallet-services)
+    + [Browser & Extension Requirements](docs/index.md#browser---extension-requirements)
+    + [Key Scripts](docs/index.md#key-scripts)
+  * [Implementation](docs/index.md#implementation)
+    + [Manifest V3 configurations](docs/index.md#manifest-v3-configurations)
+    + [FCL Installation & Configuration](docs/index.md#fcl-installation---configuration)
+    + [Harness & Testing](docs/index.md#harness---testing)
+    + [FCL Discovery](docs/index.md#fcl-discovery)
+    + [Account Creation](docs/index.md#account-creation)
+    + [FCL Authentication](docs/index.md#fcl-authentication)
+    + [FCL Authorization](docs/index.md#fcl-authorization)
+    + [Other Services](docs/index.md#other-services)
+    + [Transaction History & Event Indexing](docs/index.md#transaction-history---event-indexing)
+    + [NFT Viewing & Metadata](docs/index.md#nft-viewing---metadata)
+    + [Other Resources](docs/index.md#other-resources)
 
 
 
