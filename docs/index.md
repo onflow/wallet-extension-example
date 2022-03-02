@@ -37,10 +37,9 @@ The following is an overview of these scripts and the functionality they need to
 - `content.js`: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage`.
 - `script.js`: Injected by `content.js` into the brower page shared with the dapp. Adds the extension `authn` service to `window.fcl_extensions` list on load. This allows FCL to confirm installation and send extension details to Discovery or launch as default wallet.
 
-![FCL Authz Sequence Diagram](img/ext-rpc-message-passing.png)
 <details>
 <summary>Application Context Diagram</summary>
-<img src="/img/ext-rpc-message-passing.png"/>
+<img src="img/ext-rpc-message-passing.png"/>
 </details>
 
 ## Implementation
@@ -138,7 +137,7 @@ Once the extension popup window is open, communication is proxied directly throu
 
 <details>
 <summary>FCL Discovery and Authn Sequence Diagram</summary>
-<img src="/img/ext-rpc-authn-sequence.png"/>
+<img src="img/ext-rpc-authn-sequence.png"/>
 </details>
 
 ### Account Creation
@@ -154,10 +153,9 @@ Authentication is triggered either through Discovery, default configuration (fcl
 
 All messages above are proxied through `content.js`.
 
-![FCL Authz Sequence Diagram](img/ext-rpc-authn-sequence.png)
 <details>
 <summary>FCL Discovery and Authn Sequence Diagram</summary>
-<img src="/img/ext-rpc-authn-sequence.png"/>
+<img src="img/ext-rpc-authn-sequence.png"/>
 </details>
 
 ### FCL Authorization
@@ -173,7 +171,6 @@ Although a [sample implementation](#) has been provided, you should thoroughly r
 
 All messages above are proxied through `content.js`.
 
-![FCL Authz Sequence Diagram](img/ext-rpc-authz-sequence.png)
 <details>
 <summary>FCL Authz Sequence Diagram</summary>
 <img src="img/ext-rpc-authz-sequence.png"/>
