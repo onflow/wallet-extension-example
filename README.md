@@ -40,7 +40,7 @@ npm run build
 Load your extension in Chrome:
 
 - In Chrome, navigate to `chrome://extensions`
-- Enable the "Developer mode" toggle  
+- Enable the "Developer mode" toggle
 - Click on "Load unpacked"
 - Select the `build` folder
 
