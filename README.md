@@ -42,7 +42,7 @@ Load your extension in Chrome:
 - In Chrome, navigate to `chrome://extensions`
 - Enable the "Developer mode" toggle  
 - Click on "Load unpacked"
-- Select the `/build` folder
+- Select the `build` folder
 
 ### Refreshing the extension
 
