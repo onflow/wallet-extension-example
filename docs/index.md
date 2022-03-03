@@ -110,9 +110,7 @@ See [here](https://docs.onflow.org/fcl/reference/configure-fcl/) for more config
 
 ### Harness & Testing
 
-TODO: Replace with built-in harness instructions
-
-In order to test your FCL integration as you build your extension, you may want to use a simple sample dapp that can send authentication and authorization requests. We have created a [basic harness](https://github.com/orodio/harness) to use for development that you can download, run, and use against your extension. View the instructions on the harness to get it running.
+In order to test your FCL integration as you build your extension, you may want to use a simple sample dapp that can send authentication and authorization requests. We have created a barebones dapp to use for development that you can run and use against your extension. View the instructions on the [README](https://github.com/gregsantos/flow-wallet-extension) to get it running.
 
 ### FCL Discovery
 
