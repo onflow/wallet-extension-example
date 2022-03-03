@@ -1,10 +1,10 @@
 # FCL EXT/RPC Guide
 
-_This guide will help you create a FCL compatible Chrome browser extension._
+_This guide will help you create an FCL-compatible Chrome browser extension._
 
 ## Overview
 
-To get started, we will cover the most important aspects of Flow, FCL, and Chrome's APIs relevant to building this extension. Get started by reading the [FCL Readme](https://docs.onflow.org/fcl/) for a high level overview of FCL and all its features.
+To get started, we will cover the most important aspects of Flow, FCL, and Chrome's APIs relevant to building this extension. Get started by reading the [FCL README](https://docs.onflow.org/fcl/) for a high level overview of FCL and all its features.
 
 ### FCL Fundamentals
 
@@ -18,7 +18,7 @@ Services methods are the communication channels that FCL can use to pass message
 
 #### Wallet Services
 
-Wallet services are the features that your wallet will support. Wallets on Flow can choose to implement any number of supported FCL services. In order to gain broad adoption by dapps on Flow, it is recommended to implement the following services as a minimum:
+Wallet services are the features that your wallet will support. Wallets on Flow can choose to implement any number of supported FCL services. In order to gain broad adoption by dapps on Flow, it is recommended to implement the following services at a minimum:
 
 - **Authentication (Authn) Service:** The wallet can provide the user's wallet address to the dapp and is confident in the user's identity using any authentication mechanism.
 - **Authorization (Authz) Service:** The wallet can provide the appropriate signatures for the on-chain transactions that the dapp requests.
@@ -29,9 +29,9 @@ For an in-depth view of FCL wallet services and methods, see this [guide](https:
 
 - Chrome v99+
 - Manifest V3 Required Permissions
-  - [storage](https://developer.chrome.com/docs/extensions/reference/storage/): You must declare the "storage" permission in the extension manifest to use the storage API. The keyVault utility use localStorage and sessionStorage to store data. keyVault data is serialized to JSON and stored unencrypted in sessionStorage during browser session and stored _encrypted_ in the localStorage for between browser sessions.
-  - [activeTab](https://developer.chrome.com/docs/extensions/mv3/manifest/activeTab/): The activeTab permission gives an extension temporary access to the currently active tab when the user invokes the extension - for example by clicking its action. Access to the tab lasts while the user is on that page, and is revoked when the user navigates away or closes the tab.
-  - [alarms](https://developer.chrome.com/docs/extensions/reference/alarms/): Gives your extension access to the chrome.alarms API.
+  - [storage](https://developer.chrome.com/docs/extensions/reference/storage/): You must declare the `storage` permission in the extension manifest to use the storage API. The `keyVault` utility from the example extension use `localStorage` and `sessionStorage` to store data. `keyVault` data is serialized to JSON and stored unencrypted in `sessionStorage` during browser session and stored _encrypted_ in the `localStorage` between browser sessions.
+  - [activeTab](https://developer.chrome.com/docs/extensions/mv3/manifest/activeTab/): The `activeTab` permission gives an extension temporary access to the currently active tab when the user invokes the extension (e.g. by clicking its action). Access to the tab lasts while the user is on that page, and is revoked when the user navigates away or closes the tab.
+  - [alarms](https://developer.chrome.com/docs/extensions/reference/alarms/): Gives your extension access to the `chrome.alarms` API.
 
 ### Key Scripts
 
@@ -41,7 +41,7 @@ The following is an overview of these scripts and the functionality they need to
 
 - **`background.js`**: Used to launch the extension with `chrome.windows.create` if selected by the user from Discovery or set directly via `fcl.config.discovery.wallet`
 - **`content.js`**: Used to proxy messages between the dapp to the extension via `chrome.runtime.sendMessage`.
-- **`script.js`**: Injected by `content.js` into the brower page shared with the dapp. Adds the extension `authn` service to `window.fcl_extensions` list on load. This allows FCL to confirm installation and send extension details to Discovery or launch as default wallet.
+- **`script.js`**: Injected by `content.js` into the dapp's HTML page. It adds the extension `authn` service to `window.fcl_extensions` list on page load. This allows FCL to confirm installation and send extension details to Discovery or launch your wallet as the default wallet.
 
 <details>
 <summary>Application Context Diagram</summary>
@@ -52,9 +52,9 @@ The following is an overview of these scripts and the functionality they need to
 
 ### Manifest V3 configurations
 
-Every chrome extension requires a manifest file. All of the configurations for the extension belong in the `manifest.json` file, which you'll find in the public folder.
+Every Chrome extension requires a manifest file. All of the configurations for the extension belong in the `manifest.json` file, which you'll find in the public folder.
 
-This file is generated automatically by CRA. However, to be valid for an extension, it must follow the extension guidelines.
+This file is generated automatically in the example extension. However, to be valid for an extension, it must follow the extension guidelines.
 
 Content script files run in the context of the webpage. In our manifest file, we have to provide permission to sites where this script could run. In our case, we have declared it could run on all websites `["http://*/*", "https://*/*"]`.
 
@@ -156,7 +156,46 @@ Once the extension popup window is open, communication is proxied directly throu
 
 ### Account Creation
 
-TODO: How to generate accounts and use the Account API
+Unlike on some other chains, [account addresses on Flow](https://docs.onflow.org/concepts/accounts-and-keys/) are not derived from public keys and instead are assigned in an on-chain transaction. As such, the account creation process is split into two steps: key generation and an account creation transaction.
+
+#### Key Generation
+
+For non-custodial wallets, we recommend following the [BIP-44 standard](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki) to derive a keypair from a mnemonic seed phrase. This allows your user to save their seed phrase (12 or 24 words) and later use it to restore their account if they lose access to their wallet. [FLIP-200 describes how to apply BIP-44 to Flow](https://github.com/onflow/flow/pull/200).
+
+Flow supports two ECDSA key curves: [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) (also used by Bitcoin and Ethereum) and NIST P-256.
+
+|Curve name|Flow Identifier|
+|----------|---------------|
+|secp256k1 |ECSDA_secp256k1|
+|NIST P-256|ECDSA_P256     |
+
+After generating the key pair, the raw public key is used inside the account creation transaciton. It must be in the following format:
+
+```
+rawPublicKey = hex(bigEndianBytes(x) + bigEndianBytes(y))
+```
+
+where `x` and `y` are the integer components of the public key.
+
+#### Account Creation Transaction
+
+The [Flow Account API](https://github.com/onflow/flow-account-api) is a simple service that assists with account creation for non-custodial wallets. It exposes an endpoint that accepts a public key and returns a newly-created account. Because there is no direct on-chain mapping from a public key to an account, the service also saves the public key -> address association. Your wallet can later query the service to fetch an account address by public key. This can be used if a user has forgotten their account address and needs to restore their wallet from a seed phrase.
+
+A testnet version of the Account API is hosted at https://hardware-wallet-api-testnet.staging.onflow.org. The sample extension [shows how to call the testnet API](../src/pages/CreateAccount.js#L42-L54) from JavaScript.
+
+If you are using the Account API, an account creation request looks like the following, where `publicKey` is the raw format described above.
+
+```sh
+curl --request POST \
+  --url https://hardware-wallet-api-testnet.staging.onflow.org/accounts \
+  --header 'content-type: application/json' \
+  --data '{
+	"publicKey": "6b1523db40836078eb6f80f8d4f934f03725a4e66574815b5d2a9f2ba5dcf9c483fc1b543392f6ada01cc13790f996d0969ee6f9c8d9190f54dc31f44be0a53b",
+	"signatureAlgorithm": "ECDSA_P256",
+	"hashAlgorithm": "SHA3_256"
+}
+'
+```
 
 ### FCL Authentication
 
