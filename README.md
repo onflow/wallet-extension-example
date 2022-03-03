@@ -1,15 +1,15 @@
 <br />
 <p align="center">
-  <h1 align="center"> FLOW WALLET EXTENSION FOR CHROME</h1>
+  <h1 align="center">EXAMPLE FLOW WALLET EXTENSION FOR CHROME</h1>
   <p align="center">
-    <i>Connect your dapp to users, their wallets and Flow.</i>
+    <i>Build an FCL-compatible Chrome extension wallet for Flow.</i>
     <br />
-    <a href="https://docs.onflow.org/fcl/"><strong>Read the docs»</strong></a>
+    <a href="https://docs.onflow.org/fcl/"><strong>Read the FCL docs»</strong></a>
     <br />
     <br />
     <a href="https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/">Quickstart</a>
     ·
-    <a href="https://github.com/onflow/fcl-js/issues">Report Bug</a>
+    <a href="https://github.com/onflow/fcl-js/issues">Report a Bug</a>
 ·
     <a href="https://developer.chrome.com/docs/extensions/reference/">Chrome API Docs</a>
   </p>
@@ -19,34 +19,51 @@
 
 ## Getting Started
 
-### Requirements
+### Build the Extension
 
-- FCL version `0.0.79-alpha.3 or higher`.
-
-### Install
+```sh
+cd extension
+```
 
 ```sh
 npm install
 ```
 
-### Build
-
 ```sh
 npm run build
 ```
 
-### Install the extension
+#### Install the extension
 
 Load your extension in Chrome:
 
 - In Chrome, navigate to `chrome://extensions`
 - Enable the "Developer mode" toggle
 - Click on "Load unpacked"
-- Select the `build` folder
+- Select the `extension/build` folder
 
-### Refreshing the extension
+#### Refreshing the extension
 
 If you make changes to the code, rebuild the extension with `npm run build` and then click the refresh icon in the Chrome extensions page.
+
+### Start the Web App
+
+The sample web app in this repository allows you to connect to the extension
+and send transactions.
+
+```sh
+cd app
+```
+
+```sh
+npm i
+```
+
+```sh
+npm run start
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ---
 
