@@ -1,8 +1,6 @@
-if (!Array.isArray(window.fcl_extensions)) {
-  window.fcl_extensions = [];
-}
+import { WalletUtils } from "@onflow/fcl";
 
-window.fcl_extensions.push({
+const service = {
   f_type: "Service",
   f_vsn: "1.0.0",
   type: "authn",
@@ -19,4 +17,6 @@ window.fcl_extensions.push({
     icon: null,
     description: "Flow Non-Custodial Wallet Extension for Chrome",
   },
-});
+};
+
+WalletUtils.injectExtService(service);

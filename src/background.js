@@ -1,5 +1,5 @@
 // Function called when a new message is received
-const extMessageHandler = (msg, sender, sendResponse) => {
+const extMessageHandler = (msg) => {
   // Messages from FCL, posted to window and proxied from content.js
   const { service } = msg;
   // Launches extension popup window

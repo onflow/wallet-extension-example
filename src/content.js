@@ -1,6 +1,7 @@
 /**
  * Inject script, to provide access to window shared with FCL
  */
+
 function injectScript(file_path, tag) {
   var node = document.getElementsByTagName(tag)[0];
   var script = document.createElement("script");
@@ -39,7 +40,5 @@ const extMessageHandler = (msg, sender, sendResponse) => {
   }
 };
 
-/**
- * Fired when a message is sent from either an extension process or another content script.
- */
+// Fired when a message is sent from either an extension process or another content script.
 chrome.runtime.onMessage.addListener(extMessageHandler);
