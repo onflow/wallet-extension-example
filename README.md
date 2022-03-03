@@ -23,23 +23,30 @@
 
 - FCL version `0.0.79-alpha.3 or higher`.
 
-### Setup
+### Install
 
-```shell
-npm i
+```sh
+npm install
 ```
 
-### Build and Install
+### Build
 
-To avoid getting Content Security Policy (CSP) errors after building. We need to tell CRA to place the extra code into a separate file for us by setting up an environment variable called INLINE_RUNTIME_CHUNK.
-
-Because this environment variable is particular and only applies to the build, we won’t add it to the .env file. Instead, we will update our build command on the package.json file.
-
-```shell
-“build”: “INLINE_RUNTIME_CHUNK=false react-scripts build”,
+```sh
+npm run build
 ```
 
-The generated index.html will contain no reference to inline JavaScript code
+### Install the extension
+
+Load your extension in Chrome:
+
+- Go to [chrome://extensions/](chrome://extensions/)
+- Enable the "Developer mode" toggle
+- Click on "Load unpacked"
+- Select the `/build` folder
+
+### Refreshing the extension
+
+If you make changes to the code, rebuild the extension with `npm run build` and then click the refresh icon in the Chrome extensions page.
 
 ---
 
