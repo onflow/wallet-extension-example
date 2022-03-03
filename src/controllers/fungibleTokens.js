@@ -1,5 +1,5 @@
-import * as fcl from "@onflow/fcl"
-import * as t from "@onflow/types"
+import * as fcl from "@onflow/fcl";
+import * as t from "@onflow/types";
 
 /*
     TODO
@@ -20,7 +20,7 @@ pub fun main(account: Address): UFix64 {
 
     return vaultRef.balance
 }
-`
+`;
 
 const getFusdCode = `
 import FUSD from 0xe223d8a629e49c68
@@ -35,11 +35,11 @@ pub fun main(account: Address): UFix64 {
     }
     return vaultRef!.balance
 }
-`
+`;
 
 export const getTokenBalance = async (currency, address) => {
-  let result
-  const CODE = currency === "flow" ? getFlowCode : getFusdCode
+  let result;
+  const CODE = currency === "flow" ? getFlowCode : getFusdCode;
   try {
     result = await fcl
       .send([
@@ -47,10 +47,10 @@ export const getTokenBalance = async (currency, address) => {
         fcl.args([fcl.arg(address, t.Address)]),
         fcl.limit(9999),
       ])
-      .then(fcl.decode)
+      .then(fcl.decode);
   } catch (e) {
-    console.error(e)
-    return 0.0
+    console.error(e);
+    return 0.0;
   }
-  return parseFloat(result)
-}
+  return parseFloat(result);
+};

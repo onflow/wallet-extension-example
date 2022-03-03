@@ -1,5 +1,5 @@
 if (!Array.isArray(window.fcl_extensions)) {
-  window.fcl_extensions = []
+  window.fcl_extensions = [];
 }
 
 window.fcl_extensions.push({
@@ -19,4 +19,4 @@ window.fcl_extensions.push({
     icon: null,
     description: "Flow Non-Custodial Wallet Extension for Chrome",
   },
-})
+});

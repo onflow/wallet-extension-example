@@ -1,10 +1,10 @@
-import FlowPubKey from "./flowPubKey"
+import FlowPubKey from "./flowPubKey";
 
 export default class FlowAccount {
   constructor(opts = {}) {
-    this.address = opts.address
-    this.balance = opts.balance
-    this.publicKeys = new Map() // keyID to flowPubKey
+    this.address = opts.address;
+    this.balance = opts.balance;
+    this.publicKeys = new Map(); // keyID to flowPubKey
   }
 
   addKey(id, hexKey, weight, sigAlg, hashAlg) {
@@ -16,33 +16,33 @@ export default class FlowAccount {
       weight: weight,
       sigAlg: sigAlg,
       hashAlg: hashAlg,
-    })
+    });
 
-    this.publicKeys.set(key.id, key)
-    return key
+    this.publicKeys.set(key.id, key);
+    return key;
   }
 
   removeKey(id) {
-    var toRemove = this.getKey(id)
+    var toRemove = this.getKey(id);
 
-    this.publicKeys.delete(id)
+    this.publicKeys.delete(id);
 
-    return toRemove
+    return toRemove;
   }
 
   getKey(keyId) {
-    return this.publicKeys.get(keyId.toString())
+    return this.publicKeys.get(keyId.toString());
   }
 
   listKeys() {
-    var valueIterator = this.publicKeys.values()
-    var list = []
-    var keys = valueIterator.next()
+    var valueIterator = this.publicKeys.values();
+    var list = [];
+    var keys = valueIterator.next();
     while (!keys.done) {
-      list.push(keys.value)
-      keys = valueIterator.next()
+      list.push(keys.value);
+      keys = valueIterator.next();
     }
-    return list
+    return list;
   }
 
   _serialize() {
@@ -50,7 +50,7 @@ export default class FlowAccount {
       address: this.address,
       balance: this.balance,
       publicKeys: Object.fromEntries(this.publicKeys),
-    }
-    return JSON.stringify(data)
+    };
+    return JSON.stringify(data);
   }
 }

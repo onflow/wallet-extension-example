@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Text,
@@ -8,18 +8,18 @@ import {
   Image,
   Center,
   VStack,
-} from "@chakra-ui/react"
-import Title from "../../components/Title"
-import Layout from "../../components/Layout"
-import {accountManager} from "../../lib/AccountManager"
-import {authnServiceDefinition} from "../../controllers/serviceDefinition"
-import * as styles from "../../styles"
-import FlowLogo from "../../assets/flow-logo.png"
+} from "@chakra-ui/react";
+import Title from "../../components/Title";
+import Layout from "../../components/Layout";
+import { accountManager } from "../../lib/AccountManager";
+import { authnServiceDefinition } from "../../controllers/serviceDefinition";
+import * as styles from "../../styles";
+import FlowLogo from "../../assets/flow-logo.png";
 
-export default function Authn({location}) {
-  const [opener, setOpener] = useState(null)
-  const [account, setAccount] = useState(null)
-  const [host, setHost] = useState(null)
+export default function Authn({ location }) {
+  const [opener, setOpener] = useState(null);
+  const [account, setAccount] = useState(null);
+  const [host, setHost] = useState(null);
 
   useEffect(() => {
     /**
@@ -32,7 +32,7 @@ export default function Authn({location}) {
           active: true,
           currentWindow: false,
         },
-        tabs => {
+        (tabs) => {
           /**
            * Sends a single message to the content script(s) in the specified tab,
            * with an optional callback to run when a response is sent back.
@@ -40,42 +40,42 @@ export default function Authn({location}) {
            * The runtime.onMessage event is fired in each content script running
            * in the specified tab for the current extension.
            */
-          setOpener(tabs[0].id)
-          chrome.tabs.sendMessage(tabs[0].id || 0, {type: "FCL:VIEW:READY"})
+          setOpener(tabs[0].id);
+          chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:READY" });
         }
-      )
+      );
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
-        const {hostname} = msg.config.client
-        hostname && setHost(hostname)
+        const { hostname } = msg.config.client;
+        hostname && setHost(hostname);
       }
-    }
+    };
 
     /**
      * Fired when a message is sent from either an extension process or a content script.
      */
-    chrome.runtime?.onMessage.addListener(extMessageHandler)
-  }, [])
+    chrome.runtime?.onMessage.addListener(extMessageHandler);
+  }, []);
 
   useEffect(() => {
     async function getAccount() {
-      const account = await accountManager.getFavoriteAccount()
-      setAccount(account)
+      const account = await accountManager.getFavoriteAccount();
+      setAccount(account);
     }
-    getAccount()
-  }, [])
+    getAccount();
+  }, []);
 
   if (!account) {
-    return null
+    return null;
   }
 
-  const address = account ? account.address : ""
+  const address = account ? account.address : "";
 
   function sendAuthnToFCL() {
     // Since we only allow keys >1000 weight, it doesn't matter which key we select
-    const keyId = account.listKeys()[0].id
-    const services = authnServiceDefinition(address, keyId)
+    const keyId = account.listKeys()[0].id;
+    const services = authnServiceDefinition(address, keyId);
 
     chrome.tabs.sendMessage(parseInt(opener), {
       f_type: "PollingResponse",
@@ -88,43 +88,43 @@ export default function Authn({location}) {
         addr: address,
         services: services,
       },
-    })
-    window.close()
+    });
+    window.close();
   }
 
   function sendCancelToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), {type: "FCL:VIEW:CLOSE"})
-    window.close()
+    chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
+    window.close();
   }
 
   return (
     <Layout withGoBack={false}>
-      <Title align='center'>Sign In</Title>
-      <Box mx='auto' w='280px'>
-        <Text mt='32px' fontWeight='bold' fontSize='20px' color={"white"}>
+      <Title align="center">Sign In</Title>
+      <Box mx="auto" w="280px">
+        <Text mt="32px" fontWeight="bold" fontSize="20px" color={"white"}>
           {host}
         </Text>
         <br />
-        <Text fontSize='16px' mt='20px'>
+        <Text fontSize="16px" mt="20px">
           This app would like to:
         </Text>
         <Flex
-          mt='16px'
-          p='12px'
-          borderTopWidth='3px'
-          borderBottomWidth='3px'
-          borderColor='gray.500'
+          mt="16px"
+          p="12px"
+          borderTopWidth="3px"
+          borderBottomWidth="3px"
+          borderColor="gray.500"
         >
-          <VStack textAlign='left'>
+          <VStack textAlign="left">
             <Text
-              fontWeight='medium'
-              fontSize='16px'
-              color='gray.300'
-              textAlign='left'
+              fontWeight="medium"
+              fontSize="16px"
+              color="gray.300"
+              textAlign="left"
             >
               View your Flow Address
             </Text>
-            <Text fontWeight='semibold' fontSize='16px' textAlign='left'>
+            <Text fontWeight="semibold" fontSize="16px" textAlign="left">
               {address}
             </Text>
           </VStack>
@@ -139,27 +139,27 @@ export default function Authn({location}) {
         <Spacer />
         <Button
           onClick={sendCancelToFCL}
-          textAlign='center'
-          mt='4'
+          textAlign="center"
+          mt="4"
           bg={styles.tertiaryColor}
-          mx='auto'
-          mr='16px'
-          maxW='150px'
+          mx="auto"
+          mr="16px"
+          maxW="150px"
         >
           Cancel
         </Button>
         <Button
           onClick={sendAuthnToFCL}
-          textAlign='center'
-          mt='4'
+          textAlign="center"
+          mt="4"
           bg={styles.primaryColor}
           color={styles.whiteColor}
-          mx='auto'
-          maxW='150px'
+          mx="auto"
+          maxW="150px"
         >
           Confirm
         </Button>
       </Flex>
     </Layout>
-  )
+  );
 }

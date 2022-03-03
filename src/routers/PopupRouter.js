@@ -1,47 +1,47 @@
-import React, {useEffect, useState} from "react"
-import {MemoryRouter, Route} from "react-router"
-import {AnimatedSwitch} from "react-router-transition"
-import Initial from "../pages/Initial"
-import CreateAccount from "../pages/CreateAccount"
-import LogIn from "../pages/LogIn"
-import Balances from "../pages/Balances"
-import NFTs from "../pages/NFTs"
-import Swaps from "../pages/Swaps"
-import History from "../pages/History"
-import SetPassword from "../pages/SetPassword"
-import SelectAccount from "../pages/SelectAccount"
-import UserMenu from "../pages/UserMenu"
-import {keyVault} from "../lib/keyVault"
-import {accountManager} from "../lib/AccountManager"
+import React, { useEffect, useState } from "react";
+import { MemoryRouter, Route } from "react-router";
+import { AnimatedSwitch } from "react-router-transition";
+import Initial from "../pages/Initial";
+import CreateAccount from "../pages/CreateAccount";
+import LogIn from "../pages/LogIn";
+import Balances from "../pages/Balances";
+import NFTs from "../pages/NFTs";
+import Swaps from "../pages/Swaps";
+import History from "../pages/History";
+import SetPassword from "../pages/SetPassword";
+import SelectAccount from "../pages/SelectAccount";
+import UserMenu from "../pages/UserMenu";
+import { keyVault } from "../lib/keyVault";
+import { accountManager } from "../lib/AccountManager";
 
 const PopupRouter = () => {
-  const [loading, setLoading] = useState(true)
-  const [initial, setInitial] = useState(null)
+  const [loading, setLoading] = useState(true);
+  const [initial, setInitial] = useState(null);
   useEffect(() => {
     async function setRoute() {
       if (keyVault.unlocked) {
-        const selectedAccount = await accountManager.getFavoriteAccount()
+        const selectedAccount = await accountManager.getFavoriteAccount();
         if (selectedAccount) {
-          setInitial("/Balances")
+          setInitial("/Balances");
         } else {
-          setInitial("/SelectAccount")
+          setInitial("/SelectAccount");
         }
       } else {
         // if we have an account, go to Login page
-        const allAccounts = await accountManager.listAccounts()
+        const allAccounts = await accountManager.listAccounts();
         if (allAccounts.size > 0) {
-          setInitial("/LogIn")
+          setInitial("/LogIn");
         } else {
-          setInitial("/Initial")
+          setInitial("/Initial");
         }
       }
-      setLoading(false)
+      setLoading(false);
     }
-    setRoute()
-  }, [])
+    setRoute();
+  }, []);
 
   if (loading) {
-    return null
+    return null;
   }
   const entryRoutes = [
     "/Initial",
@@ -51,29 +51,29 @@ const PopupRouter = () => {
     "/NFTs",
     "/Swaps",
     "/History",
-  ]
-  const initialIndex = entryRoutes.indexOf(initial) || 0
+  ];
+  const initialIndex = entryRoutes.indexOf(initial) || 0;
   return (
     <MemoryRouter initialEntries={entryRoutes} initialIndex={initialIndex}>
       <AnimatedSwitch
-        atEnter={{opacity: 0.5}}
-        atLeave={{opacity: 0.5}}
-        atActive={{opacity: 1}}
-        className='switch-wrapper'
+        atEnter={{ opacity: 0.5 }}
+        atLeave={{ opacity: 0.5 }}
+        atActive={{ opacity: 1 }}
+        className="switch-wrapper"
       >
-        <Route path='/Initial' component={Initial}></Route>
-        <Route path='/CreateAccount' component={CreateAccount}></Route>
-        <Route path='/SelectAccount' component={SelectAccount}></Route>
-        <Route path='/SetPassword' component={SetPassword}></Route>
-        <Route path='/LogIn' component={LogIn}></Route>
-        <Route path='/Balances' component={Balances}></Route>
-        <Route path='/NFTs' component={NFTs}></Route>
-        <Route path='/Swaps' component={Swaps}></Route>
-        <Route path='/History' component={History}></Route>
-        <Route path='/UserMenu' component={UserMenu}></Route>
+        <Route path="/Initial" component={Initial}></Route>
+        <Route path="/CreateAccount" component={CreateAccount}></Route>
+        <Route path="/SelectAccount" component={SelectAccount}></Route>
+        <Route path="/SetPassword" component={SetPassword}></Route>
+        <Route path="/LogIn" component={LogIn}></Route>
+        <Route path="/Balances" component={Balances}></Route>
+        <Route path="/NFTs" component={NFTs}></Route>
+        <Route path="/Swaps" component={Swaps}></Route>
+        <Route path="/History" component={History}></Route>
+        <Route path="/UserMenu" component={UserMenu}></Route>
       </AnimatedSwitch>
     </MemoryRouter>
-  )
-}
+  );
+};
 
-export default PopupRouter
+export default PopupRouter;

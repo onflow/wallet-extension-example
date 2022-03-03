@@ -1,5 +1,5 @@
-import {config} from "@onflow/fcl"
-import {send as httpSend} from "@onflow/transport-http"
+import { config } from "@onflow/fcl";
+import { send as httpSend } from "@onflow/transport-http";
 
 const configs = {
   flow_mainnet: {
@@ -8,12 +8,12 @@ const configs = {
   flow_testnet: {
     accessNode: "https://rest-testnet.onflow.org",
   },
-}
+};
 
 const configureFcl = (network = "flow_testnet") => {
-  const fclConfig = config()
-  fclConfig.put("accessNode.api", configs[network].accessNode)
-  fclConfig.put("sdk.transport", httpSend)
-}
+  const fclConfig = config();
+  fclConfig.put("accessNode.api", configs[network].accessNode);
+  fclConfig.put("sdk.transport", httpSend);
+};
 
-export default configureFcl
+export default configureFcl;

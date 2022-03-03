@@ -21,23 +21,30 @@
 
 ```shell
 git clone https://github.com/gregsantos/flow-wallet-extension.git
+
 cd flow-wallet-extension/
+
 npm i
 ```
 
 ### Build
 
-TODO: Fill in with new build instructions
-
-To avoid getting Content Security Policy (CSP) errors after building. We need to tell CRA to place the extra code into a separate file for us by setting up an environment variable called INLINE_RUNTIME_CHUNK.
-
-Because this environment variable is particular and only applies to the build, we won’t add it to the .env file. Instead, we will update our build command on the package.json file.
-
-```shell
-“build”: “INLINE_RUNTIME_CHUNK=false react-scripts build”,
+```sh
+npm run dev
 ```
 
-The generated index.html will contain no reference to inline JavaScript code
+### Install the extension
+
+Load your extension in Chrome:
+
+- In Chrome, navigate to `chrome://extensions`
+- Enable the "Developer mode" toggle
+- Click on "Load unpacked"
+- Select the `build` folder
+
+### Refreshing the extension
+
+If you make changes to the code, rebuild the extension with `npm run dev` and then click the refresh icon in the Chrome extensions page.
 
 ### Run the harness
 TODO: Fill out instructions here.
@@ -66,6 +73,3 @@ See the full guide to building an extension on Flow [here](docs/index.md).
     + [Transaction History & Event Indexing](docs/index.md#transaction-history---event-indexing)
     + [NFT Viewing & Metadata](docs/index.md#nft-viewing---metadata)
     + [Other Resources](docs/index.md#other-resources)
-
-
-
