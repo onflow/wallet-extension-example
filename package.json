@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "A sample Chrome extension wallet for Flow that is compatible with FCL.",
   "scripts": {
-    "build": "node utils/build.js",
+    "dev": "NODE_ENV=development webpack",
+    "build": "NODE_ENV=production webpack",
     "prettier": "prettier --write '**/*.{js,jsx,json,css,scss,md}'"
   },
   "dependencies": {

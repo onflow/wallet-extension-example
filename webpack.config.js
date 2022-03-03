@@ -1,6 +1,5 @@
 var webpack = require("webpack"),
   path = require("path"),
-  env = require("./utils/env"),
   CopyWebpackPlugin = require("copy-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
   TerserPlugin = require("terser-webpack-plugin");
@@ -130,7 +129,7 @@ var options = {
   ],
 };
 
-if (env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") {
   options.devtool = "source-map";
 } else {
   options.optimization = {
