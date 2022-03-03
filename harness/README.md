@@ -1,7 +1,7 @@
 # FCL Test Harness
 
-This is a barebones web application that can be used to connect to and test
-FCL wallets on Flow.
+This is a barebones web application that can be used to
+connect to and test FCL wallets on Flow.
 
 ## Usage
 
