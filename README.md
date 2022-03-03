@@ -2,58 +2,68 @@
 <p align="center">
   <h1 align="center"> Sample Flow Wallet Chrome Extension</h1>
   <p align="center">
-    <i>Demo and guide to creating a FCL Chrome wallet extension on Flow.</i>
+    <i>Demo and guide to creating an FCL Chrome wallet extension on Flow.</i>
     <br />
     <a href="https://github.com/gregsantos/flow-wallet-extension/blob/master/docs/index.md"><strong>Read the docs»</strong></a>
     <br />
     <br />
-    <a href="https://docs.onflow.org/fcl/">FCL Readme</a>
+    <a href="https://docs.onflow.org/fcl/">FCL README</a>
     ·
-    <a href="https://github.com/onflow/fcl-js/issues">Report Bug</a>
+    <a href="https://github.com/onflow/fcl-js/issues">Report a Bug</a>
 ·
     <a href="https://developer.chrome.com/docs/extensions/reference/">Chrome API Docs</a>
   </p>
 </p>
 
-## Getting Started
+## Getting started
 
 ### Setup
 
 ```shell
 git clone https://github.com/gregsantos/flow-wallet-extension.git
 
-cd flow-wallet-extension/
+cd flow-wallet-extension
+cd extension
 
 npm i
-```
 
-### Build
-
-```sh
 npm run dev
 ```
 
-### Install the extension
+#### Install the extension
 
 Load your extension in Chrome:
 
 - In Chrome, navigate to `chrome://extensions`
 - Enable the "Developer mode" toggle
 - Click on "Load unpacked"
-- Select the `build` folder
+- Select the `extension/build` folder
 
-### Refreshing the extension
+#### Refreshing the extension
 
 If you make changes to the code, rebuild the extension with `npm run dev` and then click the refresh icon in the Chrome extensions page.
 
-### Run the harness
-TODO: Fill out instructions here.
+### Start the harness app
 
-### Run the extension
-TODO: Fill out instructions here.
+The harness is a barebones web app that allows you to 
+connect to the extension and send transactions.
+
+```sh
+cd harness
+
+npm i
+
+npm run start
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+---
 
 ## Build your own wallet
+
 See the full guide to building an extension on Flow [here](docs/index.md).
+
   * [Overview](docs/index.md#overview)
     + [FCL Fundamentals](docs/index.md#fcl-fundamentals)
       - [Discovery](docs/index.md#discovery)
