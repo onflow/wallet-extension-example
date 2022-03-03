@@ -22,7 +22,8 @@
 ```shell
 git clone https://github.com/gregsantos/flow-wallet-extension.git
 
-cd flow-wallet-extension/extension
+cd flow-wallet-extension
+cd extension
 
 npm i
 ```
