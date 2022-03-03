@@ -32,7 +32,7 @@ npm install
 ### Build
 
 ```sh
-npm run build
+npm run dev
 ```
 
 ### Install the extension
@@ -46,7 +46,7 @@ Load your extension in Chrome:
 
 ### Refreshing the extension
 
-If you make changes to the code, rebuild the extension with `npm run build` and then click the refresh icon in the Chrome extensions page.
+If you make changes to the code, rebuild the extension with `npm run dev` and then click the refresh icon in the Chrome extensions page.
 
 ---
 
