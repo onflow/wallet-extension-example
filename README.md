@@ -26,9 +26,7 @@ cd flow-wallet-extension
 cd extension
 
 npm i
-```
 
-```sh
 npm run dev
 ```
 
@@ -52,13 +50,9 @@ connect to the extension and send transactions.
 
 ```sh
 cd harness
-```
 
-```sh
 npm i
-```
 
-```sh
 npm run start
 ```
 
