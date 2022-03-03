@@ -7,7 +7,7 @@
     <a href="https://github.com/gregsantos/flow-wallet-extension/blob/master/docs/index.md"><strong>Read the docs»</strong></a>
     <br />
     <br />
-    <a href="https://docs.onflow.org/fcl/">FCL Readme</a>
+    <a href="https://docs.onflow.org/fcl/">FCL README</a>
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report a Bug</a>
 ·
