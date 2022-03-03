@@ -1,9 +1,5 @@
 import { WalletUtils } from "@onflow/fcl";
 
-if (!Array.isArray(window.fcl_extensions)) {
-  window.fcl_extensions = [];
-}
-
 const service = {
   f_type: "Service",
   f_vsn: "1.0.0",
