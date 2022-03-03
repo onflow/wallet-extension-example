@@ -21,6 +21,6 @@ const service = {
     icon: null,
     description: "Flow Non-Custodial Wallet Extension for Chrome",
   },
-}
+};
 
 WalletUtils.injectExtService(service);
