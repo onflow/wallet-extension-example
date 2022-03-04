@@ -2,29 +2,27 @@
 
 ## Getting Started
 
-### Build the Extension
+### Install
 
-```sh
-cd extension
+```shell
+npm i
 ```
 
-```sh
-npm install
+### Build the extension
+
+```shell
+
+npm run dev --workspace fcl-wallet-extension-demo
+
 ```
 
-```sh
-npm run build
-```
-
-#### Install the extension
-
-Load your extension in Chrome:
+### Add the extension to Chrome
 
 - In Chrome, navigate to `chrome://extensions`
 - Enable the "Developer mode" toggle
 - Click on "Load unpacked"
-- Select the `extension/build` folder
+- Select the `packages/extension/build` folder
 
-#### Refreshing the extension
+### Refreshing the extension
 
-If you make changes to the code, rebuild the extension with `npm run build` and then click the refresh icon in the Chrome extensions page.
+If you make changes to the code, rebuild the extension with `npm run dev` and then click the refresh icon in the Chrome extensions page.
