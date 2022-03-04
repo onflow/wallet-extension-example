@@ -5,12 +5,9 @@
     <br />
     <a href="docs/index.md"><strong>Read the docs »</strong></a>
     <br />
-    <br />
-    <a href="https://docs.onflow.org/fcl/">FCL README</a>
+    <a href="https://docs.onflow.org/fcl/">What is FCL?</a>
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report a Bug</a>
-·
-    <a href="https://developer.chrome.com/docs/extensions/reference/">Chrome API Docs</a>
   </p>
 </p>
 
