@@ -1,28 +1,24 @@
-<br />
 <p align="center">
-  <h1 align="center"> Sample Flow Wallet Chrome Extension</h1>
+  <h1 align="center">Flow Chrome Extension Wallet Example</h1>
   <p align="center">
-    <i>Demo and guide to creating an FCL Chrome wallet extension on Flow.</i>
+    <i>An example and guide showing how to build an FCL-compatible wallet extension on Flow.</i>
     <br />
-    <a href="https://github.com/gregsantos/flow-wallet-extension/blob/master/docs/index.md"><strong>Read the docs»</strong></a>
+    <a href="docs/index.md"><strong>Read the docs »</strong></a>
     <br />
     <br />
-    <a href="https://docs.onflow.org/fcl/">FCL README</a>
+    <a href="https://docs.onflow.org/fcl/">What is FCL?</a>
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report a Bug</a>
-·
-    <a href="https://developer.chrome.com/docs/extensions/reference/">Chrome API Docs</a>
   </p>
 </p>
 
 ## Getting started
 
-Run all commands from root dir
+Run all commands from the root directory.
 
-### Clone and Install
+### Install
 
 ```shell
-git clone https://github.com/gregsantos/flow-wallet-extension.git
 
 npm i
 
@@ -36,9 +32,7 @@ npm run dev --workspace fcl-wallet-extension-demo
 
 ```
 
-### Install the extension
-
-Load your extension in Chrome:
+### Add the extension to Chrome
 
 - In Chrome, navigate to `chrome://extensions`
 - Enable the "Developer mode" toggle

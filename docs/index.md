@@ -1,10 +1,10 @@
-# FCL EXT/RPC Guide
+# FCL Chrome Extension Wallet Guide (EXT/RPC)
 
 _This guide will help you create an FCL-compatible Chrome browser extension._
 
 ## Overview
 
-To get started, we will cover the most important aspects of Flow, FCL, and Chrome's APIs relevant to building this extension. Get started by reading the [FCL README](https://docs.onflow.org/fcl/) for a high level overview of FCL and all its features.
+To get started, we will cover the most important aspects of Flow, the Flow Client Library (FCL), and Chrome's APIs relevant to building this extension. Get started by reading the [FCL README](https://docs.onflow.org/fcl/) for a high-level overview of FCL and its features.
 
 ### FCL Fundamentals
 
@@ -50,7 +50,7 @@ The following is an overview of these scripts and the functionality they need to
 
 ## Implementation
 
-### Manifest V3 configurations
+### Manifest V3 Configurations
 
 Every Chrome extension requires a manifest file. All of the configurations for the extension belong in the `manifest.json` file, which you'll find in the public folder.
 
@@ -85,7 +85,7 @@ It also needs to declare permissions for any chrome APIs we would be using in ou
   ],
 ```
 
-See [here](https://github.com/gregsantos/flow-wallet-extension/blob/master/public/manifest.json) for the full sample manifest v3 file.
+See [here](../packages/extension/src/manifest.json) for the full sample manifest v3 file.
 
 ### FCL Installation & Configuration
 
@@ -110,11 +110,11 @@ See [here](https://docs.onflow.org/fcl/reference/configure-fcl/) for more config
 
 ### Harness & Testing
 
-In order to test your FCL integration as you build your extension, you may want to use a simple sample dapp that can send authentication and authorization requests. We have created a barebones dapp to use for development that you can run and use against your extension. View the instructions on the [README](https://github.com/gregsantos/flow-wallet-extension) to get it running.
+In order to test your FCL integration as you build your extension, you may want to use a simple sample dapp that can send authentication and authorization requests. We have created a barebones dapp to use for development that you can run and use against your extension. View the instructions on the [README](../README.md) to get it running.
 
 ### FCL Discovery
 
-FCL relies on the global window object to find injected extensions in `window.fcl_extensions` list. It expects the extension to have injected a specific object into the array that it needs to confirm installation and proceed with authentication if the user chooses it. This `authn` type Service object is added via [`script.js`](https://github.com/gregsantos/flow-wallet-extension/blob/master/public/script.js) and passed to Discovery. It contains details like the extension endpoint to open on login (see below), the FCL version, and the wallet provider details.
+FCL relies on the global window object to find injected extensions in `window.fcl_extensions` list. It expects the extension to have injected a specific object into the array that it needs to confirm installation and proceed with authentication if the user chooses it. This `authn` type Service object is added via [`script.js`](../packages/extension/src/script.js) and passed to Discovery. It contains details like the extension endpoint to open on login (see below), the FCL version, and the wallet provider details.
 
 ```js
 const AuthnService = {
@@ -201,7 +201,7 @@ Authentication is triggered either through Discovery, default configuration (`fc
 
 1. On opening of the authentication tab on the extension, it should fire a message of `{type: "FCL:VIEW:READY"}` via `chrome.tabs.sendMessage` to indicate to the dapp that it should wait for a response from the user within the extension.
 2. The dapp/FCL will respond with `FCL:VIEW:READY:RESPONSE` which is received by `content.js` and proxied to the extension authentication page. The dapp will wait for an approved polling response from the extension.
-3. Once the user has successfully authenticated, the extension should send a message of type `PollingResponse` with the `status` field as `"APPROVED"` and an `AuthnResponse` with relevant service objects as data. See [sample authn page](https://github.com/gregsantos/flow-wallet-extension/blob/master/src/pages/services/Authn.js).
+3. Once the user has successfully authenticated, the extension should send a message of type `PollingResponse` with the `status` field as `"APPROVED"` and an `AuthnResponse` with relevant service objects as data. See [sample authn page](../packages/extension/src/pages/services/Authn.js).
 
 All messages above are proxied through `content.js`.
 
@@ -220,7 +220,7 @@ In the `PollingResponse`, there should be a `data` field that contains a composi
 
 > **This composite signature will be generated using the users keys and should be done securely.**
 
-Although a [sample implementation](#) has been provided, you should thoroughly review your own signing functionality and ensure its security.
+Although a [sample implementation](../packages/extension/) has been provided, you should thoroughly review your own signing functionality and ensure its security.
 
 All messages above are proxied through `content.js`.
 
@@ -248,9 +248,11 @@ If you would like to support showing user's their NFTs and associated metadata, 
 ### Other Resources
 
 - Block Explorers
-  - Flowscan [Mainnet](https://flowscan.org/) / [Testnet](https://testnet.flowscan.org/)
+  - Flowscan
+    - [Mainnet](https://flowscan.org/)
+    - [Testnet](https://testnet.flowscan.org/)
   - [Flow-view-source](https://flow-view-source.com/)
-- On-ramp Providers
+- Payment On-ramp Providers
   - [Moonpay](https://www.moonpay.com/)
   - [Wyre](https://www.sendwyre.com/)
   - [Ramp](https://ramp.network/)
