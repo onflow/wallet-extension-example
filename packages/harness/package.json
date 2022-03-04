@@ -1,7 +1,6 @@
 {
   "name": "fcl-harness",
   "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "@onflow/fcl": "0.0.79-pain.0",
     "@onflow/transport-http": "^0.0.6",
