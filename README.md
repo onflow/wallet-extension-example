@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">Flow Chrome Extension Wallet Example</h1>
   <p align="center">
-    <i>An example and guide showing how to build an FCL Chrome wallet extension on Flow.</i>
+    <i>An example and guide showing how to build an FCL-compatible Chrome wallet extension on Flow.</i>
     <br />
     <a href="docs/index.md"><strong>Read the docs »</strong></a>
     <br />
