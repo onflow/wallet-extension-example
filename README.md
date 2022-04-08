@@ -10,6 +10,9 @@
     ·
     <a href="https://github.com/onflow/fcl-js/issues">Report a Bug</a>
   </p>
+  <p align="center">
+   This guide and sample is based on a <a href="https://github.com/onflow/flip-fest/blob/main/winners.md#flow-providers-non-custodial-wallets-28">winning FLIP Fest submission</a> from the <a href="https://github.com/Zay-Codes-Lab">ZayCodes team</a>.
+  </p>
 </p>
 
 ## Getting started
