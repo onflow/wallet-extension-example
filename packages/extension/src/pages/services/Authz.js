@@ -44,8 +44,8 @@ export default function Authz() {
     const signable = data.body;
     const { hostname } = data.config.client;
     hostname && setHost(hostname);
-    if (signable.cadence) {
-      setTransactionCode(signable.cadence);
+    if (signable.voucher.cadence) {
+      setTransactionCode(signable.voucher.cadence);
     }
     setSignable(signable);
   }
@@ -98,7 +98,7 @@ export default function Authz() {
   async function sendAuthzToFCL() {
     initTransactionState();
     const signedMessage = await createSignature(
-      signable.message,
+      fcl.WalletUtils.encodeMessageFromSignable(signable, signable.addr),
       signable.addr,
       signable.keyId
     );
