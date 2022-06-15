@@ -14,7 +14,7 @@ Dapps on Flow are encouraged to use FCL's [Discovery API](https://github.com/onf
 
 #### Service Methods
 
-Services methods are the communication channels that FCL can use to pass messages to and from your wallet in order to fulfill user interactions. For extensions, we will be using RPC in the browser to communicate between the wallet and the dapp. For more context on service methods, see other supported methods [here](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v3.md#service-methods). Note that the EXT/RPC is not documented in the provider spec but is similar to the other front-channel communication methods such as IFRAME/RPC.
+Services methods are the communication channels that FCL can use to pass messages to and from your wallet in order to fulfill user interactions. For extensions, we will be using RPC in the browser to communicate between the wallet and the dapp. For more context on service methods, see other supported methods [here](https://github.com/onflow/fcl-js/blob/master/packages/fcl/src/wallet-provider-spec/draft-v3.md#service-methods).
 
 #### Wallet Services
 
@@ -91,19 +91,15 @@ See [here](../packages/extension/src/manifest.json) for the full sample manifest
 
 Use the following versions of FCL within your extension - available via [NPM](https://www.npmjs.com/package/@onflow/fcl):
 
-- **FCL Version**: `^0.0.79-alpha.3`
-- **HTTP Transport**: `^0.0.6`
-  - Requires separate http-transport package from `@onflow/transport-http` installed as dependency
+- **FCL Version**: `^1.0.3-alpha.0`
 
-Configure FCL to use the HTTP API on the Access Node with the HTTP transport layer.
+Configure FCL to use the HTTP API on the Access Node.
 
 ```js
 import {config} from "@onflow/fcl"
-import {send as httpSend} from "@onflow/transport-http"
 
 config()
 fclConfig.put("accessNode.api", "https://rest-testnet.onflow.org")
-fclConfig.put("sdk.transport", httpSend)
 ```
 
 See [here](https://docs.onflow.org/fcl/reference/configure-fcl/) for more configuration options. Note, that many of these configuration options are dapp specific and not needed for the wallet.
