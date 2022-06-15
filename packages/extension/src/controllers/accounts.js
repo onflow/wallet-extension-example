@@ -104,7 +104,8 @@ export const validateFlowAccountInfo = async (
     keyID,
     sig
   );
-  const verification = await fcl.verifyUserSignatures(msg, [compSig]);
+
+  const verification = await fcl.AppUtils.verifyUserSignatures(msg, [compSig]);
 
   if (!verification) {
     throw new Error("Private key not valid for this account");

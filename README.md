@@ -31,7 +31,7 @@ npm i
 
 ```shell
 
-npm run dev --workspace fcl-wallet-extension-demo
+npm run build --workspace fcl-wallet-extension-demo
 
 ```
 

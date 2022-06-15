@@ -11,8 +11,8 @@ export const CMD = async () => {
       }
     `,
     args: (arg, t) => [
-      arg(5, t.Int),
-      arg(7, t.Int),
+      arg("5", t.Int),
+      arg("7", t.Int),
     ],
   }).then(yup("Q-1"))
     .catch(nope("Q-1"))
