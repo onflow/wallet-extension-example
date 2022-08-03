@@ -15,6 +15,7 @@ const configureFcl = (network = "flow_testnet") => {
   const fclConfig = config();
   fclConfig.put("accessNode.api", configs[network].accessNode);
   fclConfig.put("flow.network", configs[network].flowNetwork);
+  fclConfig.put("logger.level", 5);
 };
 
 export default configureFcl;

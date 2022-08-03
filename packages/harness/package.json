@@ -2,10 +2,11 @@
   "name": "fcl-harness",
   "version": "0.1.0",
   "dependencies": {
-    "@onflow/fcl": "^1.0.3-alpha.0",
+    "@onflow/fcl": "1.1.1-templates.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "^4.0.3",
+    "styled-components": "^5.3.5",
     "swr": "^0.4.2",
     "web-vitals": "^1.0.1"
   },
