@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MemoryRouter, Route } from "react-router";
-import { AnimatedSwitch } from "react-router-transition";
+import { MemoryRouter, Route, Switch } from "react-router";
 import Initial from "../pages/Initial";
 import CreateAccount from "../pages/CreateAccount";
 import LogIn from "../pages/LogIn";
@@ -55,12 +54,7 @@ const PopupRouter = () => {
   const initialIndex = entryRoutes.indexOf(initial) || 0;
   return (
     <MemoryRouter initialEntries={entryRoutes} initialIndex={initialIndex}>
-      <AnimatedSwitch
-        atEnter={{ opacity: 0.5 }}
-        atLeave={{ opacity: 0.5 }}
-        atActive={{ opacity: 1 }}
-        className="switch-wrapper"
-      >
+      <Switch>
         <Route path="/Initial" component={Initial}></Route>
         <Route path="/CreateAccount" component={CreateAccount}></Route>
         <Route path="/SelectAccount" component={SelectAccount}></Route>
@@ -71,7 +65,7 @@ const PopupRouter = () => {
         <Route path="/Swaps" component={Swaps}></Route>
         <Route path="/History" component={History}></Route>
         <Route path="/UserMenu" component={UserMenu}></Route>
-      </AnimatedSwitch>
+      </Switch>
     </MemoryRouter>
   );
 };

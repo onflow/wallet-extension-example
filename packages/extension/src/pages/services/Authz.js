@@ -77,6 +77,8 @@ export default function Authz() {
 
     let cadence = _signable.cadence
 
+    console.log("cadence", cadence, btoa(cadence))
+
     let foundTemplate = await fetch(
       `https://flow-ix-template-svc-testnet.herokuapp.com/v1/template?network=testnet&cadence=${btoa(cadence)}`)
       .then(response => response.json())
@@ -95,9 +97,16 @@ export default function Authz() {
 
     // Fetch audits from trusted auditors
     let audit = await fetch(
-      `https://flow-ix-template-svc-testnet.herokuapp.com/v1/audit?template_id=${foundTemplate.id}`)
+      `https://flow-ix-template-svc-testnet.herokuapp.com/v1/audit?template_id=${foundTemplate?.id}`)
       .then(response => response.json())
       .catch(e => null)
+
+    if (!audit) {
+      audit = await fetch(
+        `http://localhost:3030/audits/${foundTemplate?.id}`)
+        .then(response => response.json())
+        .catch(e => null)
+    }
 
     console.log("fetchTemplateAndVerifyAudits found Audit", _signable, foundTemplate, audit)
 
@@ -146,10 +155,10 @@ export default function Authz() {
     const _signable = data.body;
     const { hostname } = data.config.client;
     hostname && setHost(hostname);
-    if (signable.voucher.cadence) {
-      setTransactionCode(signable.voucher.cadence);
-    }
-    setSignable(JSON.stringify(signabl));
+    // if (_signable.voucher.cadence) {
+    //   setTransactionCode(_signable.voucher.cadence);
+    // }
+    setSignable(JSON.stringify(_signable));
 
     // setSignable(JSON.stringify(_signable));
   }
@@ -313,10 +322,10 @@ export default function Authz() {
                       </Text>
                       <Text> {description} </Text>
                       <br />
-                      {parsedSignable && parsedTemplate && parsedTemplate.data.arguments && (
+                      {parsedSignable && parsedTemplate && parsedTemplate?.data?.arguments && (
                         <>
                         {
-                          parsedTemplate.data.messages?.title?.i18n?.["en-US"] && (
+                          parsedTemplate?.data.messages?.title?.i18n?.["en-US"] && (
                             <Text
                               align="left"
                               color="gray.100"
@@ -327,12 +336,12 @@ export default function Authz() {
                               <Text fontSize="16px" color={styles.flowColor}>
                                 Title:
                               </Text>
-                              {parsedTemplate.data.messages?.title?.i18n?.["en-US"]}
+                              {parsedTemplate?.data.messages?.title?.i18n?.["en-US"]}
                             </Text>
                           )
                         }
                         {
-                          parsedTemplate.data.messages?.description?.i18n?.["en-US"] && (
+                          parsedTemplate?.data?.messages?.description?.i18n?.["en-US"] && (
                             <Text
                               align="left"
                               color="gray.100"
@@ -343,7 +352,7 @@ export default function Authz() {
                               <Text fontSize="16px" color={styles.flowColor}>
                               Description:
                               </Text>
-                              {parsedTemplate.data.messages?.description?.i18n?.["en-US"]}
+                              {parsedTemplate?.data?.messages?.description?.i18n?.["en-US"]}
                             </Text>
                           )
                         }
@@ -387,7 +396,7 @@ export default function Authz() {
                         ) : null}
                       </VStack>
                       <br/>
-                      {parsedSignable && parsedTemplate && parsedTemplate.data.arguments && (
+                      {parsedSignable && parsedTemplate && parsedTemplate?.data?.arguments && (
                         <>
                           <Text fontSize="18px" mt="12px">
                             Arguments
@@ -402,8 +411,8 @@ export default function Authz() {
                             borderColor="gray.500"
                             align="left"
                           >
-                            {parsedSignable && parsedTemplate && parsedTemplate.data.arguments && (
-                              Object.keys(parsedTemplate.data.arguments).map(argKey => (
+                            {parsedSignable && parsedTemplate && parsedTemplate?.data?.arguments && (
+                              Object.keys(parsedTemplate?.data?.arguments).map(argKey => (
                                 <>
                                   <Text
                                     align="left"
@@ -426,7 +435,7 @@ export default function Authz() {
                                     fontWeight="medium"
                                     fontSize="16px"
                                   >
-                                    Title: {parsedTemplate.data.arguments[argKey]?.messages?.title?.i18n?.["en-US"]}
+                                    Title: {parsedTemplate?.data?.arguments[argKey]?.messages?.title?.i18n?.["en-US"]}
                                   </Text>
                                   <Text
                                     align="left"
@@ -435,7 +444,7 @@ export default function Authz() {
                                     fontWeight="medium"
                                     fontSize="16px"
                                   >
-                                    Value: <b>{parsedSignable?.voucher?.arguments[parsedTemplate.data.arguments[argKey]?.index]?.value}</b>
+                                    Value: <b>{parsedSignable?.voucher?.arguments[parsedTemplate?.data?.arguments[argKey]?.index]?.value}</b>
                                   </Text> 
                                   <br/>
                                 </>                   
