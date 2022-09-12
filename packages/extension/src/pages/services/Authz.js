@@ -18,49 +18,78 @@ import ErrorBoundary from "../../components/ErrorBoundary";
 import { keyVault } from "../../lib/keyVault";
 import { createSignature } from "../../controllers/authz";
 import { useTransaction } from "../../contexts/TransactionContext";
-import {verify} from "../../audits/verify";
-import {audits} from "../../audits/audits"; 
+import { verify } from "../../audits/verify";
+import { audits } from "../../audits/audits";
 import * as styles from "../../styles";
 
 const AUDIT_DESCRIPTIONS = {
-  "VERIFIED": "This transaction has been audited ✅.",
-  "PENDING": "Verifying audits...",
-  "UNVERIFIED": "This transaction has not been audited ⚠️.",
-  "INIT": "",
-}
+  VERIFIED: "This transaction has been audited ✅.",
+  PENDING_TEMPLATE: "Fetching template...",
+  PENDING_AUDITS: "Verifying audits...",
+  UNVERIFIED: "This transaction has not been audited ⚠️.",
+  PENDING_DEPENDENCIES: "Verifying dependency tree...",
+  INIT: "",
+};
 
 const AUDIT_VERIFICATION_STATUS = {
-  "VERIFIED": "VERIFIED",
-  "PENDING": "PENDING",
-  "UNVERIFIED": "UNVERIFIED",
-  "INIT": "INIT",
-}
+  VERIFIED: "VERIFIED",
+  PENDING: "PENDING",
+  UNVERIFIED: "UNVERIFIED",
+  INIT: "INIT",
+};
 
 const AUDIT_STATUS_REDUCER_ACTIONS = {
-  "SET_VERIFIED": "SET_VERIFIED",
-  "SET_UNVERIFIED": "SET_UNVERIFIED",
-}
+  SET_VERIFIED: "SET_VERIFIED",
+  SET_UNVERIFIED: "SET_UNVERIFIED",
+};
 
 function auditStatusReducer(state, action) {
   switch (action.type) {
     case AUDIT_STATUS_REDUCER_ACTIONS.SET_VERIFIED:
-      return { ...state, [action.value.message]: true }
+      return { ...state, [action.value.signable.message]: {
+        verified: true,
+        status: action.value.status,
+      }};
     case AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED:
-      return { ...state, [action.value.message]: false }
+      return { ...state, [action.value.signable.message]: {
+        verified: false,
+        status: action.value.status,
+      }};
     default:
-      return state
+      return state;
   }
 }
 
+const TEMPLATE_RESOLVERS = [
+  async (cadence) => {
+    return fetch(
+      `https://flix.flow.com/v1/templates/search`, 
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          cadence_base64: btoa(cadence),
+          network: "testnet"
+        })
+      }
+    )
+      .then((response) => response.json())
+      .catch((e) => null);
+  },
+];
+
 export default function Authz() {
   const [opener, setOpener] = useState(null);
-  const [isAuditedByMessage, dispatchIsAuditedByMessage] = useReducer(auditStatusReducer, {});
+  const [isAuditedByMessage, dispatchIsAuditedByMessage] = useReducer(
+    auditStatusReducer,
+    {}
+  );
   const [signable, setSignable] = useState("{}");
   const [template, setTemplate] = useState("{}");
   const [unlocked, setUnlocked] = useState(keyVault.unlocked);
-  // const [transactionCode, setTransactionCode] = useState(``);
   const [showTransactionCode, setShowTransactionCode] = useState(false);
-  // const [description, setDescription] = useState(DESCRIPTIONS.INIT);
   const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
   const [txView, setTxView] = useState("detail");
@@ -70,102 +99,121 @@ export default function Authz() {
     useTransaction();
   const toast = useToast();
 
-  fcl.config().get('logger.level').then(l => console.log("extension logger.level", l))
+  fcl
+    .config()
+    .get("logger.level")
+    .then((l) => console.log("extension logger.level", l));
 
   const fetchTemplateAndVerifyAudits = async (_signable) => {
-    console.log("fetchTemplateAndVerifyAudits", _signable)
+    let cadence = _signable.cadence;
 
-    let cadence = _signable.cadence
+    dispatchIsAuditedByMessage({
+      type: AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED,
+      value: {
+        signable: _signable,
+        status: AUDIT_DESCRIPTIONS.PENDING_TEMPLATE
+      }
+    });
 
-    console.log("cadence", cadence, btoa(cadence))
-
-    let foundTemplate = await fetch(
-      `https://flow-ix-template-svc-testnet.herokuapp.com/v1/template?network=testnet&cadence=${btoa(cadence)}`)
-      .then(response => response.json())
-      .catch(e => null)
+    let foundTemplates = (
+      await Promise.all(
+        TEMPLATE_RESOLVERS.map(async (templateResolver) =>
+          templateResolver(cadence)
+        )
+      )
+    ).filter((a) => a !== null && (Array.isArray(a) ? a.length > 0 : true));
+    let foundTemplate = foundTemplates[0];
+    if (Array.isArray(foundTemplate)) foundTemplate = foundTemplate[0];
 
     if (!foundTemplate) {
       dispatchIsAuditedByMessage({
         type: AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED,
-        value: _signable
-      })
+        value: {
+          signable: _signable,
+          status: AUDIT_DESCRIPTIONS.UNVERIFIED
+        }
+      });
+      return;
     }
 
-    setTemplate(JSON.stringify(foundTemplate))
+    setTemplate(JSON.stringify(foundTemplate));
 
-    console.log("fetchTemplateAndVerifyAudits looking for Audit", _signable, foundTemplate)
-
-    // Fetch audits from trusted auditors
-    let audit = await fetch(
-      `https://flow-ix-template-svc-testnet.herokuapp.com/v1/audit?template_id=${foundTemplate?.id}`)
-      .then(response => response.json())
-      .catch(e => null)
-
-    if (!audit) {
-      audit = await fetch(
-        `http://localhost:3030/audits/${foundTemplate?.id}`)
-        .then(response => response.json())
-        .catch(e => null)
-    }
-
-    console.log("fetchTemplateAndVerifyAudits found Audit", _signable, foundTemplate, audit)
-
-    if (!audit || !foundTemplate) {
+    if (!foundTemplate) {
       dispatchIsAuditedByMessage({
         type: AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED,
-        value: _signable
-      })
+        value: {
+          signable: _signable,
+          status: AUDIT_DESCRIPTIONS.UNVERIFIED
+        }
+      });
+      return;
     }
-    
-    let verifiedAudit = await fcl.InteractionTemplateUtils.verifyInteractionTemplateAudit({
-      template: foundTemplate,
-      audit,
-    })
 
-    console.log("fetchTemplateAndVerifyAudits verified Audit", _signable, foundTemplate, audit, verifiedAudit)
+    dispatchIsAuditedByMessage({
+      type: AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED,
+      value: {
+        signable: _signable,
+        status: AUDIT_DESCRIPTIONS.PENDING_AUDITS
+      }
+    });
 
-    let areTemplateDependenciesSame = 
-      await fcl.InteractionTemplateUtils.verifyDependencyPinsSameAtLatestSealedBlock({
+    let audits =
+      await fcl.InteractionTemplateUtils.getInteractionTemplateAudits({
         template: foundTemplate,
-        networks: ["testnet"]
-      })
+      });
 
-    console.log("fetchTemplateAndVerifyAudits areTemplateDependenciesSame", areTemplateDependenciesSame)
+    let isAudited = Boolean(Object.values(audits).find((a) => a === true));
 
-    if (verifiedAudit) {
+    dispatchIsAuditedByMessage({
+      type: AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED,
+      value: {
+        signable: _signable,
+        status: AUDIT_DESCRIPTIONS.PENDING_DEPENDENCIES
+      }
+    });
+
+    let areTemplateDependenciesSame =
+      await fcl.InteractionTemplateUtils.verifyDependencyPinsSameAtLatestSealedBlock(
+        {
+          template: foundTemplate,
+          network: "testnet",
+        }
+      );
+
+    if (isAudited && areTemplateDependenciesSame) {
       dispatchIsAuditedByMessage({
         type: AUDIT_STATUS_REDUCER_ACTIONS.SET_VERIFIED,
-        value: _signable
-      })
+        value: {
+          signable: _signable,
+          status: AUDIT_DESCRIPTIONS.VERIFIED
+        },
+      });
     } else {
       dispatchIsAuditedByMessage({
         type: AUDIT_STATUS_REDUCER_ACTIONS.SET_UNVERIFIED,
-        value: _signable
-      })
+        value: {
+          signable: _signable,
+          status: AUDIT_DESCRIPTIONS.VERIFIED
+        },
+      });
     }
-  }
+  };
 
   const fclCallback = async (data) => {
     if (typeof data != "object") return;
     if (data.type !== "FCL:VIEW:READY:RESPONSE") return;
-    console.log("MSG RECEIVED", data, new Date(Date.now()).toString())
-
-    // setDescription(DESCRIPTIONS.INIT)
+    console.log("MSG RECEIVED", data, new Date(Date.now()).toString());
 
     const _signable = data.body;
     const { hostname } = data.config.client;
     hostname && setHost(hostname);
-    // if (_signable.voucher.cadence) {
-    //   setTransactionCode(_signable.voucher.cadence);
-    // }
-    setSignable(JSON.stringify(_signable));
 
-    // setSignable(JSON.stringify(_signable));
-  }
+    setSignable(JSON.stringify(_signable));
+  };
 
   useEffect(() => {
-    (() => fetchTemplateAndVerifyAudits(JSON.parse(signable)))()
-  }, [signable])
+    (() => fetchTemplateAndVerifyAudits(JSON.parse(signable)))();
+  }, [signable]);
 
   const extMessageHandler = async (msg, sender, sendResponse) => {
     if (msg.type === "FCL:VIEW:READY:RESPONSE") {
@@ -215,7 +263,10 @@ export default function Authz() {
   async function sendAuthzToFCL() {
     initTransactionState();
     const signedMessage = await createSignature(
-      fcl.WalletUtils.encodeMessageFromSignable(JSON.parse(signable), JSON.parse(signable).addr),
+      fcl.WalletUtils.encodeMessageFromSignable(
+        JSON.parse(signable),
+        JSON.parse(signable).addr
+      ),
       JSON.parse(signable).addr,
       JSON.parse(signable).keyId
     );
@@ -232,36 +283,22 @@ export default function Authz() {
       ),
     });
 
-    // verifyTemplateAudit("{}")
-    // setIsAudited(false)
-    // setDescription("This transaction has not been audited ⚠️.")
-
-    setTxView("sending")
+    setTxView("sending");
   }
 
   function sendCancelToFCL() {
-    // setSignable("{}")
-    // setIsAudited(false)
-    // setDescription("This transaction has not been audited ⚠️.")
-
     chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
 
-    window.close()
+    window.close();
   }
 
-  const parsedSignable = JSON.parse(signable)
-  const parsedTemplate = JSON.parse(template)
-  // let isAudited = isAuditedByMessage?.[parsedSignable?.message] || false
-  
-  let description = isAuditedByMessage[parsedSignable.message] !== undefined
-    ? (isAuditedByMessage[parsedSignable.message] ? AUDIT_DESCRIPTIONS.VERIFIED : AUDIT_DESCRIPTIONS.UNVERIFIED)
-    : AUDIT_DESCRIPTIONS.UNVERIFIED
+  const parsedSignable = JSON.parse(signable);
+  const parsedTemplate = JSON.parse(template);
 
-  // console.log("template", template)
-  // console.log("parsedSignable", parsedSignable)
-  // console.log("isAuditedByMessage", isAuditedByMessage)
-  // console.log("isAudited", isAudited)
-  // console.log("signable", parsedSignable)
+  let description =
+    isAuditedByMessage[parsedSignable.message] !== undefined
+      ? isAuditedByMessage[parsedSignable.message].status
+      : AUDIT_DESCRIPTIONS.UNVERIFIED;
 
   return (
     <Layout withGoBack={false}>
@@ -322,42 +359,50 @@ export default function Authz() {
                       </Text>
                       <Text> {description} </Text>
                       <br />
-                      {parsedSignable && parsedTemplate && parsedTemplate?.data?.arguments && (
-                        <>
-                        {
-                          parsedTemplate?.data.messages?.title?.i18n?.["en-US"] && (
-                            <Text
-                              align="left"
-                              color="gray.100"
-                              textAlign="left"
-                              fontWeight="medium"
-                              fontSize="16px"
-                            >
-                              <Text fontSize="16px" color={styles.flowColor}>
-                                Title:
+                      {parsedSignable &&
+                        parsedTemplate &&
+                        parsedTemplate?.data?.arguments && (
+                          <>
+                            {parsedTemplate?.data.messages?.title?.i18n?.[
+                              "en-US"
+                            ] && (
+                              <Text
+                                align="left"
+                                color="gray.100"
+                                textAlign="left"
+                                fontWeight="medium"
+                                fontSize="16px"
+                              >
+                                <Text fontSize="16px" color={styles.flowColor}>
+                                  Title:
+                                </Text>
+                                {
+                                  parsedTemplate?.data.messages?.title?.i18n?.[
+                                    "en-US"
+                                  ]
+                                }
                               </Text>
-                              {parsedTemplate?.data.messages?.title?.i18n?.["en-US"]}
-                            </Text>
-                          )
-                        }
-                        {
-                          parsedTemplate?.data?.messages?.description?.i18n?.["en-US"] && (
-                            <Text
-                              align="left"
-                              color="gray.100"
-                              textAlign="left"
-                              fontWeight="medium"
-                              fontSize="16px"
-                            >
-                              <Text fontSize="16px" color={styles.flowColor}>
-                              Description:
+                            )}
+                            {parsedTemplate?.data?.messages?.description
+                              ?.i18n?.["en-US"] && (
+                              <Text
+                                align="left"
+                                color="gray.100"
+                                textAlign="left"
+                                fontWeight="medium"
+                                fontSize="16px"
+                              >
+                                <Text fontSize="16px" color={styles.flowColor}>
+                                  Description:
+                                </Text>
+                                {
+                                  parsedTemplate?.data?.messages?.description
+                                    ?.i18n?.["en-US"]
+                                }
                               </Text>
-                              {parsedTemplate?.data?.messages?.description?.i18n?.["en-US"]}
-                            </Text>
-                          )
-                        }
-                        </>
-                      )}
+                            )}
+                          </>
+                        )}
                       <VStack
                         mt="4px"
                         p="12px"
@@ -395,65 +440,83 @@ export default function Authz() {
                           </>
                         ) : null}
                       </VStack>
-                      <br/>
-                      {parsedSignable && parsedTemplate && parsedTemplate?.data?.arguments && (
-                        <>
-                          <Text fontSize="18px" mt="12px">
-                            Arguments
-                          </Text>
-                          <VStack
-                            mt="8px"
-                            p="12px"
-                            pl="0px"
-                            pr="0px"
-                            borderTopWidth="3px"
-                            borderBottomWidth="3px"
-                            borderColor="gray.500"
-                            align="left"
-                          >
-                            {parsedSignable && parsedTemplate && parsedTemplate?.data?.arguments && (
-                              Object.keys(parsedTemplate?.data?.arguments).map(argKey => (
-                                <>
-                                  <Text
-                                    align="left"
-                                    color="gray.100"
-                                    textAlign="left"
-                                    fontWeight="medium"
-                                    fontSize="16px"
-                                  >
-                                    <Text 
+                      <br />
+                      {parsedSignable &&
+                        parsedTemplate &&
+                        parsedTemplate?.data?.arguments && (
+                          <>
+                            <Text fontSize="18px" mt="12px">
+                              Arguments
+                            </Text>
+                            <VStack
+                              mt="8px"
+                              p="12px"
+                              pl="0px"
+                              pr="0px"
+                              borderTopWidth="3px"
+                              borderBottomWidth="3px"
+                              borderColor="gray.500"
+                              align="left"
+                            >
+                              {parsedSignable &&
+                                parsedTemplate &&
+                                parsedTemplate?.data?.arguments &&
+                                Object.keys(
+                                  parsedTemplate?.data?.arguments
+                                ).map((argKey) => (
+                                  <>
+                                    <Text
+                                      align="left"
+                                      color="gray.100"
+                                      textAlign="left"
+                                      fontWeight="medium"
                                       fontSize="16px"
-                                      color={styles.flowColor}
                                     >
-                                      {argKey}
+                                      <Text
+                                        fontSize="16px"
+                                        color={styles.flowColor}
+                                      >
+                                        {argKey}
+                                      </Text>
                                     </Text>
-                                  </Text>
-                                  <Text
-                                    align="left"
-                                    color="gray.100"
-                                    textAlign="left"
-                                    fontWeight="medium"
-                                    fontSize="16px"
-                                  >
-                                    Title: {parsedTemplate?.data?.arguments[argKey]?.messages?.title?.i18n?.["en-US"]}
-                                  </Text>
-                                  <Text
-                                    align="left"
-                                    color="gray.100"
-                                    textAlign="left"
-                                    fontWeight="medium"
-                                    fontSize="16px"
-                                  >
-                                    Value: <b>{parsedSignable?.voucher?.arguments[parsedTemplate?.data?.arguments[argKey]?.index]?.value}</b>
-                                  </Text> 
-                                  <br/>
-                                </>                   
-                              ))
-                            )}
-                          </VStack>
-                        </>
-                      )}
-                      <br/>
+                                    <Text
+                                      align="left"
+                                      color="gray.100"
+                                      textAlign="left"
+                                      fontWeight="medium"
+                                      fontSize="16px"
+                                    >
+                                      Title:{" "}
+                                      {
+                                        parsedTemplate?.data?.arguments[argKey]
+                                          ?.messages?.title?.i18n?.["en-US"]
+                                      }
+                                    </Text>
+                                    <Text
+                                      align="left"
+                                      color="gray.100"
+                                      textAlign="left"
+                                      fontWeight="medium"
+                                      fontSize="16px"
+                                    >
+                                      Value:{" "}
+                                      <b>
+                                        {
+                                          parsedSignable?.voucher?.arguments[
+                                            parsedTemplate?.data?.arguments[
+                                              argKey
+                                            ]?.index
+                                          ]?.value
+                                        }
+                                      </b>
+                                    </Text>
+                                    <br />
+                                  </>
+                                ))}
+                            </VStack>
+                          </>
+                        )}
+                      <br />
                       <Text fontSize="18px" mt="12px">
                         Estimated Fees
                       </Text>
