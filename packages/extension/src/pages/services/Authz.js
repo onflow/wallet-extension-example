@@ -29,10 +29,10 @@ export default function Authz() {
   const [description, setDescription] = useState(
     "This transaction has not been audited."
   );
-  const [password, setPassword] = useState(null);
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [txView, setTxView] = useState("detail");
-  const [host, setHost] = useState(null);
+  const [host, setHost] = useState("");
 
   const { initTransactionState, setTxId, setTransactionStatus } =
     useTransaction();
@@ -54,8 +54,7 @@ export default function Authz() {
     chrome.tabs &&
       chrome.tabs.query(
         {
-          active: true,
-          currentWindow: false,
+          url: "http://localhost:3000/*",
         },
         (tabs) => {
           setOpener(tabs[0].id);

@@ -20,7 +20,7 @@
       "js": ["content.js"]
     }
   ],
-  "permissions": ["activeTab", "storage", "alarms"],
+  "permissions": ["activeTab", "storage", "alarms", "tabs"],
   "web_accessible_resources": [
     {
       "resources": ["index.html", "script.js"],

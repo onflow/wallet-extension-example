@@ -29,8 +29,7 @@ export default function Authn({ location }) {
     chrome.tabs &&
       chrome.tabs.query(
         {
-          active: true,
-          currentWindow: false,
+          url: "http://localhost:3000/*",
         },
         (tabs) => {
           /**

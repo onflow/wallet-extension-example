@@ -32,8 +32,7 @@ function Popup() {
     chrome.tabs &&
       chrome.tabs.query(
         {
-          active: true,
-          currentWindow: false,
+          url: "http://localhost:3000/*"
         },
         (tabs) => {
           chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:CLOSE" });
