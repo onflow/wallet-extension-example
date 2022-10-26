@@ -20,8 +20,7 @@ import { createSignature } from "../../controllers/authz";
 import { useTransaction } from "../../contexts/TransactionContext";
 import * as styles from "../../styles";
 
-export default function Authz() {
-  const [opener, setOpener] = useState(null);
+export default function Authz({ fclTabId }) {
   const [signable, setSignable] = useState(null);
   const [unlocked, setUnlocked] = useState(keyVault.unlocked);
   const [transactionCode, setTransactionCode] = useState(``);
@@ -51,16 +50,7 @@ export default function Authz() {
   }
 
   useEffect(() => {
-    chrome.tabs &&
-      chrome.tabs.query(
-        {
-          url: "http://localhost:3000/*",
-        },
-        (tabs) => {
-          setOpener(tabs[0].id);
-          chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:READY" });
-        }
-      );
+    chrome.tabs.sendMessage(fclTabId, { type: "FCL:VIEW:READY" });
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
@@ -102,7 +92,7 @@ export default function Authz() {
       signable.keyId
     );
 
-    chrome.tabs.sendMessage(parseInt(opener), {
+    chrome.tabs.sendMessage(fclTabId, {
       f_type: "PollingResponse",
       f_vsn: "1.0.0",
       status: "APPROVED",
@@ -117,7 +107,7 @@ export default function Authz() {
   }
 
   function sendCancelToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
+    chrome.tabs.sendMessage(fclTabId, { type: "FCL:VIEW:CLOSE" });
     window.close();
   }
 

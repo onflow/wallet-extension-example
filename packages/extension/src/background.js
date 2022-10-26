@@ -1,7 +1,6 @@
 let currentPopup = null;
 
-function createPopup(popUrl) {
-
+function createPopup(hostTabId, service) {
   function handlePopupClosed(windowId) {
     if (currentPopup && windowId == currentPopup.id) {
       currentPopup = null;
@@ -10,6 +9,13 @@ function createPopup(popUrl) {
 
   try {
     if (!currentPopup) {
+      const tabIdParam = new URLSearchParams({
+        tabId: hostTabId,
+      });
+      const popUrl = chrome.runtime.getURL(
+        `index.html?${tabIdParam}#/${service.type}`
+      );
+
       chrome.windows
         .create({
           url: popUrl,
@@ -22,6 +28,14 @@ function createPopup(popUrl) {
           currentPopup = window;
           chrome.windows.onRemoved.addListener(handlePopupClosed);
         });
+    } else {
+      chrome.scripting.executeScript({
+        target: { tabId: hostTabId },
+        function: () =>
+          alert(
+            "Extension is ignoring given request because it can only have one popup at a time. Make sure to close the current popup before making another request"
+          ),
+      });
     }
   } catch (error) {
     console.log("error: ", error);
@@ -36,10 +50,12 @@ const extMessageHandler = (msg) => {
   if (service?.endpoint && service?.endpoint === "ext:0x1234") {
     chrome.tabs.query(
       {
-        url: "http://localhost:3000/*",
+        active: true,
+        lastFocusedWindow: true,
       },
       (tabs) => {
-        createPopup(chrome.runtime.getURL(`index.html#/${service.type}`))
+        // pass in current tab's tabId to URL so extension can use it to send message back to FCL
+        createPopup(tabs[0].id, service);
       }
     );
   }

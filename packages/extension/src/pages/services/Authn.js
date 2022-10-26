@@ -16,8 +16,7 @@ import { authnServiceDefinition } from "../../controllers/serviceDefinition";
 import * as styles from "../../styles";
 import FlowLogo from "../../assets/flow-logo.png";
 
-export default function Authn({ location }) {
-  const [opener, setOpener] = useState(null);
+export default function Authn({ fclTabId }) {
   const [account, setAccount] = useState(null);
   const [host, setHost] = useState(null);
 
@@ -26,23 +25,7 @@ export default function Authn({ location }) {
      * We can't use "chrome.runtime.sendMessage" for sending messages from React.
      * For sending messages from React we need to specify which tab to send it to.
      */
-    chrome.tabs &&
-      chrome.tabs.query(
-        {
-          url: "http://localhost:3000/*",
-        },
-        (tabs) => {
-          /**
-           * Sends a single message to the content script(s) in the specified tab,
-           * with an optional callback to run when a response is sent back.
-           *
-           * The runtime.onMessage event is fired in each content script running
-           * in the specified tab for the current extension.
-           */
-          setOpener(tabs[0].id);
-          chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:READY" });
-        }
-      );
+    chrome.tabs.sendMessage(fclTabId, { type: "FCL:VIEW:READY" });
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
@@ -76,7 +59,7 @@ export default function Authn({ location }) {
     const keyId = account.listKeys()[0].id;
     const services = authnServiceDefinition(address, keyId);
 
-    chrome.tabs.sendMessage(parseInt(opener), {
+    chrome.tabs.sendMessage(fclTabId, {
       f_type: "PollingResponse",
       f_vsn: "1.0.0",
       status: "APPROVED",
@@ -92,7 +75,7 @@ export default function Authn({ location }) {
   }
 
   function sendCancelToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
+    chrome.tabs.sendMessage(fclTabId, { type: "FCL:VIEW:CLOSE" });
     window.close();
   }
 
