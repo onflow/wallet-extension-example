@@ -7,38 +7,34 @@ function createPopup(hostTabId, service) {
     }
   }
 
-  try {
-    if (!currentPopup) {
-      const tabIdParam = new URLSearchParams({
-        tabId: hostTabId,
-      });
-      const popUrl = chrome.runtime.getURL(
-        `index.html?${tabIdParam}#/${service.type}`
-      );
+  if (!currentPopup) {
+    const tabIdParam = new URLSearchParams({
+      tabId: hostTabId,
+    });
+    const popUrl = chrome.runtime.getURL(
+      `index.html?${tabIdParam}#/${service.type}`
+    );
 
-      chrome.windows
-        .create({
-          url: popUrl,
-          type: "popup",
-          height: 628,
-          width: 375,
-          left: 1000,
-        })
-        .then((window) => {
-          currentPopup = window;
-          chrome.windows.onRemoved.addListener(handlePopupClosed);
-        });
-    } else {
-      chrome.scripting.executeScript({
-        target: { tabId: hostTabId },
-        function: () =>
-          alert(
-            "Extension is ignoring given request because it can only have one popup at a time. Make sure to close the current popup before making another request"
-          ),
+    chrome.windows
+      .create({
+        url: popUrl,
+        type: "popup",
+        height: 628,
+        width: 375,
+        left: 1000,
+      })
+      .then((window) => {
+        currentPopup = window;
+        chrome.windows.onRemoved.addListener(handlePopupClosed);
       });
-    }
-  } catch (error) {
-    console.log("error: ", error);
+  } else {
+    chrome.scripting.executeScript({
+      target: { tabId: hostTabId },
+      function: () =>
+        alert(
+          "Extension is ignoring given request because it can only have one popup at a time. Make sure to close the current popup before making another request"
+        ),
+    });
   }
 }
 
