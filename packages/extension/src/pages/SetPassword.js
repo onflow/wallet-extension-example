@@ -101,7 +101,7 @@ const SetPassword = ({ location }) => {
           mt="24"
           mb="6"
           placeholder="Password"
-          autoFocus="true"
+          autoFocus={true}
           onEnter={() => importOrCreateAccount(true)}
         />
 
@@ -140,7 +140,7 @@ const SetPassword = ({ location }) => {
           mt="24"
           mb="6"
           placeholder="Password"
-          autoFocus="true"
+          autoFocus={true}
           onEnter={() => importOrCreateAccount(false)}
         />
 

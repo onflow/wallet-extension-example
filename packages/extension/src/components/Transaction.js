@@ -1,6 +1,6 @@
 import React from "react";
 import { useTransaction } from "../contexts/TransactionContext";
-import { Box, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, Progress } from "@chakra-ui/react";
 import * as styles from "../styles";
 
 function Transaction() {
@@ -61,7 +61,6 @@ function Transaction() {
             <a
               href={`https://testnet.flowscan.org/transaction/${txId}`}
               target="_blank"
-              and
               rel="noopener noreferrer"
             >
               <Text as="em">Tx ID:</Text>{" "}
@@ -74,14 +73,14 @@ function Transaction() {
           <Text as="i">{STATUS_DETAILS[statusKey].message}</Text>
           {!STATUS_DETAILS[statusKey].hideProgress && (
             <Box mb={3}>
-              <progress
-                indeterminate={STATUS_DETAILS[statusKey].progressIndeterminate}
+              <Progress
+                isIndeterminate={STATUS_DETAILS[statusKey].progressIndeterminate}
                 min="0"
                 max="100"
                 value={STATUS_DETAILS[statusKey].progressValue}
               >
                 {STATUS_DETAILS[statusKey].progressText}
-              </progress>
+              </Progress>
             </Box>
           )}
           <div>
@@ -89,7 +88,6 @@ function Transaction() {
               <a
                 href={`https://testnet.flowscan.org/transaction/${txId}`}
                 target="_blank"
-                and
                 rel="noopener noreferrer"
               >
                 View Transaction Details

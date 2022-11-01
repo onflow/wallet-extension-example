@@ -10,10 +10,14 @@ const SubmitInput = (props) => {
     }
   };
 
+  // Removes warning that onEnter is not a prop for Input
+  var filteredProps = Object.assign({}, props);
+  delete filteredProps.onEnter;
+
   if (props.textArea) {
-    return <Textarea {...props} onKeyDown={handleKeyDown} resize="none" />;
+    return <Textarea {...filteredProps} onKeyDown={handleKeyDown} resize="none" />;
   } else {
-    return <Input {...props} onKeyDown={handleKeyDown} />;
+    return <Input {...filteredProps} onKeyDown={handleKeyDown} />;
   }
 };
 

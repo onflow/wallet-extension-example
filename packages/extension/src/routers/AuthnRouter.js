@@ -10,7 +10,7 @@ import { keyVault } from "../lib/keyVault";
 import { accountManager } from "../lib/AccountManager";
 import Authn from "../pages/services/Authn";
 
-function AuthnRouter() {
+function AuthnRouter({ fclTabId }) {
   const [loading, setLoading] = useState(true);
   const [initial, setInitial] = useState(null);
 
@@ -56,7 +56,9 @@ function AuthnRouter() {
         <Route path="/SelectAccount" component={SelectAccount}></Route>
         <Route path="/SetPassword" component={SetPassword}></Route>
         <Route path="/LogIn" component={LogIn}></Route>
-        <Route path="/Balances" component={Authn}></Route>
+        <Route path="/Balances">
+          <Authn fclTabId={fclTabId}></Authn>
+        </Route>
       </AnimatedSwitch>
     </MemoryRouter>
   );

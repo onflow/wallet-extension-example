@@ -20,8 +20,7 @@ import { createSignature } from "../../controllers/authz";
 import { useTransaction } from "../../contexts/TransactionContext";
 import * as styles from "../../styles";
 
-export default function Authz() {
-  const [opener, setOpener] = useState(null);
+export default function Authz({ fclTabId }) {
   const [signable, setSignable] = useState(null);
   const [unlocked, setUnlocked] = useState(keyVault.unlocked);
   const [transactionCode, setTransactionCode] = useState(``);
@@ -29,10 +28,10 @@ export default function Authz() {
   const [description, setDescription] = useState(
     "This transaction has not been audited."
   );
-  const [password, setPassword] = useState(null);
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [txView, setTxView] = useState("detail");
-  const [host, setHost] = useState(null);
+  const [host, setHost] = useState("");
 
   const { initTransactionState, setTxId, setTransactionStatus } =
     useTransaction();
@@ -51,17 +50,7 @@ export default function Authz() {
   }
 
   useEffect(() => {
-    chrome.tabs &&
-      chrome.tabs.query(
-        {
-          active: true,
-          currentWindow: false,
-        },
-        (tabs) => {
-          setOpener(tabs[0].id);
-          chrome.tabs.sendMessage(tabs[0].id || 0, { type: "FCL:VIEW:READY" });
-        }
-      );
+    chrome.tabs.sendMessage(fclTabId, { type: "FCL:VIEW:READY" });
 
     const extMessageHandler = (msg, sender, sendResponse) => {
       if (msg.type === "FCL:VIEW:READY:RESPONSE") {
@@ -103,7 +92,7 @@ export default function Authz() {
       signable.keyId
     );
 
-    chrome.tabs.sendMessage(parseInt(opener), {
+    chrome.tabs.sendMessage(fclTabId, {
       f_type: "PollingResponse",
       f_vsn: "1.0.0",
       status: "APPROVED",
@@ -118,7 +107,7 @@ export default function Authz() {
   }
 
   function sendCancelToFCL() {
-    chrome.tabs.sendMessage(parseInt(opener), { type: "FCL:VIEW:CLOSE" });
+    chrome.tabs.sendMessage(fclTabId, { type: "FCL:VIEW:CLOSE" });
     window.close();
   }
 
